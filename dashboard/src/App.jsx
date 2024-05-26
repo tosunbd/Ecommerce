@@ -1,17 +1,13 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
+import Router from './routers/Router';
+import publicRoutes from './routers/routes/publicRoutes';
 
-function App() {  
+function App() {
+  const [allRoutes, setAllRoutes] = useState([...publicRoutes]);
+  console.log(allRoutes);
 
-  return (
-    <>
-      <div className='App'>
-        <h1 className="text-3xl font-bold underline">
-          Hello world!
-        </h1>
-      </div>
-    </>
-  )
+  return <Router allRoutes={allRoutes} />;
 }
 
-export default App
+export default App;
