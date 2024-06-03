@@ -1,8 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaFacebook, FaGoogle } from 'react-icons/fa';
 
 const Login = () => {
+
+    const [state, setState] = useState({        
+        email: '',
+        password: ''
+    });
+
+    const inputHandle = (e) => {
+        setState({
+            ...state,
+            [e.target.name]: e.target.value            
+        })
+    }
+
+    const submit = (e) => {
+        e.preventDefault();
+        console.log(state);
+    }
+
     return (
         <div className='min-w-screen min-h-screen bg-[#cdcae9] flex justify-center items-center'>            
             <div className='w-[350px] text-[#ffffff] p-2'>
@@ -10,17 +28,16 @@ const Login = () => {
                     <h2 className='text-xl mb-3 font-bold'>Welcome to ECommerce</h2>
                     <p className='text-sm mb-3 font-medium'>Please Sign in to your account</p>
 
-                    <form>
-                    
+                    <form onSubmit={submit}>                    
 
                         <div className='flex flex-col w-full gap-1 mb-3'>
                             <label htmlFor="email">Email</label>
-                            <input className=' px-3 py-2 outline-none border border-slate-400 bg-transparent rounded-md' type="text" name='email' id='email' placeholder='Email' required />
+                            <input onChange={inputHandle} value={state.email} className=' px-3 py-2 outline-none border border-slate-400 bg-transparent rounded-md' type="email" name='email' id='email' placeholder='Email' required />
                         </div>
 
                          <div className='flex flex-col w-full gap-1 mb-3'>
                             <label htmlFor="name">Password</label>
-                            <input className=' px-3 py-2 outline-none border border-slate-400 bg-transparent rounded-md' type="text" name='password' id='password' placeholder='Password' required />
+                            <input onChange={inputHandle} value={state.password} className=' px-3 py-2 outline-none border border-slate-400 bg-transparent rounded-md' type="password" name='password' id='password' placeholder='Password' required />
                         </div>
 
 
@@ -32,7 +49,7 @@ const Login = () => {
                             </p>
                         </div>
 
-                        <div className='w-full flex items-center items-center mb-3'>
+                        <div className='w-full flex justify-center items-center mb-3'>
                             <div className='w-[45%] bg-slate-700 h-[1px]'></div>
                             <div className='w-[10%] flex justify-center items-center'>
                                 <span className='pb-1'>or</span>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaFacebook, FaGoogle } from 'react-icons/fa';
 
@@ -11,13 +11,11 @@ const Register = () => {
     });
 
     const inputHandle = (e) => {
-        if (e.target && e.target.name && e.target.value) {
-            setState(prevState => ({
-                ...prevState,
-                [e.target.name]: e.target.value
-            }));
-        }
-    }    
+        setState({
+            ...state,
+            [e.target.name]: e.target.value            
+        })
+    }
 
     const submit = (e) => {
         e.preventDefault();
@@ -40,12 +38,12 @@ const Register = () => {
 
                         <div className='flex flex-col w-full gap-1 mb-3'>
                             <label htmlFor="email">Email</label>
-                            <input onChange={inputHandle} value={state.email} className=' px-3 py-2 outline-none border border-slate-400 bg-transparent rounded-md' type="text" name='email' id='email' placeholder='Email' required />
+                            <input onChange={inputHandle} value={state.email} className=' px-3 py-2 outline-none border border-slate-400 bg-transparent rounded-md' type="email" name='email' id='email' placeholder='Email' required />
                         </div>
 
                          <div className='flex flex-col w-full gap-1 mb-3'>
                             <label htmlFor="name">Password</label>
-                            <input onChange={inputHandle} value={state.password} className=' px-3 py-2 outline-none border border-slate-400 bg-transparent rounded-md' type="text" name='password' id='password' placeholder='Password' required />
+                            <input onChange={inputHandle} value={state.password} className=' px-3 py-2 outline-none border border-slate-400 bg-transparent rounded-md' type="password" name='password' id='password' placeholder='Password' required />
                         </div>
 
                         <div className='flex items-center w-full gap-3 mb-3'>
