@@ -1,0 +1,28 @@
+# Node.js
+node_modules/
+
+# Build folders (adjust based on your build tools)
+/dashboard/build  # For React project
+/backend/build    # For Node.js backend (if applicable)
+
+# Environment variables
+.env
+
+# Test coverage reports
+/coverage/
+
+# IDE-specific files
+.idea/
+.vscode/
+
+# Temporary files
+*.log
+*.tmp
+npm-debug.log*
+yarn.lock
+
+# Editor backups
+*~
+
+# Specific file extensions (optional)
+*.sql
