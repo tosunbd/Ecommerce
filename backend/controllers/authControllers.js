@@ -4,16 +4,16 @@ const bcrypt = require('bcrypt');
 const { createToken } = require('../utilities/tokenCreate');
 
 class authControllers {
-    admin_login = async (req, res) => {        
+    admin_login = async (req, res) => {
         const { email, password } = req.body;
         try
-        {   
+        {
             const admin = await adminModel.findOne({ email: email.toLowerCase() }).select('+name +email +password +image +role');
             console.log(admin);
 
             if (admin)
             {
-                const isMatch = await bcrypt.compare(password, admin.password);                
+                const isMatch = await bcrypt.compare(password, admin.password);
                 if (isMatch)
                 {
                     const token = await createToken({
@@ -24,7 +24,7 @@ class authControllers {
                     const expiresIn = new Date();
                     expiresIn.setDate(expiresIn.getDate() + 7);
                     res.cookie('access_token', token, { expires: expiresIn, httpOnly: true, secure: true });
-                    // console.log({ token: token, message: token }); // Check what is being sent back
+
                     responseReturn(res, 200, {token, message: "Login Successful" });
                 }
                 else
