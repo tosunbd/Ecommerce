@@ -1,31 +1,41 @@
 const express = require('express');
 const dotenv = require('dotenv');
-dotenv.config();
 const cors = require('cors');
-const authRoutes = require('./routes/authRoutes');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const authRoutes = require('./routes/authRoutes');
+const { dbConnect } = require('./utilities/db');
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Database connection
+dbConnect();
+
+// Middleware
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost:5173', // Ensure this matches your front-end URL or configure as needed
     credentials: true
 }));
-
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // This line is effectively doing what express.json() does
 app.use(cookieParser());
 
-app.use(express.json());
-
+// Routes
 app.use('/api', authRoutes);
-
 app.get('/', (req, res) => {
-    res.send('Backend Server');
+    res.send('Backend Server is running.');
 });
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
+// Server startup
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
-
