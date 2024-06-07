@@ -5,8 +5,6 @@ node_modules/
 /dashboard/build  # For React project
 /backend/build    # For Node.js backend (if applicable)
 
-# Environment variables
-.env
 
 # Test coverage reports
 /coverage/
