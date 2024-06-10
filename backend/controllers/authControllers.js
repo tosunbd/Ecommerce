@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const { createToken } = require('../utilities/tokenCreate');
 
 class authControllers {
+    // Admin Login
     admin_login = async (req, res) => {
         const { email, password } = req.body;
         try
@@ -41,6 +42,30 @@ class authControllers {
             responseReturn(res, 500, { error: error.message });
         }
     }
+    // End of Admin Login
+
+    // Get User
+    getUser = async (req, res) => {
+        const { role, id } = req;
+        try
+        {
+            if (role === 'admin')
+            {
+                const user = await adminModel.findOne({ _id: id });
+                responseReturn(res, 200, {userInfo: user});
+            }
+            else
+            {
+                console.log("Seller Info");
+            }
+        }
+        catch (error) {
+            responseReturn(res, 500, { error: error.message });
+        }
+        
+    }
+
+    // End of Get User
 }
 
 module.exports = new authControllers();
