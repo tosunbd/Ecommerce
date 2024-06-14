@@ -5,9 +5,9 @@ export const getNav = (role) => {
 
     for (let i = 0; i < allNav.length; i++)
     {
-        if (role === allNav[i].role)    
+        if (role === allNav[i].role)
         {
-            finalNav.push(allNav[i]);            
+            finalNav.push(allNav[i]);
         }
     }
     return finalNav

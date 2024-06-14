@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getNav } from '../navigation/index';
 
@@ -26,18 +26,20 @@ const Sidebar = () => {
                     <ul>
                         {
                            allNav.map((n, i) => (
-                            <li key={i}>  
-                              <Link 
-                                to={n.path} 
+                            <li key={i}>
+                              <Link
+                                to={n.path}
                                 className={`${
-                                  pathName === n.path 
-                                  ? 'bg-blue-600 shadow-indigo-500/50 text-white duration-500' 
-                                  : 'text-blue-500 font-bold duration-200 hover:text-blue-700'
+                                  pathName === n.path
+                                  ? 'bg-blue-600 shadow-indigo-500/50 text-white duration-500'
+                                  : 'bg-blue-600 text-white font-bold duration-200 hover:text-blue-700'
                                 } px-[12px] py-[9px] rounded-sm flex justify-start items-center gap-[12px] hover:pl-4 transition-all mb-1`}
                               >
-                                <span>{ n.icon }</span>
+                                <span>{n.icon}</span>
                                 <span>{n.title}</span>
-                              </Link>    
+                              </Link>
+
+
                             </li>
                           ))
                           
