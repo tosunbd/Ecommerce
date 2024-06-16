@@ -204,17 +204,17 @@ const AdminDashboard = () => {
                             </tr>
                         </thead>
                         <tbody className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
-                            { [1, 2, 3, 4, 5].map((d, i) => (
+                            {[1, 2, 3, 4, 5].map((d, i) => (
                                 <tr key={i}>
-                                <td scope="row" className="px-4 py-3 font-medium whitespace-nowrap">#34344</td>
-                                <td scope="col" className="px-4 py-3 font-medium whitespace-nowrap">$454</td>
-                                <td scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Pending</td>
-                                <td scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Pending</td>
-                                <td scope="col" className="px-4 py-3 font-medium whitespace-nowrap">
-                                    <Link className="text-md font-normal" to="/">View</Link>
-                                </td>
+                                    <td scope="row" className="px-4 py-3 font-medium whitespace-nowrap">#34344</td>
+                                    <td scope="col" className="px-4 py-3 font-medium whitespace-nowrap">$454</td>
+                                    <td scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Pending</td>
+                                    <td scope="col" className="px-4 py-3 font-medium whitespace-nowrap">Pending</td>
+                                    <td scope="col" className="px-4 py-3 font-medium whitespace-nowrap">
+                                        <Link className="text-md font-normal" to="/">View</Link>
+                                    </td>
                                 </tr>
-                            )) }
+                            ))}
                         </tbody>
                     </table>
                 </div>
