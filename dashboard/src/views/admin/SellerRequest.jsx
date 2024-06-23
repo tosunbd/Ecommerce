@@ -4,7 +4,7 @@ import Pagination from "./../seller/Pagination";
 import { FaEye } from "react-icons/fa";
 
 
-const DeactivateSellers = () => {
+const SellerRequest = () => {
     
     const [currentPage, setCurrentPage] = useState(1);
     const [searchValue, setSearchValue] = useState('');
@@ -37,7 +37,6 @@ const DeactivateSellers = () => {
                                 <thead className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
                                     <tr>
                                         <th scope='col' className='px-4 py-3 align-middle text-left'> No </th>
-                                        <th scope='col' className='px-4 py-3 align-middle text-left'> Image </th>
                                         <th scope='col' className='px-4 py-3 align-middle text-left'> Name </th>           
                                         <th scope='col' className='px-4 py-3 align-middle text-left'> Email </th>
                                         <th scope='col' className='px-4 py-3 align-middle text-left'> Payment Status </th>
@@ -47,22 +46,20 @@ const DeactivateSellers = () => {
                                 </thead>
                                <tbody className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
                                    {[1, 2, 3, 4, 5].map((d, i) => (
-                                       <tr key={i}>
-                                           <td scope="row" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">{d}</td>
-                                           <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
-                                               <img className="w-[45px] h-[45px]" src={`http://localhost:5173/images/category/${encodeURIComponent(d)}.jpg`} alt="" />
-                                           </td>
-                                           <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">Taufiqul Islam</td>
-                                           <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">tosunbd@gmail.com</td>
-                                           <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">Active</td>
-                                           <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">Deactive</td>
-                                           <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
-                                               <div className="flex justify-start items-center gap-4">
-                                                   <Link className="p-[6px] bg-green-500 rounded hover:bg-green-500/50" to="/">
-                                                       <FaEye />
-                                                   </Link>
-                                                   
-                                               </div>
+                                       <tr className="border-b border-slate-700" key={i}>
+                                           <td scope="row" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{d}</td>
+                                           <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">Taufiqul Islam</td>
+                                           <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">tosunbd@gmail.com</td>
+                                           <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">Active</td>
+                                           <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">Deactive</td>
+                                           <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">
+                                           <div className="flex justify-start items-center gap-4">
+                                                <Link to='/admin/dashboard/seller/details/2'
+                                                    className="p-[6px] bg-green-500 rounded hover:bg-green-500/50">
+                                                    <FaEye />
+                                                </Link>
+                                            </div>
+
                                            </td>
                                        </tr>
                                    ))}
@@ -87,4 +84,4 @@ const DeactivateSellers = () => {
     );
 };
 
-export default DeactivateSellers;
+export default SellerRequest;

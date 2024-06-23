@@ -17,8 +17,9 @@ const Sellers = () => {
 
         <div className='px-2 lg:px-7 pt-5'>
             
-            <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
+            <h1 className='text-[25px] font-bold mb-3 text-left'>Sellers</h1>
 
+            <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
                 
                 <div className="flex justify-between items-center">
                     <select onChange={e => setItemsPerPage(parseInt(e.target.value))} className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] 
