@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Pagination from "./../seller/Pagination";
+import Pagination from "./../Pagination";
 import { FaEye } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
 

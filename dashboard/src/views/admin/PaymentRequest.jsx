@@ -2,7 +2,7 @@ import React from 'react';
 import { FixedSizeList as List } from 'react-window';
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Pagination from "./../seller/Pagination";
+import Pagination from "./../Pagination";
 
 function handleOnWheel({ deltaY }) {
     if (deltaY > 0) {

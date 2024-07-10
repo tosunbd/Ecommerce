@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { LuArrowDownSquare } from "react-icons/lu";
 import { Link } from "react-router-dom";
-import Pagination from "./../seller/Pagination";
+import Pagination from "./../Pagination";
 
 
 

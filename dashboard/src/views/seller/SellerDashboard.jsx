@@ -4,7 +4,7 @@ import { FaCartShopping } from 'react-icons/fa6';
 import Chart from 'react-apexcharts';
 import { Link } from  'react-router-dom';
 
-const AdminDashboard = () => {
+const SellerDashboard = () => {
 
     const state = {
         series: [
@@ -17,12 +17,12 @@ const AdminDashboard = () => {
                 data: [67, 39, 45, 56, 90, 56, 23, 56, 87, 78]
             },
             {
-                name: "Sellers",
+                name: "Sales",
                 data: [67, 39, 40, 76, 46, 74, 43, 26, 78, 87]
             }
         ],
         options: {
-            colors: ["#181ee8", "#ff4560", "#00e396"],
+            colors: ["#181ee8", "#00e396", "#ff4560"],
             plotOptions: {
                 bar: {
                     borderRadius: 10,
@@ -49,26 +49,6 @@ const AdminDashboard = () => {
             legend: {
                 position: 'top'
             }
-            // ,
-            // responsive: [
-            //     {
-            //         breakpoint: 565,
-            //         options: {
-            //             yaxis: {
-            //                 categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']
-            //             },
-            //             plotOptions: {
-            //                 bar: {
-            //                     horizontal: true,
-            //                 }
-            //             }, 
-            //             chart: {
-            //                 height: 550,
-            //                 type: 'bar',
-            //             },
-            //         }
-            //     }
-            // ]
         }
     };
     
@@ -87,8 +67,8 @@ const AdminDashboard = () => {
                 </div>
                 <div className="flex justify-between items-center p-5 bg-[#fde2ff] rounded-md gap-3">
                     <div className="flex flex-col justify-start items-start text-[#5c5a5a]">
-                        <h2 className='text-3xl font-bold'>$3434</h2>
-                        <span className='text-md font-medium'>Total Sales</span>
+                        <h2 className='text-3xl font-bold'>50</h2>
+                        <span className='text-md font-medium'>Products</span>
                     </div>
                     <div className='w-[40px] h-[47px] rounded-full bg-[#760077] flex justify-center items-center text-xl'>
                         <MdProductionQuantityLimits className='text-[#fae8e8] shadow-lg' />
@@ -97,16 +77,16 @@ const AdminDashboard = () => {
                 <div className="flex justify-between items-center p-5 bg-[#e9feea] rounded-md gap-3">
                     <div className="flex flex-col justify-start items-start text-[#5c5a5a]">
                         <h2 className='text-3xl font-bold'>10</h2>
-                        <span className='text-md font-medium'>Sellers</span>
+                        <span className='text-md font-medium'>Orders</span>
                     </div>
                     <div className='w-[40px] h-[47px] rounded-full bg-[#038000] flex justify-center items-center text-xl'>
-                        <FaUsers className='text-[#fae8e8] shadow-lg' />
+                        <FaCartShopping className='text-[#fae8e8] shadow-lg' />
                     </div>
                 </div>
                 <div className="flex justify-between items-center p-5 bg-[#ebebff] rounded-md gap-3">
                     <div className="flex flex-col justify-start items-start text-[#5c5a5a]">
-                        <h2 className='text-3xl font-bold'>54</h2>
-                        <span className='text-md font-medium'>Orders</span>
+                        <h2 className='text-3xl font-bold'>1</h2>
+                        <span className='text-md font-medium'>Pending Orders</span>
                     </div>
                     <div className='w-[40px] h-[47px] rounded-full bg-[#0f8eed] flex justify-center items-center text-xl'>
                         <FaCartShopping className='text-[#ece8fa] shadow-lg' />
@@ -126,7 +106,7 @@ const AdminDashboard = () => {
                     <div className="w-full bg-[#6a5fdf] p-4 rounded-md text-[#d0d2d6]">
                         
                         <div className="flex justify-between items-center">
-                            <h2 className='font-samibold text-lg text-[#d0d2d6] pb-3'>Recent Seller Message</h2>
+                            <h2 className='font-samibold text-lg text-[#d0d2d6] pb-3'>Recent Customer Message</h2>
                             <Link className='font-samibold text-[#d0d2d6] text-sm' to='/'>View All</Link>
                         </div>
                    
@@ -135,11 +115,11 @@ const AdminDashboard = () => {
 
                                 <li className='mb-3 ml-6 relative'>
                                     <div className='flex absolute -left-11 shadow-lg justify-center items-center w-10 h-10 p-[2px] bg-[#4c7fe2] rounded-full z-10'>
-                                        <img className='w-full h-full rounded-full' src="http://localhost:5173/images/admin.jpg" alt="Admin" />
+                                        <img className='w-full h-full rounded-full' src="http://localhost:5173/images/admin.jpg" alt="Seller" />
                                     </div>
                                     <div className='p-3 bg-slate-800 rounded-lg border-slate-600 shadow-sm'>
                                         <div className='flex justify-between items-center mb-2'>
-                                            <Link className='text-md font-normal'>Admin</Link>
+                                            <Link className='text-md font-normal'>Seller</Link>
                                             <time className='mb-1 text-sm font-normal sm:order-last sm:mb-0'>2 day ago</time>
                                         </div>
                                         <div className='p-2 text-xs font-normal bg-slate-700 rounded-lg border border-slate-800 text-left'>
@@ -165,11 +145,11 @@ const AdminDashboard = () => {
                                
                                 <li className='mb-2 ml-6 relative'>
                                     <div className='flex absolute -left-11 shadow-lg justify-center items-center w-10 h-10 p-[2px] bg-[#4c7fe2] rounded-full z-10'>
-                                        <img className='w-full h-full rounded-full' src="http://localhost:5173/images/admin.jpg" alt="Admin" />
+                                        <img className='w-full h-full rounded-full' src="http://localhost:5173/images/admin.jpg" alt="Customer" />
                                     </div>
                                     <div className='p-3 bg-slate-800 rounded-lg border-slate-600 shadow-sm'>
                                         <div className='flex justify-between items-center mb-2'>
-                                            <Link className='text-md font-normal'>Admin</Link>
+                                            <Link className='text-md font-normal'>Customer</Link>
                                             <time className='mb-1 text-sm font-normal sm:order-last sm:mb-0'>2 day ago</time>
                                         </div>
                                         <div className='p-2 text-xs font-normal bg-slate-700 rounded-lg border border-slate-800 text-left'>
@@ -224,4 +204,4 @@ const AdminDashboard = () => {
     );
 };
 
-export default AdminDashboard;
+export default SellerDashboard;
