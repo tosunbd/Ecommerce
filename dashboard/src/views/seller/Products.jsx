@@ -6,7 +6,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import Search from "../components/Search";
 
 
-const Sellers = () => {
+const Products = () => {
     
     const [currentPage, setCurrentPage] = useState(1);
     const [searchValue, setSearchValue] = useState('');
@@ -18,7 +18,7 @@ const Sellers = () => {
 
         <div className='px-2 lg:px-7 pt-5'>
             
-            <h1 className='text-[25px] font-bold mb-3 text-left'>Sellers</h1>
+            <h1 className='text-[25px] font-bold mb-3 text-left'>All Products</h1>
 
             <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
                 
@@ -84,4 +84,4 @@ const Sellers = () => {
     );
 };
 
-export default Sellers;
+export default Products;

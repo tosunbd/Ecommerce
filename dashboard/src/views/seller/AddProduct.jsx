@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IoMdClose } from 'react-icons/io';
+import { IoMdCloseCircle, IoMdImage } from 'react-icons/io';
 import Category from './../admin/Category';
 
 const AddProduct = () => {
@@ -27,7 +27,7 @@ const AddProduct = () => {
     const [category, setCategory] = useState('');
     const [searchValue, setSearchValue] = useState('');
     const [allCategory, setAllCategory] = useState(categories);
-
+   
     const inputHandle = (e) => {
         setState({
             ...state,
@@ -45,6 +45,42 @@ const AddProduct = () => {
         } else {
             setAllCategory(categories);
         }
+    };
+
+    const [images, setImages] = useState([]);
+    const [imageShow, setImageShow] = useState([]);
+
+    const imageHandle = (e) => {
+        const files = e.target.files;
+        if (files.length > 0)
+        {
+            setImages([...images, ...files]);
+            let imageURL = [];
+            for (let i = 0; i < files.length; i++) {
+                imageURL.push(URL.createObjectURL(files[i]));
+            }
+            setImageShow([...imageShow, ...imageURL]);
+        }        
+    };
+
+    const changeImage = (img, index) => {
+        if (img) {
+            let tempImages = [...images];
+            let tempUrl = [...imageShow];
+    
+            tempImages[index] = img;
+            tempUrl[index] = URL.createObjectURL(img);
+    
+            setImages(tempImages);
+            setImageShow(tempUrl);
+        }
+    };
+
+    const removeImage = (i) => {
+        const filterImage = images.filter((img, index) => index !== i);
+        const filterImageUrl = imageShow.filter((img, index) => index !== i);
+        setImages(filterImage);
+        setImageShow(filterImageUrl);
     };
 
     return (
@@ -95,6 +131,7 @@ const AddProduct = () => {
                                     value={category}
                                     name='category'
                                     id='category'
+                                    placeholder='--Select Category--'
                                 />
 
                                 <div className={`absolute top-[101%] bg-[#475569] w-full transition-all ${cateShow ? 'scale-100' : 'scale-0'}`}>
@@ -147,7 +184,7 @@ const AddProduct = () => {
                                     className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]'
                                     onChange={inputHandle}
                                     value={state.price}
-                                    type="text"
+                                    type="number"
                                     name='price'
                                     id='price'
                                     placeholder='Price'
@@ -159,7 +196,7 @@ const AddProduct = () => {
                                     className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]'
                                     onChange={inputHandle}
                                     value={state.discount}
-                                    type="text"
+                                    type="number"
                                     name='discount'
                                     id='discount'
                                     placeholder='% Discount'
@@ -167,36 +204,58 @@ const AddProduct = () => {
                             </div>
                         </div>
 
-                        <div className='flex flex-col mb-3 gap-4 text-[#d0d2d6]'>
+                        <div className='flex flex-col mb-5 gap-4 text-[#d0d2d6]'>
                             <div className='flex flex-col gap-1'>
-                                <label htmlFor="description">Description</label>
+                                <label className='text-[#d0d2d6] text-left' htmlFor="description">Description</label>
                                 <textarea
-                                    className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]'
+                                    className='px-4 py-2 focus:border-indigo-500 outline-none
+                                     bg-[#6a5fdf] border border-slate-700 rounded-md
+                                     text-[#d0d2d6]'
                                     onChange={inputHandle}
                                     value={state.description}
                                     name='description'
                                     id='description'
                                     placeholder='Description'
+                                    rows={5}
+                                    cols={10}
                                 />
                             </div>
                         </div>
 
-                        <div className='flex gap-4 mb-3'>
-                            <div className='relative w-1/2'>
-                                <div className='border p-2 rounded-md'>
-                                    <img src="http://localhost:5173/images/laravel_image.jpg" alt="product" className='max-w-full' />
-                                    <button className='absolute top-2 right-2 bg-red-500 text-white rounded-full p-1'>
-                                        <IoMdClose />
-                                    </button>
+                        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 md:gap-4 gap-3 w-full text-[#d0d2d6] mb-4">
+                            {imageShow.map((img, i) => (
+                                <div key={i} className='h-[180px] relative'>
+                                    <label htmlFor={`image-${i}`}>
+                                        <img className='w-full h-full rounded-sm' src={img} alt={`Uploaded ${i}`} />
+                                    </label>
+                                    <input
+                                        onChange={(e) => changeImage(e.target.files[0], i)}
+                                        type="file"
+                                        id={`image-${i}`}
+                                        className='hidden'
+                                    />
+                                    <span onClick={() => removeImage(i)} className='p-2 z-10 cursor-pointer bg-slate-700 hover:shadow-lg hover:shadow-slate-400/50 text-white absolute top-1 right-1 rounded-full'>
+                                        <IoMdCloseCircle />
+                                    </span>
                                 </div>
-                            </div>
-                            <div className='w-1/2 border-dashed border-2 border-[#d0d2d6] rounded-md flex justify-center items-center'>
-                                <label htmlFor="upload-image" className='cursor-pointer'>
-                                    <span className='text-[#d0d2d6]'>select image</span>
-                                    <input type="file" id="upload-image" className='hidden' />
-                                </label>
-                            </div>
+                            ))}
+                            <label
+                                className="flex justify-center items-center flex-col h-[180px] cursor-pointer border border-dashed hover:border-red-500 w-full text-[#d0d2d6]"
+                                htmlFor="image"
+                            >
+                                <span><IoMdImage /></span>
+                                <span>Select Image</span>
+                            </label>
+                            <input
+                                className="hidden"
+                                onChange={imageHandle}
+                                multiple
+                                type="file"
+                                name="image"
+                                id="image"
+                            />
                         </div>
+
                         <div className='flex justify-start'>
                             <button
                                 type="submit"
@@ -205,6 +264,7 @@ const AddProduct = () => {
                                 Add Product
                             </button>
                         </div>
+
                     </form>
                 </div>
             </div>
