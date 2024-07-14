@@ -27,7 +27,7 @@ const Category = () => {
                 <div className='w-full lg:w-7/12'>
                     <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
 
-                        <Search />
+                    <Search setItemsPerPage = {setItemsPerPage} setSearchValue = {setSearchValue} searchValue = {searchValue} />
 
                         <div className='relative overflow-x-auto'>
                            
