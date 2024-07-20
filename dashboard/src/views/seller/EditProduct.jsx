@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdCloseCircle, IoMdImage } from 'react-icons/io';
 import Category from './../admin/Category';
 
-const AddProduct = () => {
+const EditProduct = () => {
     const categories = [
         { id: 1, name: 'Sports' },
-        { id: 2, name: 'Tshirt' },
+        { id: 2, name: 'TShirt' },
         { id: 3, name: 'Mobile' },
         { id: 4, name: 'Computer' },
         { id: 5, name: 'Watch' },
@@ -19,9 +19,9 @@ const AddProduct = () => {
         discount: '',
         price: '',
         brand: '',
-        stock: '',
-        category: ''
-    });
+        stock: ''
+        // ,category: ''
+    ,});
 
     const [cateShow, setCateShow] = useState(false);
     const [category, setCategory] = useState('');
@@ -50,44 +50,57 @@ const AddProduct = () => {
     const [images, setImages] = useState([]);
     const [imageShow, setImageShow] = useState([]);
 
-    const imageHandle = (e) => {
-        const files = e.target.files;
+    // const imageHandle = (e) => {
+    //     const files = e.target.files;
+    //     if (files.length > 0)
+    //     {
+    //         setImages([...images, ...files]);
+    //         let imageURL = [];
+    //         for (let i = 0; i < files.length; i++) {
+    //             imageURL.push(URL.createObjectURL(files[i]));
+    //         }
+    //         setImageShow([...imageShow, ...imageURL]);
+    //     }
+    // };
+
+    const changeImage = (img, files) => {
         if (files.length > 0)
         {
-            setImages([...images, ...files]);
-            let imageURL = [];
-            for (let i = 0; i < files.length; i++) {
-                imageURL.push(URL.createObjectURL(files[i]));
-            }
-            setImageShow([...imageShow, ...imageURL]);
-        }        
-    };
-
-    const changeImage = (img, index) => {
-        if (img) {
-            let tempImages = [...images];
-            let tempUrl = [...imageShow];
-    
-            tempImages[index] = img;
-            tempUrl[index] = URL.createObjectURL(img);
-    
-            setImages(tempImages);
-            setImageShow(tempUrl);
+            console.log(img);
+            console.log(files[0]);
         }
     };
 
-    const removeImage = (i) => {
-        const filterImage = images.filter((img, index) => index !== i);
-        const filterImageUrl = imageShow.filter((img, index) => index !== i);
-        setImages(filterImage);
-        setImageShow(filterImageUrl);
-    };
+    // const removeImage = (i) => {
+    //     const filterImage = images.filter((img, index) => index !== i);
+    //     const filterImageUrl = imageShow.filter((img, index) => index !== i);
+    //     setImages(filterImage);
+    //     setImageShow(filterImageUrl);
+    // };
+
+    useEffect(() => {
+        setState({
+            name: 'Mens TShirt',
+            description: 'Very Confortable Mens TShirt',
+            discount: 5,
+            price: 255,
+            brand: 'shadheen',
+            stock: 10
+            // ,category: 'TShirt'
+        });
+        setCategory('TShirt');
+        setImageShow([
+            'http://localhost:5173/images/admin.jpg',
+            'http://localhost:5173/images/seller.png',
+            'http://localhost:5173/images/demo.jpg'
+        ]);
+    },[])
 
     return (
         <div className="px-2 lg:px-7 pt-5">
             <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
                 <div className='flex justify-between items-center pb-4'>
-                    <h1 className='text-[#d0d2d6] text-xl font-semibold'>Add Product</h1>
+                    <h1 className='text-[#d0d2d6] text-xl font-semibold'>Edit Product</h1>
                     <Link to="/seller/dashboard/products" className='bg-blue-500 hover:shadow-blue-500/50 
                     hover:shadow-lg text-white rounded-sm px-7 py-2 my-2'>All Products</Link>
                 </div>
@@ -210,8 +223,7 @@ const AddProduct = () => {
                                 <label className='text-[#d0d2d6] text-left' htmlFor="description">Description</label>
                                 <textarea
                                     className='px-4 py-2 focus:border-indigo-500 outline-none
-                                     bg-[#6a5fdf] border border-slate-700 rounded-md
-                                     text-[#d0d2d6]'
+                                    bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]'
                                     onChange={inputHandle}
                                     value={state.description}
                                     name='description'
@@ -223,38 +235,19 @@ const AddProduct = () => {
                             </div>
                         </div>
 
-                        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 md:gap-4 gap-3 w-full text-[#d0d2d6] mb-4">
-                            {imageShow.map((img, i) => (
-                                <div key={i} className='h-[180px] relative'>
-                                    <label htmlFor={`image-${i}`}>
-                                        <img className='w-full h-full rounded-sm' src={img} alt={`Uploaded ${i}`} />
-                                    </label>
-                                    <input
-                                        onChange={(e) => changeImage(e.target.files[0], i)}
-                                        type="file"
-                                        id={`image-${i}`}
-                                        className='hidden'
-                                    />
-                                    <span onClick={() => removeImage(i)} className='p-2 z-10 cursor-pointer bg-slate-700 hover:shadow-lg hover:shadow-slate-400/50 text-white absolute top-1 right-1 rounded-full'>
-                                        <IoMdCloseCircle />
-                                    </span>
-                                </div>
-                            ))}
-                            <label
-                                className="flex justify-center items-center flex-col h-[180px] cursor-pointer border border-dashed hover:border-red-500 w-full text-[#d0d2d6]"
-                                htmlFor="image"
-                            >
-                                <span><IoMdImage /></span>
-                                <span>Select Image</span>
-                            </label>
-                            <input
-                                className="hidden"
-                                onChange={imageHandle}
-                                multiple
-                                type="file"
-                                name="image"
-                                id="image"
-                            />
+                        <div className="grid lg:grid-cols-4 grid-col-1 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 md:gap-4 gap-3
+                            w-full text-[#d0d2d6] mb-4">
+                            {
+                                imageShow.map((img, i) =>
+                                    <div className=''>
+                                        <label htmlFor={i}>
+                                            <img src={img} alt="" />
+                                        </label>
+                                        <input onChange={(e) => changeImage(img, e.target.files) } type="file" id={i} className='hidden' />
+                                    </div>
+                                )
+                            }
+
                         </div>
 
                         <div className=''>
@@ -262,7 +255,7 @@ const AddProduct = () => {
                                 type="submit"
                                 className='bg-red-500 hover:shadow-green-500/50
                                 hover:shadow-lg text-white rounded-sm px-7 py-2'>
-                                Add Product
+                                Save Changes
                             </button>
                         </div>
 
@@ -273,4 +266,4 @@ const AddProduct = () => {
     );
 };
 
-export default AddProduct;
+export default EditProduct;

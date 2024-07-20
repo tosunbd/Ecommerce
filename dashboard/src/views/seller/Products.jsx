@@ -53,8 +53,8 @@ const Products = () => {
                                            <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">20</td>
                                            <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
                                                <div className="flex justify-start items-center gap-4">
-                                                   <Link className="p-[6px] bg-yellow-500 rounded
-                                                   hover:shadow-lg hover:shadow-yellow-500/50" to="/">
+                                                   <Link to={`/seller/dashboard/edit-product/3`} className="p-[6px] bg-yellow-500 rounded
+                                                   hover:shadow-lg hover:shadow-yellow-500/50">
                                                        <FaEdit />
                                                    </Link>
                                                    <Link className="p-[6px] bg-green-500 rounded

@@ -1,3 +1,4 @@
+import { FaRegEdit } from "react-icons/fa";
 import { FaImages } from "react-icons/fa6";
 import { FadeLoader } from "react-spinners";
 
@@ -5,6 +6,8 @@ const Profile = () => {
 
     const image = true;
     const loader = true;
+    const status = 'active';
+    const userInfo = true;
 
     return (
         <div className='px-2 lg:px-7 py-5'>
@@ -42,10 +45,179 @@ const Profile = () => {
                             }
                             <input type="file" className="hidden" id="img" />
                         </div>
+
+                        <div className="px-0 md:px-5 py-2">
+                            <div className="flex justify-between text-sm flex-col 
+                            gap-2 p-4 bg-slate-800 rounded-md relative">
+                                <span className="p-[6px] bg-yellow-500 rounded hover:shadow-lg
+                                    hover:shadow-yellow-500/50 absolute right-2 top-2 cursor-pointer">
+                                    <FaRegEdit />
+                                </span>
+                                <div className="flex gap-2">
+                                    <span>Name:</span>
+                                    <span>Taufiqul Islam</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span>Email:</span>
+                                    <span>tosunbd@gmail.com</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span>Role:</span>
+                                    <span>Seller</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span>Status:</span>
+                                    <span>Active</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <span>Payment Acount:</span>
+                                    {
+                                        status === 'active' ?
+                                            <span className="bg-green-500 text-white text-xs 
+                                            cursor-pointer font-normal ml-2 px-2 py-0.5 rounded">Pending</span>
+                                            : <span className="bg-blue-500 text-white text-xs 
+                                            cursor-pointer font-normal ml-2 px-2 py-0.5 rounded">Click Active</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="px-0 md:px-5 py-2">
+                            {
+                                !userInfo ? <form>
+                                    <div className='flex flex-col gap-1 mb-2'>
+                                        <label className='text-left' htmlFor="shop">Shop Name</label>
+                                        <input
+                                            className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf]
+                                            border border-slate-700 rounded-md text-[#d0d2d6]'
+                                            type="text"
+                                            name='shop'
+                                            id='shop'
+                                            placeholder='Shop Name'
+                                        />
+                                    </div>
+                                    <div className='flex flex-col gap-1 mb-2'>
+                                        <label className='text-left' htmlFor="division">Division Name</label>
+                                        <input
+                                            className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf]
+                                            border border-slate-700 rounded-md text-[#d0d2d6]'
+                                            type="text"
+                                            name='division'
+                                            id='division'
+                                            placeholder='Division Name'
+                                        />
+                                    </div>
+                                    <div className='flex flex-col gap-1 mb-2'>
+                                        <label className='text-left' htmlFor="district">District Name</label>
+                                        <input
+                                            className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf]
+                                            border border-slate-700 rounded-md text-[#d0d2d6]'
+                                            type="text"
+                                            name='district'
+                                            id='district'
+                                            placeholder='District Name'
+                                        />
+                                    </div>
+                                    <div className='flex flex-col gap-1 mb-2'>
+                                        <label className='text-left' htmlFor="subDistrict">Sub District Name</label>
+                                        <input
+                                            className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf]
+                                            border border-slate-700 rounded-md text-[#d0d2d6]'
+                                            type="text"
+                                            name='subDistrict'
+                                            id='subDistrict'
+                                            placeholder='Sub District Name'
+                                        />
+                                    </div>
+                                    <div>
+                                        <button
+                                            type="submit"
+                                            className='bg-red-500 hover:shadow-red-500/40 mt-2
+                                            hover:shadow-md text-white rounded-md px-7 py-2 my-2'>
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </form>
+
+                                    :
+
+                                <div className="flex justify-between text-sm flex-col 
+                                    gap-2 p-4 bg-slate-800 rounded-md relative">
+                                    <span className="p-[6px] bg-yellow-500 rounded hover:shadow-lg
+                                        hover:shadow-yellow-500/50 absolute right-2 top-2 cursor-pointer">
+                                        <FaRegEdit />
+                                    </span>
+                                    <div className="flex gap-2">
+                                        <span>Shop Name:</span>
+                                        <span>shadheen</span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <span>Division:</span>
+                                        <span>Dhaka</span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <span>District:</span>
+                                        <span>Dhaka</span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <span>Sub District:</span>
+                                        <span>Rampura</span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
                     </div>
                 </div>
                 <div className="w-full md:w-6/12">
-
+                    <div className="w-full pl-0 md:pl-7 mt-6 md:mt-0" >
+                        <div className="bg-[#6a5fdf] rounded-md text-[#d0d2d6] p-4">
+                            <h1 className="text-[#d0d2d6] text-lg mb-3 font-semibold">Change Password</h1>
+                            <form>
+                                <div className='flex flex-col gap-1 mb-2'>
+                                    <label className='text-left' htmlFor="email">Email</label>
+                                    <input
+                                        className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf]
+                                        border border-slate-700 rounded-md text-[#d0d2d6]'
+                                        type="email"
+                                        name='email'
+                                        id='email'
+                                        placeholder='Email'
+                                    />
+                                </div>
+                                <div className='flex flex-col gap-1 mb-2'>
+                                    <label className='text-left' htmlFor="o_password">Password</label>
+                                    <input
+                                        className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf]
+                                        border border-slate-700 rounded-md text-[#d0d2d6]'
+                                        type="password"
+                                        name='o_password'
+                                        id='o_password'
+                                        placeholder='Old Password'
+                                    />
+                                </div>
+                                <div className='flex flex-col gap-1 mb-2'>
+                                    <label className='text-left' htmlFor="n_password">New Password</label>
+                                    <input
+                                        className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf]
+                                        border border-slate-700 rounded-md text-[#d0d2d6]'
+                                        type="password"
+                                        name='n_password'
+                                        id='n_password'
+                                        placeholder='New Password'
+                                    />
+                                </div>
+                                <div>
+                                    <button
+                                        type="submit"
+                                        className='bg-red-500 hover:shadow-red-500/40 mt-2
+                                        hover:shadow-md text-white rounded-md px-7 py-2 my-2'>
+                                        Save Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
