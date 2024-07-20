@@ -54,10 +54,7 @@ const PaymentRequests = () => {
 
 const PaymentRequest = () => {
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [searchValue, setSearchValue] = useState('');
-    const [itemsPerPage, setItemsPerPage] = useState(5);
-    const [show, setShow] = useState(false);
+   
 
     return (
         <div className='px-2 lg:px-7 pt-5'>
