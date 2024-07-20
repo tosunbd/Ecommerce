@@ -44,6 +44,12 @@ class authControllers {
     }
     // End of Admin Login
 
+    // Seller Register
+    seller_register = async (req, res) => {
+        const { email, name, password } = req.body;
+    }
+    // End of Seller Register
+
     // Get User
     getUser = async (req, res) => {
         const { role, id } = req;
