@@ -1,17 +1,19 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-    const { accessToken } = req.coolies;
+    const { accessToken } = req.cookies;
     const token = accessToken;
-    if (!token) {    
+    if (!token) {
         return res.status(401).json({ message: 'Access Denied' });
     }
-    try {
+    try
+    {
         const decodeToken = jwt.verify(token, process.env.SECRET);
         req.role = decodeToken.role;
         req.id = decodeToken.id;
         next();
-    } catch (error) {
+    }
+    catch (error) {
         res.status(400).json({ message: 'Invalid Token' });
     }
 }

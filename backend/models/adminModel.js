@@ -11,8 +11,8 @@ const adminSchema = new Schema({
     },
     password: {
         type: String,
-        required: true
-        //,select: false // Ensures password is not returned in every query
+        required: true,
+        select: false // Ensures password is not returned in every query
     },
     image: {
         type: String,

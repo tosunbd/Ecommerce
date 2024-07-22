@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate} from 'react-router-dom';
 import { FaFacebook, FaGoogle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { PropagateLoader } from 'react-spinners';
-import { seller_register } from '../../store/Reducers/authReducers';
+import { seller_register, messageClear } from '../../store/Reducers/authReducers';
+import { toast } from 'react-hot-toast';
+import { overrideStyle } from '../../utils/utils';
 
 const Register = () => {
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const { loader } = useSelector(state => state.auth);
+    const { loader, errorMessage, successMessage, dispatchMessage } = useSelector(state => state.auth);
 
     const [state, setState] = useState({
         name: '',
@@ -28,6 +30,23 @@ const Register = () => {
         e.preventDefault();
         dispatch(seller_register(state));
     }
+
+    
+    useEffect(() => {
+        if (errorMessage) {
+            toast.error(errorMessage);
+            dispatch(messageClear());
+        }
+        if (successMessage) {
+            toast.success(successMessage);
+            dispatch(messageClear());
+            navigate('/login');
+        }
+        if (dispatchMessage) {
+            toast.dispatch(dispatchMessage);
+            dispatch(messageClear());
+        }
+    }, [errorMessage,successMessage, dispatch])
 
     return (
         <div className='min-w-screen min-h-screen bg-[#cdcae9] flex justify-center items-center'>

@@ -16,11 +16,11 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
     }, []);
 
     return (
-        <div>            
-        <div onClick={() => setShowSidebar(false)} className={`fixed duration-200 ${!showSidebar ? 'invisible' : 'visible'} w-screen h-screen f bg-[#8cbce780] top-0 left-0 z-10`}>
+        <div>
+            <div onClick={() => setShowSidebar(false)} className={`fixed duration-200 ${!showSidebar ? 'invisible' : 'visible'} w-screen h-screen f bg-[#8cbce780] top-0 left-0 z-10`}>
           
             </div>
-        <div className={`w-[260px] h-screen fixed bg-[#e6e7fb] z-50 top-0 shadow-[0_0_15px_0_rgba(34,41,47,0.05)] transition-all
+            <div className={`w-[260px] h-screen fixed bg-[#e6e7fb] z-50 top-0 shadow-[0_0_15px_0_rgba(34,41,47,0.05)] transition-all
             ${showSidebar ? 'left-0' : '-left-[260px]'} lg:left-0`}>
                 <div className='h-[70px] flex justify-center items-center'>
                     <Link to='/' className='w-[180px] h-[50px]'>
