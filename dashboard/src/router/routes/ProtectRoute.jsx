@@ -30,7 +30,7 @@ const ProtectRoute = ({ route, children }) => {
                             {
                                 return <Navigate to='/seller/account-pending' replace />
                             }
-                            else
+                            else// if (userInfo.status === 'deactive')
                             {
                                 return <Navigate to='/seller/account-deactive' replace />
                             }

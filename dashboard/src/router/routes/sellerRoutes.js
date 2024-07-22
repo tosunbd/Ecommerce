@@ -12,7 +12,7 @@ const SellerToAdmin = lazy(() => import("../../views/seller/SellerToAdmin"));
 const SellerToCustomer = lazy(() => import("../../views/seller/SellerToCustomer"));
 const Profile = lazy(() => import("../../views/seller/Profile"));
 const Pending = lazy(() => import("../../views/Pending"));
-const Deactive = lazy(() => import("../../views/Pending"));
+const Deactive = lazy(() => import("../../views/Deactive"));
 
 
 export const sellerRoutes = [
