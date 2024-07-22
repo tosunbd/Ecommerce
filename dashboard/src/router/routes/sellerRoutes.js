@@ -11,9 +11,21 @@ const Payments = lazy(() => import("../../views/seller/Payments"));
 const SellerToAdmin = lazy(() => import("../../views/seller/SellerToAdmin"));
 const SellerToCustomer = lazy(() => import("../../views/seller/SellerToCustomer"));
 const Profile = lazy(() => import("../../views/seller/Profile"));
+const Pending = lazy(() => import("../../views/Pending"));
+const Deactive = lazy(() => import("../../views/Pending"));
 
 
 export const sellerRoutes = [
+    {
+        path: "/seller/account-pending",
+        element: <Pending />,
+        ability: 'seller'
+    },
+    {
+        path: "/seller/account-deactive",
+        element: <Deactive />,
+        ability: 'seller'
+    },
     {
         path: "/seller/dashboard",
         element: <SellerDashboard />,
@@ -47,12 +59,14 @@ export const sellerRoutes = [
     {
         path: "/seller/dashboard/orders",
         element: <Orders />,
-        ability: ['active', 'deactive']
+        role: 'seller',
+        visiblity: ['active', 'deactive']
     },
     {
         path: "/seller/dashboard/orders/details/:orderId",
         element: <OrderDetails />,
-        ability: ['active', 'deactive']
+        role: 'seller',
+        visiblity: ['active', 'deactive']
     },
     {
         path: "/seller/dashboard/payments",
@@ -63,7 +77,8 @@ export const sellerRoutes = [
     {
         path: "/seller/dashboard/chat-support",
         element: <SellerToAdmin />,
-        ability: ['active', 'deactive', 'pending']
+        role: 'seller',
+        visiblity: ['active', 'deactive', 'pending']
     },
     {
         path: "/seller/dashboard/chat-customer/:customerId",
