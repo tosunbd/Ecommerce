@@ -39,14 +39,6 @@ const Login = () => {
             toast.success(successMessage);
             dispatch(messageClear());
             navigate('/');
-            // if ("seller")
-            // {
-            //     navigate('/seller/dashboard');
-            // }
-            // else
-            // {
-            //     navigate('/admin/dashboard');
-            // }
         }
         if (dispatchMessage) {
             toast.dispatch(dispatchMessage);

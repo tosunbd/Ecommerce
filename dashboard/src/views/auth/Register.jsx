@@ -40,7 +40,7 @@ const Register = () => {
         if (successMessage) {
             toast.success(successMessage);
             dispatch(messageClear());
-            navigate('/login');
+            navigate('/');
         }
         if (dispatchMessage) {
             toast.dispatch(dispatchMessage);

@@ -63,7 +63,7 @@ export const get_user_info = createAsyncThunk(
         try {
             // console.log(info);
             const { data } = await api.get('/get-user', { withCredentials: true });
-            // console.log(data);
+            console.log(data);
             return fulfillWithValue(data);
         }
         catch (error) {
@@ -102,7 +102,7 @@ export const authReducer = createSlice({
         successMessage: '',
         errorMessage: '',
         loader: false,
-        userInfo: '',
+        userInfo: {},
         role: returnRole(localStorage.getItem('accessToken')),
         token: localStorage.getItem('accessToken')
     },
@@ -160,9 +160,8 @@ export const authReducer = createSlice({
                 state.errorMessage = payload && payload.errorMessage ? payload.errorMessage : "Please Enter a Valid Email and Password";
             })
 
-            .addCase(get_user_info.rejected, (state, { payload }) => {
+            .addCase(get_user_info.fulfilled, (state, { payload }) => {
                 state.loader = false;
-                // Ensure there is a payload and it contains an errorMessage, otherwise set a default message
                 state.userInfo = payload.userInfo;
             })
     }
