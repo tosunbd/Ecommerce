@@ -30,7 +30,7 @@ export const seller_login = createAsyncThunk(
             return fulfillWithValue(data);
         }
         catch (error) {
-            console.error(error);  // Log the full error
+            // console.error(error);  // Log the full error
             // Check if the error response exists and has data, otherwise return a generic error
             return rejectWithValue(error.response && error.response.data ? error.response.data : { errorMessage: "Unable to connect to server" });
         }
@@ -49,7 +49,7 @@ export const seller_register = createAsyncThunk(
             return fulfillWithValue(data);
         }
         catch (error) {
-            console.error(error);  // Log the full error
+            // console.error(error);  // Log the full error
             // Check if the error response exists and has data, otherwise return a generic error
             return rejectWithValue(error.response && error.response.data ? error.response.data : { errorMessage: "Unable to connect to server" });
         }
@@ -63,7 +63,7 @@ export const get_user_info = createAsyncThunk(
         try {
             // console.log(info);
             const { data } = await api.get('/get-user', { withCredentials: true });
-            console.log(data);
+            // console.log(data);
             return fulfillWithValue(data);
         }
         catch (error) {
@@ -120,7 +120,7 @@ export const authReducer = createSlice({
             })
             .addCase(admin_login.fulfilled, (state, { payload }) => {
                 state.loader = false;
-                state.successMessage = payload && payload.successMessage ? payload.successMessage : "Seller Login Successful";
+                state.successMessage = payload && payload.successMessage ? payload.successMessage : "Admin Login Successful";
                 state.token = payload.token;
                 state.role = returnRole(payload.token);
             })
@@ -135,7 +135,7 @@ export const authReducer = createSlice({
             })
             .addCase(seller_login.fulfilled, (state, { payload }) => {
                 state.loader = false;
-                state.successMessage = payload && payload.successMessage ? payload.successMessage : "Login Successful";
+                state.successMessage = payload && payload.successMessage ? payload.successMessage : "Seller Login Successful";
                 state.token = payload.token;
                 state.role = returnRole(payload.token);
             })

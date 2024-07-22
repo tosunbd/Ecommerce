@@ -2,11 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { getNav } from '../navigation/index';
 import { BiLogOutCircle } from 'react-icons/bi';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const Sidebar = ({ showSidebar, setShowSidebar }) => {
-
-    const dispatch = useDispatch();
+    
     const { role } = useSelector(state => state.auth);
 
     const location = useLocation();
@@ -32,7 +31,6 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
                     </Link>
                 </div>
                 <div className='px-[16px]'>
-                    
                     <ul>
                         {allNav.map((n, i) => (
                             <li
@@ -53,16 +51,13 @@ const Sidebar = ({ showSidebar, setShowSidebar }) => {
                                     <span>{n.title}</span>
                                 </Link>
                             </li>
-                            
                         ))}
-              
-                      <li>
+                    <li>
                         <button className='text-[#030811] font-bold duration-200 px-[12px] py-[9px] flex justify-start items-center gap-[12px] hover:pl-4 transition-all w-full mb-1'>
                         <span><BiLogOutCircle /></span>
                         <span>Logout</span>
                         </button>
-                      </li>
-          
+                    </li>
                     </ul>
                 </div>
             </div>
