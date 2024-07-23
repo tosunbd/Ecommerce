@@ -6,10 +6,6 @@ const ProtectRoute = ({ route, children }) => {
 
     const { role, userInfo } = useSelector(state => state.auth);
 
-    console.log('route = ');
-    console.log(route);
-    console.log('userInfo = ');
-    console.log(userInfo);
     if (role)
     {
         if (route.role)

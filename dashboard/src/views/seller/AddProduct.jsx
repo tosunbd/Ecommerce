@@ -38,7 +38,6 @@ const AddProduct = () => {
     const categorySearch = (e) => {
         const value = e.target.value;
         setSearchValue(value);
-        
         if (value) {
             const srcValue = categories.filter(c => c.name.toLowerCase().includes(value.toLowerCase()));
             setAllCategory(srcValue);
@@ -60,17 +59,15 @@ const AddProduct = () => {
                 imageURL.push(URL.createObjectURL(files[i]));
             }
             setImageShow([...imageShow, ...imageURL]);
-        }        
+        }
     };
 
     const changeImage = (img, index) => {
         if (img) {
             let tempImages = [...images];
             let tempUrl = [...imageShow];
-    
             tempImages[index] = img;
             tempUrl[index] = URL.createObjectURL(img);
-    
             setImages(tempImages);
             setImageShow(tempUrl);
         }
@@ -210,8 +207,7 @@ const AddProduct = () => {
                                 <label className='text-[#d0d2d6] text-left' htmlFor="description">Description</label>
                                 <textarea
                                     className='px-4 py-2 focus:border-indigo-500 outline-none
-                                     bg-[#6a5fdf] border border-slate-700 rounded-md
-                                     text-[#d0d2d6]'
+                                    bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]'
                                     onChange={inputHandle}
                                     value={state.description}
                                     name='description'

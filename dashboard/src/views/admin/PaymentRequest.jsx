@@ -55,10 +55,10 @@ const PaymentRequests = () => {
 const PaymentRequest = () => {
 
      // const state;
-     const [currentPage, setCurrentPage] = useState(1);
-     const [searchValue, setSearchValue] = useState('');
-     const [itemsPerPage, setItemsPerPage] = useState(5);
-     const [show, setShow] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchValue, setSearchValue] = useState('');
+    const [itemsPerPage, setItemsPerPage] = useState(5);
+    const [show, setShow] = useState(false);
      // const indexOfLastItem = currentPage * itemsPerPage;
 
     return (

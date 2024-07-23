@@ -115,55 +115,55 @@ export const authReducer = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(admin_login.pending, (state) => {
-                state.loader = true;
-            })
-            .addCase(admin_login.fulfilled, (state, { payload }) => {
-                state.loader = false;
-                state.successMessage = payload && payload.successMessage ? payload.successMessage : "Admin Login Successful";
-                state.token = payload.token;
-                state.role = returnRole(payload.token);
-            })
-            .addCase(admin_login.rejected, (state, { payload }) => {
-                state.loader = false;
-                // Ensure there is a payload and it contains an errorMessage, otherwise set a default message
-                state.errorMessage = payload && payload.errorMessage ? payload.errorMessage : "Please Enter a Valid Email and Password";
-            })
+        .addCase(admin_login.pending, (state) => {
+            state.loader = true;
+        })
+        .addCase(admin_login.fulfilled, (state, { payload }) => {
+            state.loader = false;
+            state.successMessage = payload && payload.successMessage ? payload.successMessage : "Admin Login Successful";
+            state.token = payload.token;
+            state.role = returnRole(payload.token);
+        })
+        .addCase(admin_login.rejected, (state, { payload }) => {
+            state.loader = false;
+            // Ensure there is a payload and it contains an errorMessage, otherwise set a default message
+            state.errorMessage = payload && payload.errorMessage ? payload.errorMessage : "Please Enter a Valid Email and Password";
+        })
 
-            .addCase(seller_login.pending, (state) => {
-                state.loader = true;
-            })
-            .addCase(seller_login.fulfilled, (state, { payload }) => {
-                state.loader = false;
-                state.successMessage = payload && payload.successMessage ? payload.successMessage : "Seller Login Successful";
-                state.token = payload.token;
-                state.role = returnRole(payload.token);
-            })
-            .addCase(seller_login.rejected, (state, { payload }) => {
-                state.loader = false;
-                // Ensure there is a payload and it contains an errorMessage, otherwise set a default message
-                state.errorMessage = payload && payload.errorMessage ? payload.errorMessage : "Please Enter a Valid Email and Password";
-            })
+        .addCase(seller_login.pending, (state) => {
+            state.loader = true;
+        })
+        .addCase(seller_login.fulfilled, (state, { payload }) => {
+            state.loader = false;
+            state.successMessage = payload && payload.successMessage ? payload.successMessage : "Seller Login Successful";
+            state.token = payload.token;
+            state.role = returnRole(payload.token);
+        })
+        .addCase(seller_login.rejected, (state, { payload }) => {
+            state.loader = false;
+            // Ensure there is a payload and it contains an errorMessage, otherwise set a default message
+            state.errorMessage = payload && payload.errorMessage ? payload.errorMessage : "Please Enter a Valid Email and Password";
+        })
 
-            .addCase(seller_register.pending, (state) => {
-                state.loader = true;
-            })
-            .addCase(seller_register.fulfilled, (state, { payload }) => {
-                state.loader = false;
-                state.successMessage = payload && payload.successMessage ? payload.successMessage : "Successfuly Register";
-                state.token = payload.token;
-                state.role = returnRole(payload.token);
-            })
-            .addCase(seller_register.rejected, (state, { payload }) => {
-                state.loader = false;
-                // Ensure there is a payload and it contains an errorMessage, otherwise set a default message
-                state.errorMessage = payload && payload.errorMessage ? payload.errorMessage : "Please Enter a Valid Email and Password";
-            })
+        .addCase(seller_register.pending, (state) => {
+            state.loader = true;
+        })
+        .addCase(seller_register.fulfilled, (state, { payload }) => {
+            state.loader = false;
+            state.successMessage = payload && payload.successMessage ? payload.successMessage : "Successfuly Register";
+            state.token = payload.token;
+            state.role = returnRole(payload.token);
+        })
+        .addCase(seller_register.rejected, (state, { payload }) => {
+            state.loader = false;
+            // Ensure there is a payload and it contains an errorMessage, otherwise set a default message
+            state.errorMessage = payload && payload.errorMessage ? payload.errorMessage : "Please Enter a Valid Email and Password";
+        })
 
-            .addCase(get_user_info.fulfilled, (state, { payload }) => {
-                state.loader = false;
-                state.userInfo = payload.userInfo;
-            })
+        .addCase(get_user_info.fulfilled, (state, { payload }) => {
+            state.loader = false;
+            state.userInfo = payload.userInfo;
+        })
     }
 });
 

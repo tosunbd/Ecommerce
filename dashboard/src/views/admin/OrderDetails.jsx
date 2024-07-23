@@ -40,7 +40,7 @@ const OrderDetails = () => {
                                     </div>
                                     <span className='text-left'>Price : $232</span>
                                 </div>
-                                
+
                                 <div className='mt-4 flex flex-col gap-4 bg-[#8288ed] rounded-md'>
                                     <div className='text-[#d0d2d6]'>
                                         <div className='flex gap-3 text-md'>
@@ -51,7 +51,7 @@ const OrderDetails = () => {
                                                     <span>Brand : </span>
                                                     <span>Easy</span>
                                                     <span className='text-lg'>Quantity : 3</span>
-                                                </p>                                                
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -67,7 +67,7 @@ const OrderDetails = () => {
                                                     <span>Brand : </span>
                                                     <span>Easy</span>
                                                     <span className='text-lg'>Quantity : 3</span>
-                                                </p>                                                
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -84,7 +84,7 @@ const OrderDetails = () => {
                                                     <span>Brand : </span>
                                                     <span>Easy</span>
                                                     <span className='text-lg'>Quantity : 3</span>
-                                                </p>                                                
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -109,7 +109,7 @@ const OrderDetails = () => {
                                                     <span>Brand : </span>
                                                     <span>Easy</span>
                                                     <span className='text-lg'>Quantity : 3</span>
-                                                </p>                                                
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -128,7 +128,7 @@ const OrderDetails = () => {
                                                     <span>Brand : </span>
                                                     <span>Easy</span>
                                                     <span className='text-lg'>Quantity : 3</span>
-                                                </p>                                                
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -137,7 +137,7 @@ const OrderDetails = () => {
                         </div>
 
                     </div>
-                                            
+
                 </div>
 
             </div>
