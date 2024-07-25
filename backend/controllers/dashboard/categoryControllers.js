@@ -8,8 +8,17 @@ class categoryControllers
         // console.log('this is working.');
         const form = formidable();
         form.parse(req, async (err, fields, files) => {
-            console.log(fields);
-            console.log(files);
+            // console.log(fields);
+            // console.log(files);
+            if (err) {
+                responseReturn(res, 404, { err: 'somthing went wrong.' });
+            }
+            else {
+                let {name} = fields;
+                let { image } = files;
+                name = name.trim();
+                const slug = name.split(' ').join('-');
+            }
         });
     }
     // End of Category Get
