@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate} from 'react-router-dom';
 import { FaFacebook, FaGoogle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';

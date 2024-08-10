@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import Pagination from "./../Pagination";
 import { FaEdit, FaImage, FaTrash } from "react-icons/fa";
@@ -6,15 +6,13 @@ import { IoMdCloseCircle } from "react-icons/io";
 import Search from "../components/Search";
 import { PropagateLoader } from 'react-spinners';
 import { overrideStyle } from '../../utils/utils';
-import { categoryAdd } from './../../store/Reducers/categoryReducers';
-import { useDispatch, useSelector } from "react-redux";
-
+import { categoryAdd, messageClear } from './../../store/Reducers/categoryReducers';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-hot-toast';
 
 const Category = () => {
-
     const dispatch = useDispatch();
-    const { loader } = useSelector(state => state.category);
-    // const loader = false;
+    const { loader, errorMessage, successMessage } = useSelector(state => state.category);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [searchValue, setSearchValue] = useState('');
@@ -24,38 +22,52 @@ const Category = () => {
 
     const [state, setState] = useState({
         name: '',
-        image: ''
+        image: null // Initialize as null instead of an empty string
     });
 
     const imageHandle = (e) => {
         const files = e.target.files;
-        if (files.length > 0)
-        {
+        if (files.length > 0) {
             setImage(URL.createObjectURL(files[0]));
             setState({
                 ...state,
-                image: files[0]
+                image: files[0]  // Ensure the image file is set correctly
             });
         }
-    }
-
-    // const add_category = (e) => {
-    //     e.preventDefault();
-    //     dispatch(categoryAdd);
-    //     // console.log(state);
-    // }
+    };
 
     const add_category = (e) => {
         e.preventDefault();
+        if (!state.name || !state.image) {
+            toast.error("Please fill out all required fields.");
+            return;
+        }
         dispatch(categoryAdd(state));
-        // console.log(state);
-    }
+    };
 
-
+    useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage);
+            dispatch(messageClear());
+            setState({
+                name: '',
+                image: null
+            });
+            setImage('');
+        }
+        if (errorMessage) {
+            toast.error(errorMessage);
+            dispatch(messageClear());
+            setState({
+                name: '',
+                image: null
+            });
+            setImage('');
+        }
+    }, [errorMessage, successMessage, dispatch]);
 
     return (
         <div className='px-2 lg:px-7 pt-5'>
-
             <div className="flex lg:hidden justify-between items-center mb-5 p-4 bg-[#6a5fdf] rounded-md">
                 <h1 className="text-[#d0d2d6] font-samibold text-lg">Category</h1>
                 <button onClick={() => setShow(true)} className="bg-red-500 shadow-lg hover:shadow-red-500/40 py-2 px-4 
@@ -64,16 +76,12 @@ const Category = () => {
                 </button>
             </div>
 
-
             <div className='flex flex-wrap w-full'>
-
                 <div className='w-full lg:w-7/12'>
                     <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
-
-                    <Search setItemsPerPage = {setItemsPerPage} setSearchValue = {setSearchValue} searchValue = {searchValue} />
+                        <Search setItemsPerPage={setItemsPerPage} setSearchValue={setSearchValue} searchValue={searchValue} />
 
                         <div className='relative overflow-x-auto'>
-
                             <table className='w-full text-sm text-[#d0d2d6]'>
                                 <thead className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
                                     <tr>
@@ -105,7 +113,6 @@ const Category = () => {
                                     ))}
                                 </tbody>
                             </table>
-
                         </div>
 
                         <div className="w-full flex justify-end mt-4 bottom-4 right-4">
@@ -117,7 +124,6 @@ const Category = () => {
                                 showItems={3}
                             />
                         </div>
-
                     </div>
                 </div>
 
@@ -131,7 +137,6 @@ const Category = () => {
                                 </div>
                             </div>
                             <form onSubmit={add_category}>
-
                                 <div className="flex flex-col w-full gap-1 mb-3">
                                     <label className="text-left" htmlFor="name">Category Name</label>
                                     <input value={state.name} onChange={(e) => setState({
@@ -144,7 +149,7 @@ const Category = () => {
                                     <label className="flex justify-center items-center 
                                     flex-col h-[238px] cursor-pointer border border-dashed hover:border-red-500 w-full border-[#d0d2d6]" htmlFor="image">
                                         {
-                                            imageShow ? <img className="w-full h-full" src={imageShow} />
+                                            imageShow ? <img className="w-full h-full" src={imageShow} alt="Category Preview" />
                                                 :
                                                 <>
                                                     <span><FaImage /></span>
@@ -155,25 +160,17 @@ const Category = () => {
                                     <input onChange={imageHandle} className="hidden" type="file" id="image" />
 
                                     <div className="mt-3">
-                                        {/* <button className="bg-red-500 w-full hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2 my-2">Add Category
-                                        </button> */}
-
-                                        <button disabled={loader ? true : false} className="bg-red-500 w-full hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2 my-2">
+                                        <button disabled={loader} className="bg-red-500 w-full hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2 my-2">
                                             {
                                                 loader ? <PropagateLoader color='#fff' cssOverride={overrideStyle} /> : 'Add Category'
                                             }
                                         </button>
-
-
                                     </div>
-
                                 </div>
-
                             </form>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     );

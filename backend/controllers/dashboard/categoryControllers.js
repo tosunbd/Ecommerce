@@ -6,6 +6,7 @@ const fs = require('fs-extra');
 const path = require('path');
 
 class CategoryControllers {
+
     // Category Add
     add_category = async (req, res) => {
         const uploadDir = path.join(__dirname, '..', '..', 'uploads');
@@ -37,59 +38,35 @@ class CategoryControllers {
             });
 
             try {
-                const filePath = image.filepath || image.path; // Adjusting to ensure the correct path is used
+                const filePath = image.filepath || image.path;
                 console.log('File being uploaded:', filePath);
                 const result = await cloudinary.uploader.upload(filePath, { folder: 'Categories' });
                 console.log('Upload result:', result);
+
                 const category = new categoryModel({
                     name,
                     image: result.url,
                     slug
                 });
+
                 await category.save();
                 return responseReturn(res, 201, { category, message: 'Category Added Successfully' });
             } catch (uploadError) {
                 console.error('Upload or save error:', uploadError);
                 return responseReturn(res, 500, { error: 'Failed to upload image or save category.', details: uploadError.message });
             } finally {
-                // Clean up the uploaded file from the server after uploading to Cloudinary
                 const filePath = image.filepath || image.path;
                 await fs.remove(filePath);
             }
         });
-    }
+    };
+
     // End of Category Add
 
     // Category Get
     get_category = async (req, res) => {
         console.log('this is working.');
-        // const { email, password } = req.body;
-        // try {
-        //     const admin = await adminModel.findOne({ email: email.toLowerCase() }).select('+password');
-        //     // console.log(admin);
-
-        //     if (admin) {
-        //         const isMatch = await bcrypt.compare(password, admin.password);
-        //         if (isMatch) {
-        //             const token = await createToken({
-        //                 id: admin.id,
-        //                 role: admin.role
-        //             });
-
-        //             const expiresIn = new Date();
-        //             expiresIn.setDate(expiresIn.getDate() + 7);
-        //             res.cookie('accessToken', token, { expires: expiresIn, httpOnly: true, secure: true });
-
-        //             responseReturn(res, 200, { token, message: "Login Successful" });
-        //         } else {
-        //             responseReturn(res, 404, { message: "Invalid Password" });
-        //         }
-        //     } else {
-        //         responseReturn(res, 400, { error: "Email not found" });
-        //     }
-        // } catch (error) {
-        //     responseReturn(res, 500, { error: error.message });
-        // }
+        // Implementation for getting categories...
     }
     // End of Category Get
 }
