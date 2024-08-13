@@ -24,9 +24,10 @@ export const categoryAdd = createAsyncThunk(
 
 export const get_category = createAsyncThunk(
     'category/get_category',
-    async ({ itemsPerPage, page, searchValue }, { rejectWithValue, fulfillWithValue }) => {
+    async ({ itemsPerPage, currentPage, searchValue }, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await api.get(`/category-get?itemsPerPage=${itemsPerPage}&page=${page}&searchValue=${searchValue}`, { withCredentials: true });
+            const { data } = await api.get(`/category-get?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}&searchValue=${searchValue}`, { withCredentials: true });
+            console.log(data);
             return fulfillWithValue(data);
         } catch (error) {
             return rejectWithValue(error.response && error.response.data ? error.response.data : { errorMessage: "Unable to connect to server" });

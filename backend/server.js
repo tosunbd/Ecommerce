@@ -18,9 +18,10 @@ dbConnect();
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:5173', // Ensure this matches your front-end URL or configure as needed
+    origin: 'http://localhost:5173',
     credentials: true
 }));
+
 app.use(bodyParser.json()); // This line is effectively doing what express.json() does
 app.use(cookieParser());
 

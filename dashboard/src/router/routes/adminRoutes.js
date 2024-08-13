@@ -13,53 +13,55 @@ const OrderDetails = lazy(() => import("../../views/admin/OrderDetails"));
 
 export const adminRoutes = [
     {
-        path: "admin/dashboard",
+        path: "/admin/dashboard",
         element: <AdminDashboard />,
         ability: 'admin'
     },
     {
-        path: "admin/dashboard/orders",
+        path: "/admin/dashboard/orders",
         element: <Orders />,
         ability: 'admin'
     },
     {
-        path: "admin/dashboard/category",
+        path: "/admin/dashboard/category",
         element: <Category />,
         ability: 'admin'
     },
     {
-        path: "admin/dashboard/sellers",
+        path: "/admin/dashboard/sellers",
         element: <Sellers />,
         ability: 'admin'
     },
     {
-        path: "admin/dashboard/payment-request",
+        path: "/admin/dashboard/payment-request",
         element: <PaymentRequest />,
         ability: 'admin'
     },
     {
-        path: "admin/dashboard/deactivate-sellers",
+        path: "/admin/dashboard/deactivate-sellers",
         element: <DeactivateSeller />,
         ability: 'admin'
     },
     {
-        path: "admin/dashboard/sellers-request",
+        path: "/admin/dashboard/sellers-request",
         element: <SellerRequest />,
         ability: 'admin'
     },
     {
-        path: "admin/dashboard/seller/details/:sellerId",
+        path: "/admin/dashboard/seller/details/:sellerId",
         element: <SellerDetails />,
         ability: 'admin'
     },
     {
-        path: "admin/dashboard/chat-sellers",
+        path: "/admin/dashboard/chat-sellers",
         element: <ChatSeller />,
         ability: 'admin'
     },
     {
-        path: "admin/dashboard/order/details/:orderId",
+        path: "/admin/dashboard/order/details/:orderId",
         element: <OrderDetails />,
         ability: 'admin'
     }
 ];
+
+

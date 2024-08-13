@@ -6,7 +6,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import Search from "../components/Search";
 import { PropagateLoader } from 'react-spinners';
 import { overrideStyle } from '../../utils/utils';
-import { categoryAdd, messageClear } from './../../store/Reducers/categoryReducers';
+import { categoryAdd, messageClear, get_category } from './../../store/Reducers/categoryReducers';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-hot-toast';
 
@@ -64,7 +64,18 @@ const Category = () => {
             });
             setImage('');
         }
-    }, [errorMessage, successMessage, dispatch]);
+    }, [errorMessage, successMessage, dispatch]);   
+    
+
+    useEffect(() => {
+        const obj = {
+            itemsPerPage: parseInt(itemsPerPage),
+            currentPage: parseInt(currentPage),
+            searchValue
+        };
+        dispatch(get_category(obj));
+    }, [itemsPerPage, currentPage, searchValue, dispatch]);    
+
 
     return (
         <div className='px-2 lg:px-7 pt-5'>
