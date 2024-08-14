@@ -64,33 +64,30 @@ class CategoryControllers {
     // End of Category Add
 
     // Category Get
+    // 
+    
     get_category = async (req, res) => {
-        //console.log('get_category route hit');
         const { itemsPerPage, currentPage, searchValue } = req.query;
     
         try {
-            const itemsPerPageNum = parseInt(itemsPerPage, 10);
-            const currentPageNum = parseInt(currentPage, 10);
+            const itemsPerPageNum = parseInt(itemsPerPage, 10) || 0;
+            const currentPageNum = parseInt(currentPage, 10) || 1;
+            const query = searchValue ? { name: { $regex: new RegExp(searchValue, 'i') } } : {};
     
-            if (searchValue) {
-                const categories = await categoryModel.find({ name: { $regex: new RegExp(searchValue, 'i') } })
-                    .skip((currentPageNum - 1) * itemsPerPageNum)
-                    .limit(itemsPerPageNum)
-                    .sort({ createdAt: -1 });
-                const totalCategory = await categoryModel.find({ name: { $regex: new RegExp(searchValue, 'i') } }).countDocuments();
-                return responseReturn(res, 200, { categories, totalCategory });
-            } else {
-                const categories = await categoryModel.find({})
-                    .skip((currentPageNum - 1) * itemsPerPageNum)
-                    .limit(itemsPerPageNum)
-                    .sort({ createdAt: -1 });
-                const totalCategory = await categoryModel.find({}).countDocuments();
-                return responseReturn(res, 200, { categories, totalCategory });
-            }
+            const categories = await categoryModel.find(query)
+                .skip((currentPageNum - 1) * itemsPerPageNum)
+                .limit(itemsPerPageNum > 0 ? itemsPerPageNum : 0)
+                .sort({ createdAt: -1 });
+    
+            const totalCategory = await categoryModel.countDocuments(query);
+    
+            return responseReturn(res, 200, { categories, totalCategory });
         } catch (error) {
+            console.error(error.message);
             return responseReturn(res, 500, { error: 'Something went wrong while fetching categories.', details: error.message });
         }
     };
+    
     
     // End of Category Get
 }

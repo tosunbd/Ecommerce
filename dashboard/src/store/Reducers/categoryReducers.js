@@ -27,7 +27,7 @@ export const get_category = createAsyncThunk(
     async ({ itemsPerPage, currentPage, searchValue }, { rejectWithValue, fulfillWithValue }) => {
         try {
             const { data } = await api.get(`/category-get?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}&searchValue=${searchValue}`, { withCredentials: true });
-            console.log(data);
+            // console.log(data);
             return fulfillWithValue(data);
         } catch (error) {
             return rejectWithValue(error.response && error.response.data ? error.response.data : { errorMessage: "Unable to connect to server" });
@@ -41,7 +41,8 @@ export const categoryReducers = createSlice({
         successMessage: '',
         errorMessage: '',
         loader: false,
-        categories: []
+        categories: [],
+        totalCategory: 0
     },
     reducers: {
         messageClear: (state,_) => {
@@ -62,6 +63,11 @@ export const categoryReducers = createSlice({
             state.loader = false;
             state.successMessage = payload.message;
             state.categories = [...state.categories, payload.category];
+        })
+
+        .addCase(get_category.fulfilled, (state, { payload }) => {
+            state.categories = payload.categories;
+            state.totalCategory = payload.totalCategory;            
         })
     }
 });

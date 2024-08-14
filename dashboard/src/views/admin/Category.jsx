@@ -12,7 +12,7 @@ import { toast } from 'react-hot-toast';
 
 const Category = () => {
     const dispatch = useDispatch();
-    const { loader, errorMessage, successMessage } = useSelector(state => state.category);
+    const { loader, errorMessage, successMessage, categories } = useSelector(state => state.category);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [searchValue, setSearchValue] = useState('');
@@ -103,13 +103,13 @@ const Category = () => {
                                     </tr>
                                 </thead>
                                 <tbody className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
-                                    {[1, 2, 3, 4].map((d, i) => (
+                                    {categories.map((d, i) => (
                                         <tr key={i}>
-                                            <td scope="row" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">{d}</td>
+                                            <td scope="row" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">{i + 1}</td>
                                             <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
-                                                <img className="w-[45px] h-[45px]" src={`http://localhost:5173/images/category/${encodeURIComponent(d)}.jpg`} alt="" />
+                                                <img className="w-[45px] h-[45px]" src={d.image} alt="" />
                                             </td>
-                                            <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">T-Shirt</td>
+                                            <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">{d.name}</td>
                                             <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
                                                 <div className="flex justify-start items-center gap-4">
                                                     <Link className="p-[6px] bg-yellow-500 rounded hover:bg-yellow-500/50" to="/">
