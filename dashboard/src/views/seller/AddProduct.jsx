@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdCloseCircle, IoMdImage } from 'react-icons/io';
-import Category from './../admin/Category';
+import { useDispatch, useSelector } from 'react-redux';
+import { get_category } from '../../../../backend/controllers/dashboard/categoryControllers';
+
 
 const AddProduct = () => {
-    const categories = [
-        { id: 1, name: 'Sports' },
-        { id: 2, name: 'Tshirt' },
-        { id: 3, name: 'Mobile' },
-        { id: 4, name: 'Computer' },
-        { id: 5, name: 'Watch' },
-        { id: 6, name: 'Pant' }
-    ];
+
+    const dispatch = useDispatch();
+    const { categories } = useSelector((state) => state.category);
+
+    useEffect(() => {
+        dispatch(get_category({
+            itemsPerPage: '',
+            currentPage: '',
+            searchValue: ''
+        }));
+    }, []);
 
     const [state, setState] = useState({
         name: '',
@@ -26,8 +31,8 @@ const AddProduct = () => {
     const [cateShow, setCateShow] = useState(false);
     const [category, setCategory] = useState('');
     const [searchValue, setSearchValue] = useState('');
-    const [allCategory, setAllCategory] = useState(categories);
-   
+    const [allCategory, setAllCategory] = useState([]);
+
     const inputHandle = (e) => {
         setState({
             ...state,
@@ -80,6 +85,14 @@ const AddProduct = () => {
         setImageShow(filterImageUrl);
     };
 
+    const add = (e) => {
+        e.preventDefault();
+    };
+
+    useEffect(() => {
+        setAllCategory(categories);
+    },[categories]);
+
     return (
         <div className="px-2 lg:px-7 pt-5">
             <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
@@ -89,7 +102,7 @@ const AddProduct = () => {
                     hover:shadow-lg text-white rounded-sm px-7 py-2 my-2'>All Products</Link>
                 </div>
                 <div>
-                    <form action="">
+                    <form onSubmit={add}>
                         <div className='grid grid-cols-2 gap-4 mb-3 text-[#d0d2d6]'>
                             <div className='flex flex-col gap-1'>
                                 <label className='text-left' htmlFor="name">Product Name</label>

@@ -1,16 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api/api";
 
-// Start of CategoryAdd
-export const categoryAdd = createAsyncThunk(
-    'category/categoryAdd',
+// Start of add_product
+export const add_product = createAsyncThunk(
+    'product/add_product',
     async ({ name, image }, { rejectWithValue, fulfillWithValue }) => {
         try {
             const formData = new FormData();
             formData.append('name', name);
             formData.append('image', image);
 
-            const { data } = await api.post('/category-add', formData, { withCredentials: true });
+            const { data } = await api.post('/product-add', formData, { withCredentials: true });
             return fulfillWithValue(data);
         } catch (error) {
             return rejectWithValue(error.response && error.response.data ? error.response.data : { errorMessage: "Unable to connect to server" });
@@ -18,15 +18,15 @@ export const categoryAdd = createAsyncThunk(
     }
 );
 
-// End of CategoryAdd
+// End of add_product
 
-// start of get_category
+// start of get_product
 
-export const get_category = createAsyncThunk(
-    'category/get_category',
+export const get_product = createAsyncThunk(
+    'product/get_product',
     async ({ itemsPerPage, currentPage, searchValue }, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await api.get(`/category-get?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}&searchValue=${searchValue}`, { withCredentials: true });
+            const { data } = await api.get(`/product-get?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}&searchValue=${searchValue}`, { withCredentials: true });
             // console.log(data);
             return fulfillWithValue(data);
         } catch (error) {
@@ -35,14 +35,14 @@ export const get_category = createAsyncThunk(
     }
 );
 
-export const categoryReducers = createSlice({
-    name: 'category',
+export const productReducers = createSlice({
+    name: 'product',
     initialState: {
         successMessage: '',
         errorMessage: '',
         loader: false,
-        categories: [],
-        totalCategory: 0
+        products: [],
+        totalProduct: 0
     },
     reducers: {
         messageClear: (state,_) => {
@@ -52,25 +52,25 @@ export const categoryReducers = createSlice({
     },
     extraReducers: (builder) => {
         builder
-        .addCase(categoryAdd.pending, (state) => {
+        .addCase(add_product.pending, (state) => {
             state.loader = true;
         })
-        .addCase(categoryAdd.rejected, (state, { payload }) => {
+        .addCase(add_product.rejected, (state, { payload }) => {
             state.loader = false;
             state.errorMessage = payload.error;
         })
-        .addCase(categoryAdd.fulfilled, (state, { payload }) => {
+        .addCase(add_product.fulfilled, (state, { payload }) => {
             state.loader = false;
             state.successMessage = payload.message;
-            state.categories = [...state.categories, payload.category];
+            state.products = [...state.products, payload.product];
         })
 
-        .addCase(get_category.fulfilled, (state, { payload }) => {
-            state.categories = payload.categories;
-            state.totalCategory = payload.totalCategory;
+        .addCase(get_product.fulfilled, (state, { payload }) => {
+            state.products = payload.products;
+            state.totalproduct = payload.totalproduct;
         })
     }
 });
 
-export const { messageClear } = categoryReducers.actions;
-export default categoryReducers.reducer;
+export const { messageClear } = productReducers.actions;
+export default productReducers.reducer;

@@ -5,10 +5,10 @@ const categoryModel = require('../../models/categoryModel');
 const fs = require('fs-extra');
 const path = require('path');
 
-class CategoryControllers {
+class ProductControllers {
 
-    // Category Add
-    add_category = async (req, res) => {
+    // Product Add
+    add_product = async (req, res) => {
         const uploadDir = path.join(__dirname, '..', '..', 'uploads');
         await fs.ensureDir(uploadDir);
 
@@ -40,7 +40,7 @@ class CategoryControllers {
             try {
                 const filePath = image.filepath || image.path;
                 console.log('File being uploaded:', filePath);
-                const result = await cloudinary.uploader.upload(filePath, { folder: 'Categories' });
+                const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
                 console.log('Upload result:', result);
 
                 const category = new categoryModel({
@@ -61,11 +61,11 @@ class CategoryControllers {
         });
     };
 
-    // End of Category Add
+    // End of Product Add
 
-    // Category Get
+    // Product Get
 
-    get_category = async (req, res) => {
+    get_product = async (req, res) => {
         const { itemsPerPage, currentPage, searchValue } = req.query;
 
         try {
@@ -79,22 +79,22 @@ class CategoryControllers {
             const currentPageNum = parseInt(currentPage, 10) || 1;
             const query = searchValue ? { name: { $regex: new RegExp(searchValue, 'i') } } : {};
 
-            const categories = await categoryModel.find(query)
+            const products = await categoryModel.find(query)
                 .skip((currentPageNum - 1) * itemsPerPageNum)
                 .limit(itemsPerPageNum > 0 ? itemsPerPageNum : 0)
                 .sort({ createdAt: -1 });
 
-            const totalCategory = await categoryModel.countDocuments(query);
+            const totalProduct = await categoryModel.countDocuments(query);
 
-            return responseReturn(res, 200, { categories, totalCategory });
+            return responseReturn(res, 200, { products, totalProduct });
         } catch (error) {
             console.error(error.message);
-            return responseReturn(res, 500, { error: 'Something went wrong while fetching categories.', details: error.message });
+            return responseReturn(res, 500, { error: 'Something went wrong while fetching products.', details: error.message });
         }
     };
 
-    // End of Category Get
+    // End of Product Get
 }
 
-const categoryControllers = new CategoryControllers();
-module.exports = { categoryControllers, get_category: categoryControllers.get_category };
+const productControllers = new ProductControllers();
+module.exports = { productControllers, get_product: productControllers.get_category };
