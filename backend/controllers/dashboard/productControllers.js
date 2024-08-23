@@ -1,7 +1,7 @@
 const { responseReturn } = require('../../utilities/response');
 const formidable = require('formidable');
 const cloudinary = require('cloudinary').v2;
-const categoryModel = require('../../models/categoryModel');
+const productModel = require('../../models/productModel');
 const fs = require('fs-extra');
 const path = require('path');
 
@@ -19,7 +19,7 @@ class ProductControllers {
                 return responseReturn(res, 400, { error: 'Something went wrong while parsing the form.' });
             }
 
-            let { name } = fields;
+            let { name, category, description, stock, price, discount, shopname, brand } = fields;
             let { image } = files;
 
             if (!name || !image) {
@@ -38,22 +38,38 @@ class ProductControllers {
             });
 
             try {
+
+                let allImageUrl = [];
+                for (let i = 0; i < image.length; i++) {
+                    const result = await cloudinary.uploader.upload(image[i].filepath || image[i].path, { folder: 'products' });
+                    allImageUrl.push(result.url);
+                }
+                console.log('Uploaded image URLs:', allImageUrl);
+
                 const filePath = image.filepath || image.path;
                 console.log('File being uploaded:', filePath);
                 const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
                 console.log('Upload result:', result);
 
-                const category = new categoryModel({
+                const product = new productModel({
+                    sellerId: id,
                     name,
-                    image: result.url,
-                    slug
+                    slug,
+                    shopname,
+                    category: category.trim(),
+                    description: description.trim(),
+                    stock: parseInt(stock),
+                    price: parseInt(price),
+                    discount: parseInt(discount),                    
+                    brand: brand.trim(),
+                    image: allImageUrl,                    
                 });
 
-                await category.save();
-                return responseReturn(res, 201, { category, message: 'Category Added Successfully' });
+                await product.save();
+                return responseReturn(res, 201, { product, message: 'Product Added Successfully' });
             } catch (uploadError) {
                 console.error('Upload or save error:', uploadError);
-                return responseReturn(res, 500, { error: 'Failed to upload image or save category.', details: uploadError.message });
+                return responseReturn(res, 500, { error: 'Failed to upload image or save product.', details: uploadError.message });
             } finally {
                 const filePath = image.filepath || image.path;
                 await fs.remove(filePath);
@@ -79,12 +95,12 @@ class ProductControllers {
             const currentPageNum = parseInt(currentPage, 10) || 1;
             const query = searchValue ? { name: { $regex: new RegExp(searchValue, 'i') } } : {};
 
-            const products = await categoryModel.find(query)
+            const products = await productModel.find(query)
                 .skip((currentPageNum - 1) * itemsPerPageNum)
                 .limit(itemsPerPageNum > 0 ? itemsPerPageNum : 0)
                 .sort({ createdAt: -1 });
 
-            const totalProduct = await categoryModel.countDocuments(query);
+            const totalProduct = await productModel.countDocuments(query);
 
             return responseReturn(res, 200, { products, totalProduct });
         } catch (error) {
@@ -97,10 +113,8 @@ class ProductControllers {
 }
 
 const productControllers = new ProductControllers();
-module.exports = { productControllers, get_product: productControllers.get_category };
 
-const categoryControllers = new CategoryControllers();
 module.exports = {
-  add_category: productControllers.add_product,  // Add this
-  get_category: productControllers.get_product
+    add_product: productControllers.add_product,
+    get_product: productControllers.get_product
 };

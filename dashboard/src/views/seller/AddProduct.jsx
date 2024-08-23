@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdCloseCircle, IoMdImage } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
-import { get_category } from '../../../../backend/controllers/dashboard/categoryControllers';
-
+//import { get_category } from '../../../../backend/controllers/dashboard/categoryControllers';
+import { get_category } from '../../store/Reducers/categoryReducers';
+import { add_product } from '../../store/Reducers/productReducers';
 
 const AddProduct = () => {
 
@@ -87,6 +88,21 @@ const AddProduct = () => {
 
     const add = (e) => {
         e.preventDefault();
+        const formData = new FormData();
+        formData.append('name', state.name);
+        formData.append('description', state.description);
+        formData.append('discount', state.discount);
+        formData.append('price', state.price);
+        formData.append('brand', state.brand);
+        formData.append('stock', state.stock);
+        formData.append('category', state.category);
+        formData.append('shopName', 'shadheen');
+        for (let i = 0; i < images.length; i++) { 
+            formData.append('images', images[i]);
+        }
+        // dispatch({ type: 'add_product', payload: formData });
+        dispatch(add_product(formData ));
+        console.log([...formData]);
     };
 
     useEffect(() => {

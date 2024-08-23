@@ -6,7 +6,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import Search from "../components/Search";
 import { PropagateLoader } from 'react-spinners';
 import { overrideStyle } from '../../utils/utils';
-import { categoryAdd, messageClear, get_category } from './../../store/Reducers/categoryReducers';
+import { add_category, messageClear, get_category } from './../../store/Reducers/categoryReducers';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-hot-toast';
 
@@ -42,7 +42,7 @@ const Category = () => {
             toast.error("Please fill out all required fields.");
             return;
         }
-        dispatch(categoryAdd(state));
+        dispatch(add_category(state));
     };
 
     useEffect(() => {
