@@ -98,6 +98,6 @@ class CategoryControllers {
 
 const categoryControllers = new CategoryControllers();
 module.exports = {
-  add_category: categoryControllers.add_category,
-  get_category: categoryControllers.get_category
+    add_category: categoryControllers.add_category,
+    get_category: categoryControllers.get_category
 };

@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api/api";
 
-// Start of CategoryAdd
-export const categoryAdd = createAsyncThunk(
-    'category/categoryAdd',
+// Start of add_category
+export const add_category = createAsyncThunk(
+    'category/add_category',
     async ({ name, image }, { rejectWithValue, fulfillWithValue }) => {
         try {
             const formData = new FormData();
@@ -18,7 +18,7 @@ export const categoryAdd = createAsyncThunk(
     }
 );
 
-// End of CategoryAdd
+// End of add_category
 
 // start of get_category
 
@@ -52,14 +52,14 @@ export const categoryReducers = createSlice({
     },
     extraReducers: (builder) => {
         builder
-        .addCase(categoryAdd.pending, (state) => {
+        .addCase(add_category.pending, (state) => {
             state.loader = true;
         })
-        .addCase(categoryAdd.rejected, (state, { payload }) => {
+        .addCase(add_category.rejected, (state, { payload }) => {
             state.loader = false;
             state.errorMessage = payload.error;
         })
-        .addCase(categoryAdd.fulfilled, (state, { payload }) => {
+        .addCase(add_category.fulfilled, (state, { payload }) => {
             state.loader = false;
             state.successMessage = payload.message;
             state.categories = [...state.categories, payload.category];

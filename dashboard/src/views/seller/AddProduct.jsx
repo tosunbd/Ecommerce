@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdCloseCircle, IoMdImage } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
-import { get_category } from '../../../../backend/controllers/dashboard/categoryControllers';
-
+//import { get_category } from '../../../../backend/controllers/dashboard/categoryControllers';
+import { get_category } from '../../store/Reducers/categoryReducers';
 
 const AddProduct = () => {
 

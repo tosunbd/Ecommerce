@@ -97,10 +97,8 @@ class ProductControllers {
 }
 
 const productControllers = new ProductControllers();
-module.exports = { productControllers, get_product: productControllers.get_category };
 
-const categoryControllers = new CategoryControllers();
 module.exports = {
-  add_category: productControllers.add_product,  // Add this
-  get_category: productControllers.get_product
+    add_product: productControllers.add_product,
+    get_product: productControllers.get_product
 };
