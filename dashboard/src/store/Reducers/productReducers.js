@@ -6,8 +6,7 @@ export const add_product = createAsyncThunk(
     'product/add_product',
     async (product , { rejectWithValue, fulfillWithValue }) => {
         try {
-            
-            const { data } = await api.post('/product-add', product, { withCredentials: true });
+            const { data } = await api.post('/add_product', product, { withCredentials: true });
             console.log(data);
             return fulfillWithValue(data);
         } catch (error) {

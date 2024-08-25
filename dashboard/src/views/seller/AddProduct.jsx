@@ -2,12 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdCloseCircle, IoMdImage } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
-//import { get_category } from '../../../../backend/controllers/dashboard/categoryControllers';
 import { get_category } from '../../store/Reducers/categoryReducers';
-<<<<<<< HEAD
 import { add_product } from '../../store/Reducers/productReducers';
-=======
->>>>>>> f514e1823e365b2abae01c31ea61fcdee82caaab
 
 const AddProduct = () => {
 
