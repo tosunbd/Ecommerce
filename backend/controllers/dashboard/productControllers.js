@@ -3,82 +3,73 @@ const formidable = require('formidable');
 const cloudinary = require('cloudinary').v2;
 const productModel = require('../../models/productModel');
 const fs = require('fs-extra');
-const path = require('path');
+
 
 class ProductControllers {
-
     // Product Add
     add_product = async (req, res) => {
-        const uploadDir = path.join(__dirname, '..', '..', 'uploads');
-        await fs.ensureDir(uploadDir);
-
+        console.log(req);
         const { id } = req;
-        const form = formidable({ multiples: false, uploadDir: uploadDir, keepExtensions: true });
-
+        const form = formidable({ multiples: true });
+    
         form.parse(req, async (err, fields, files) => {
             if (err) {
                 console.error('Form parse error:', err);
                 return responseReturn(res, 400, { error: 'Something went wrong while parsing the form.' });
             }
-
+    
             let { name, category, description, stock, price, discount, shopname, brand } = fields;
             let { image } = files;
-
-            if (!name || !image) {
-                console.error('Missing required fields:', { name, image });
-                return responseReturn(res, 400, { error: 'Name and image are required fields.' });
+    
+            // Log fields and files to verify they are received correctly
+            console.log('Fields:', fields);
+            console.log('Files:', files);
+    
+            if (!image) {
+                return responseReturn(res, 400, { error: 'No image provided' });
             }
-
+    
             name = name.trim();
             const slug = name.split(' ').join('-');
-
+    
             cloudinary.config({
                 cloud_name: process.env.CLOUD_NAME,
                 api_key: process.env.API_KEY,
                 api_secret: process.env.API_SECRET,
                 secure: true
             });
-
+    
             try {
                 let allImageUrl = [];
-
-                // Check if multiple images are uploaded
-                if (Array.isArray(image)) {
-                    for (let i = 0; i < image.length; i++) {
-                        const filePath = image[i].filepath || image[i].path;
-                        const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
-                        allImageUrl.push(result.url);
-                    }
-                } else {
-                    // Single image upload
-                    const filePath = image.filepath || image.path;
-                    const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
+                image = Array.isArray(image) ? image : [image]; // Handle single image case
+    
+                for (let i = 0; i < image.length; i++) {
+                    const result = await cloudinary.uploader.upload(image[i].filepath, { folder: 'products' });
                     allImageUrl.push(result.url);
                 }
-
-                console.log('Uploaded image URLs:', allImageUrl);
-
-                const product = new productModel({
+    
+                // Ensure product creation works correctly
+                const product = await productModel.create({
                     sellerId: id,
                     name,
                     slug,
-                    description: description.trim(),
-                    discount: parseInt(discount),
-                    price: parseInt(price),
-                    brand: brand.trim(),
-                    stock: parseInt(stock),
-                    category: category.trim(),
-                    image: allImageUrl,
+                    description,
+                    discount,
+                    price,
+                    brand,
+                    stock,
+                    category,
+                    images: allImageUrl
                 });
-
-                await product.save();
+    
+                console.log('Product created:', product);
+    
                 return responseReturn(res, 201, { product, message: 'Product Added Successfully' });
-
             } catch (uploadError) {
                 console.error('Upload or save error:', uploadError);
                 return responseReturn(res, 500, { error: 'Failed to upload image or save product.', details: uploadError.message });
             } finally {
-                // Cleanup uploaded files in case of error or successful upload
+                // Delete files after upload
                 const filePaths = Array.isArray(image) ? image.map(img => img.filepath || img.path) : [image.filepath || image.path];
                 for (const filePath of filePaths) {
                     await fs.remove(filePath);
@@ -86,7 +77,7 @@ class ProductControllers {
             }
         });
     };
-
+    
 
     // End of Product Add
 
