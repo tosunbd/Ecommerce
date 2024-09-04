@@ -3,39 +3,70 @@ const formidable = require('formidable');
 const cloudinary = require('cloudinary').v2;
 const productModel = require('../../models/productModel');
 const fs = require('fs-extra');
-const path = require('path');
-
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET,
-  secure: true,
-});
 
 class ProductControllers {
-
-  // Product Add
-  add_product = async (req, res) => {
-    try {
-      console.log('Starting product add process...');
-
-      const form = formidable({ multiples: true, uploadDir: './uploads', keepExtensions: true });
-
-      form.parse(req, async (err, fields, files) => {
-        if (err) {
-            return res.status(400).json({ error: 'Form parsing error.' });
-        }
+    // Product Add
+    add_product = async (req, res) => {
+        console.log('Received request:', req); // Log the incoming request
+        const { id } = req;
+        const form = formidable({ multiples: true });
     
-        // Fields from the form
-        const { name, category, description, stock, price, shopName } = fields;
-        const { images } = files;
-    
-        if (!name || !category || !images) {
-            return res.status(400).json({ error: 'Name, category, and images are required fields.' });
-        }
+        form.parse(req, async (err, fields, files) => {
+            if (err) {
+                console.error('Form parse error:', err);
+                return responseReturn(res, 400, { error: 'Something went wrong while parsing the form.' });
+            }
+        
+            console.log('Fields received:', fields);
+            console.log('Files received:', files);
+        
+            let { name, category, description, stock, price, discount, shopName, brand } = fields;
+            let { images } = files;
+        
+            // Handle single or multiple image files
+            images = Array.isArray(images) ? images : [images];
+        
+            if (!images || images.length === 0) {
+                return responseReturn(res, 400, { error: 'No image provided' });
+            }
+        
+            try {
+                let allImageUrl = [];
+        
+                for (let i = 0; i < images.length; i++) {
+                    const result = await cloudinary.uploader.upload(images[i].filepath, { folder: 'products' });
+                    allImageUrl.push(result.url);
+                }
+        
+                const product = await productModel.create({
+                    sellerId: req.id,
+                    name,
+                    slug: name.split(' ').join('-'),
+                    description,
+                    discount,
+                    price,
+                    brand,
+                    stock,
+                    category,
+                    shopName,
+                    images: allImageUrl
+                });
 
+                return responseReturn(res, 201, { product, message: 'Product Added Successfully' });
+            } catch (uploadError) {
+                console.error('Image upload or save error:', uploadError);
+                return responseReturn(res, 500, { error: 'Failed to upload image or save product.' });
+            }
+        });
 
-        let allImageUrl = [];
+    };
+
+    // End of Product Add
+
+    // Product Get
+
+    get_product = async (req, res) => {
+        const { itemsPerPage, currentPage, searchValue } = req.query;
 
         try {
           console.log('Uploading images...');
@@ -93,28 +124,7 @@ class ProductControllers {
   };
 
   // Product Get
-  get_product = async (req, res) => {
-    const { itemsPerPage, currentPage, searchValue } = req.query;
-
-    try {
-      const itemsPerPageNum = parseInt(itemsPerPage, 10) || 0;
-      const currentPageNum = parseInt(currentPage, 10) || 1;
-      const query = searchValue ? { name: { $regex: new RegExp(searchValue, 'i') } } : {};
-
-      const products = await productModel.find(query)
-        .skip((currentPageNum - 1) * itemsPerPageNum)
-        .limit(itemsPerPageNum > 0 ? itemsPerPageNum : 0)
-        .sort({ createdAt: -1 });
-
-      const totalProduct = await productModel.countDocuments(query);
-
-      return responseReturn(res, 200, { products, totalProduct });
-    } catch (error) {
-      console.error('Error while fetching products:', error.message);
-      return responseReturn(res, 500, { error: 'Something went wrong while fetching products.', details: error.message });
-    }
-  };
-}
+  
 
 const productControllers = new ProductControllers();
 

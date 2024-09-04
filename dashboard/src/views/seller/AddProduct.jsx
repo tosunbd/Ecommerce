@@ -85,6 +85,7 @@ const AddProduct = () => {
         setImageShow(filteredImageUrls);
     };
 
+<<<<<<< HEAD
     useEffect(() => {
         setState(prevState => ({
             ...prevState,
@@ -94,10 +95,20 @@ const AddProduct = () => {
     
 
     const add = (e) => {
+=======
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const addProduct = async (e) => {
+>>>>>>> 24c25351f992b6a58157e50b1f9888be3a1f3003
         e.preventDefault();
+        if (isSubmitting) return;
+    
+        setIsSubmitting(true);
+    
         const formData = new FormData();
         formData.append('name', state.name);
         formData.append('category', state.category);
+<<<<<<< HEAD
         formData.append('description', state.description);
         formData.append('price', state.price);
         formData.append('stock', state.stock);
@@ -114,6 +125,32 @@ const AddProduct = () => {
     };
     
     
+=======
+        formData.append('shopName', 'shadheen');
+    
+        // Log to check if images exist
+        // console.log('Images:', images);
+        for (let i = 0; i < images.length; i++) {
+            formData.append('images', images[i]);
+        }
+    
+        console.log([...formData]); // Log the entire FormData object
+    
+        try {
+            await dispatch(add_product(formData)).unwrap();
+            console.log('Product added successfully');
+        } catch (error) {
+            console.error('Failed to add product:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+    
+    
+
+    
+    // dispatch(add_product(formData)); // Check if dispatch is called
+>>>>>>> 24c25351f992b6a58157e50b1f9888be3a1f3003
 
     useEffect(() => {
         setAllCategory(categories); // Set the initial list of categories
@@ -128,7 +165,7 @@ const AddProduct = () => {
                     hover:shadow-lg text-white rounded-sm px-7 py-2 my-2'>All Products</Link>
                 </div>
                 <div>
-                    <form onSubmit={add}>
+                    <form onSubmit={addProduct}>
                         <div className='grid grid-cols-2 gap-4 mb-3 text-[#d0d2d6]'>
                             <div className='flex flex-col gap-1'>
                                 <label className='text-left' htmlFor="name">Product Name</label>
