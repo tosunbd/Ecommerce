@@ -5,127 +5,120 @@ const productModel = require('../../models/productModel');
 const fs = require('fs-extra');
 const path = require('path');
 
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
+  secure: true,
+});
+
 class ProductControllers {
 
-    // Product Add
-    add_product = async (req, res) => {
-        const uploadDir = path.join(__dirname, '..', '..', 'uploads');
-        await fs.ensureDir(uploadDir);
+  // Product Add
+  add_product = async (req, res) => {
+    try {
+      console.log('Starting product add process...');
 
-        const { id } = req;
-        const form = formidable({ multiples: false, uploadDir: uploadDir, keepExtensions: true });
+      const form = formidable({ multiples: true, uploadDir: './uploads', keepExtensions: true });
 
-        form.parse(req, async (err, fields, files) => {
-            if (err) {
-                console.error('Form parse error:', err);
-                return responseReturn(res, 400, { error: 'Something went wrong while parsing the form.' });
-            }
-
-            let { name, category, description, stock, price, discount, shopname, brand } = fields;
-            let { image } = files;
-
-            if (!name || !image) {
-                console.error('Missing required fields:', { name, image });
-                return responseReturn(res, 400, { error: 'Name and image are required fields.' });
-            }
-
-            name = name.trim();
-            const slug = name.split(' ').join('-');
-
-            cloudinary.config({
-                cloud_name: process.env.CLOUD_NAME,
-                api_key: process.env.API_KEY,
-                api_secret: process.env.API_SECRET,
-                secure: true
-            });
-
-            try {
-                let allImageUrl = [];
-
-                // Check if multiple images are uploaded
-                if (Array.isArray(image)) {
-                    for (let i = 0; i < image.length; i++) {
-                        const filePath = image[i].filepath || image[i].path;
-                        const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
-                        allImageUrl.push(result.url);
-                    }
-                } else {
-                    // Single image upload
-                    const filePath = image.filepath || image.path;
-                    const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
-                    allImageUrl.push(result.url);
-                }
-
-                console.log('Uploaded image URLs:', allImageUrl);
-
-                const product = new productModel({
-                    sellerId: id,
-                    name,
-                    slug,
-                    description: description.trim(),
-                    discount: parseInt(discount),
-                    price: parseInt(price),
-                    brand: brand.trim(),
-                    stock: parseInt(stock),
-                    category: category.trim(),
-                    image: allImageUrl,
-                });
-
-                await product.save();
-                return responseReturn(res, 201, { product, message: 'Product Added Successfully' });
-
-            } catch (uploadError) {
-                console.error('Upload or save error:', uploadError);
-                return responseReturn(res, 500, { error: 'Failed to upload image or save product.', details: uploadError.message });
-            } finally {
-                // Cleanup uploaded files in case of error or successful upload
-                const filePaths = Array.isArray(image) ? image.map(img => img.filepath || img.path) : [image.filepath || image.path];
-                for (const filePath of filePaths) {
-                    await fs.remove(filePath);
-                }
-            }
-        });
-    };
+      form.parse(req, async (err, fields, files) => {
+        if (err) {
+            return res.status(400).json({ error: 'Form parsing error.' });
+        }
+    
+        // Fields from the form
+        const { name, category, description, stock, price, shopName } = fields;
+        const { images } = files;
+    
+        if (!name || !category || !images) {
+            return res.status(400).json({ error: 'Name, category, and images are required fields.' });
+        }
 
 
-    // End of Product Add
-
-    // Product Get
-
-    get_product = async (req, res) => {
-        const { itemsPerPage, currentPage, searchValue } = req.query;
+        let allImageUrl = [];
 
         try {
+          console.log('Uploading images...');
 
-            // let skipPage = '';
-            // if(itemsPerPage && currentPage) {
-            //     const skipPage = parseInt(itemsPerPage) * (parseInt(currentPage) - 1);
-            // }
+          // Handle multiple images
+          if (Array.isArray(images)) {
+            for (let image of images) {
+              const filePath = image.filepath || image.path;
+              console.log('Uploading image:', filePath);
+              const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
+              allImageUrl.push(result.url);
+            }
+          } else {
+            // Handle single image
+            const filePath = images.filepath || images.path;
+            console.log('Uploading single image:', filePath);
+            const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
+            allImageUrl.push(result.url);
+          }
 
-            const itemsPerPageNum = parseInt(itemsPerPage, 10) || 0;
-            const currentPageNum = parseInt(currentPage, 10) || 1;
-            const query = searchValue ? { name: { $regex: new RegExp(searchValue, 'i') } } : {};
+          console.log('Uploaded image URLs:', allImageUrl);
 
-            const products = await productModel.find(query)
-                .skip((currentPageNum - 1) * itemsPerPageNum)
-                .limit(itemsPerPageNum > 0 ? itemsPerPageNum : 0)
-                .sort({ createdAt: -1 });
+          const product = new productModel({
+            sellerId: req.user._id, // Assuming the user is authenticated
+            name: name.trim(),
+            description: description.trim(),
+            discount: parseInt(discount),
+            price: parseInt(price),
+            brand: brand.trim(),
+            stock: parseInt(stock),
+            category: category.trim(),
+            shopName: shopName.trim(),
+            images: allImageUrl,
+          });
 
-            const totalProduct = await productModel.countDocuments(query);
+          await product.save();
+          console.log('Product saved successfully');
+          return res.status(201).json({ product, message: 'Product added successfully' });
 
-            return responseReturn(res, 200, { products, totalProduct });
-        } catch (error) {
-            console.error(error.message);
-            return responseReturn(res, 500, { error: 'Something went wrong while fetching products.', details: error.message });
+        } catch (uploadError) {
+          console.error('Upload or save error:', uploadError);
+          return res.status(500).json({ error: 'Failed to upload image or save product.' });
+        } finally {
+          // Clean up temp files
+          const filePaths = Array.isArray(images) ? images.map(img => img.filepath || img.path) : [images.filepath || images.path];
+          for (const filePath of filePaths) {
+            await fs.remove(filePath);
+          }
         }
-    };
+      });
+    } catch (error) {
+      console.error('Unexpected server error:', error);
+      return res.status(500).json({ error: 'Unexpected server error occurred.' });
+    }
+  };
 
-    // End of Product Get
+  // Product Get
+  get_product = async (req, res) => {
+    const { itemsPerPage, currentPage, searchValue } = req.query;
+
+    try {
+      const itemsPerPageNum = parseInt(itemsPerPage, 10) || 0;
+      const currentPageNum = parseInt(currentPage, 10) || 1;
+      const query = searchValue ? { name: { $regex: new RegExp(searchValue, 'i') } } : {};
+
+      const products = await productModel.find(query)
+        .skip((currentPageNum - 1) * itemsPerPageNum)
+        .limit(itemsPerPageNum > 0 ? itemsPerPageNum : 0)
+        .sort({ createdAt: -1 });
+
+      const totalProduct = await productModel.countDocuments(query);
+
+      return responseReturn(res, 200, { products, totalProduct });
+    } catch (error) {
+      console.error('Error while fetching products:', error.message);
+      return responseReturn(res, 500, { error: 'Something went wrong while fetching products.', details: error.message });
+    }
+  };
 }
 
 const productControllers = new ProductControllers();
 
 module.exports = {
-    add_product: productControllers.add_product,
-    get_product: productControllers.get_product
+  add_product: productControllers.add_product,
+  get_product: productControllers.get_product
 };

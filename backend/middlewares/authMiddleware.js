@@ -12,6 +12,7 @@ module.exports = (req, res, next) => {
         req.role = decodeToken.role;
         req.id = decodeToken.id;
         next();
+        // console.log('Middleware:', req);
     }
     catch (error) {
         res.status(400).json({ message: 'Invalid Token' });

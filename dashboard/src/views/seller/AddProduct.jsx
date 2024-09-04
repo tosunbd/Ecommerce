@@ -16,7 +16,7 @@ const AddProduct = () => {
             currentPage: '',
             searchValue: ''
         }));
-    }, []);
+    }, [dispatch]);
 
     const [state, setState] = useState({
         name: '',
@@ -25,7 +25,8 @@ const AddProduct = () => {
         price: '',
         brand: '',
         stock: '',
-        category: ''
+        category: '',
+        shopName: 'shadheen'  // Setting default shopName
     });
 
     const [cateShow, setCateShow] = useState(false);
@@ -44,8 +45,8 @@ const AddProduct = () => {
         const value = e.target.value;
         setSearchValue(value);
         if (value) {
-            const srcValue = categories.filter(c => c.name.toLowerCase().includes(value.toLowerCase()));
-            setAllCategory(srcValue);
+            const filteredCategories = categories.filter(c => c.name.toLowerCase().includes(value.toLowerCase()));
+            setAllCategory(filteredCategories);
         } else {
             setAllCategory(categories);
         }
@@ -56,8 +57,7 @@ const AddProduct = () => {
 
     const imageHandle = (e) => {
         const files = e.target.files;
-        if (files.length > 0)
-        {
+        if (files.length > 0) {
             setImages([...images, ...files]);
             let imageURL = [];
             for (let i = 0; i < files.length; i++) {
@@ -79,34 +79,45 @@ const AddProduct = () => {
     };
 
     const removeImage = (i) => {
-        const filterImage = images.filter((img, index) => index !== i);
-        const filterImageUrl = imageShow.filter((img, index) => index !== i);
-        setImages(filterImage);
-        setImageShow(filterImageUrl);
+        const filteredImages = images.filter((img, index) => index !== i);
+        const filteredImageUrls = imageShow.filter((img, index) => index !== i);
+        setImages(filteredImages);
+        setImageShow(filteredImageUrls);
     };
+
+    useEffect(() => {
+        setState(prevState => ({
+            ...prevState,
+            shopName: 'shadheen'
+        }));
+    }, []);
+    
 
     const add = (e) => {
         e.preventDefault();
         const formData = new FormData();
         formData.append('name', state.name);
-        formData.append('description', state.description);
-        formData.append('discount', state.discount);
-        formData.append('price', state.price);
-        formData.append('brand', state.brand);
-        formData.append('stock', state.stock);
         formData.append('category', state.category);
-        formData.append('shopName', 'shadheen');
-        for (let i = 0; i < images.length; i++) { 
-            formData.append('images', images[i]);
+        formData.append('description', state.description);
+        formData.append('price', state.price);
+        formData.append('stock', state.stock);
+        formData.append('shopName', state.shopName);
+        
+        // Append images
+        if (state.images.length > 0) {
+            for (let i = 0; i < state.images.length; i++) {
+                formData.append('images', state.images[i]);
+            }
         }
-        // dispatch({ type: 'add_product', payload: formData });
-        dispatch(add_product(formData ));
-        console.log([...formData]);
+    
+        dispatch(add_product(formData));
     };
+    
+    
 
     useEffect(() => {
-        setAllCategory(categories);
-    },[categories]);
+        setAllCategory(categories); // Set the initial list of categories
+    }, [categories]);
 
     return (
         <div className="px-2 lg:px-7 pt-5">
@@ -151,10 +162,9 @@ const AddProduct = () => {
                                 <input
                                     type="text"
                                     onClick={() => setCateShow(!cateShow)}
-                                    className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] 
-                                    border border-slate-700 rounded-md text-[#d0d2d6]'
+                                    className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]'
                                     onChange={categorySearch}
-                                    value={category}
+                                    value={category}  // Make sure this is correctly populated
                                     name='category'
                                     id='category'
                                     placeholder='--Select Category--'
@@ -166,9 +176,7 @@ const AddProduct = () => {
                                             type="text"
                                             onChange={categorySearch}
                                             value={searchValue}
-                                            className='px-3 py-1 w-full focus:border-indigo-500 
-                                            outline-none bg-[#6a5fdf] border border-slate-700
-                                            rounded-md text-[#d0d2d6]'
+                                            className='px-3 py-1 w-full focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]'
                                             placeholder='Search'
                                         />
                                     </div>
@@ -178,7 +186,7 @@ const AddProduct = () => {
                                                 key={i}
                                                 onClick={() => {
                                                     setCateShow(false);
-                                                    setCategory(c.name);
+                                                    setCategory(c.name);  // This should set the category correctly
                                                     setSearchValue('');
                                                     setAllCategory(categories);
                                                 }}
@@ -187,8 +195,8 @@ const AddProduct = () => {
                                         ))}
                                     </div>
                                 </div>
+                        </div>
 
-                            </div>
                             <div className='flex flex-col gap-1'>
                                 <label className='text-left' htmlFor="stock">Product Stock</label>
                                 <input

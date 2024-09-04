@@ -42,29 +42,29 @@ const productSchema = new Schema({
         required: true
     },
     images: {
-        type: Array,
+        type: [String], // Array of image URLs
         required: true
-    },
+    }
+    ,
     rating: {
         type: Number,
-        required: 0
+        default: 0 // Provide a default value instead of making it required
     }
 }, { timestamps: true });
 
+// Text index for search optimization
 productSchema.index({
     name: 'text',
     category: 'text',
     brand: 'text',
     description: 'text'
-},
-{
+}, {
     weights: {
         name: 5,
         category: 4,
         brand: 3,
         description: 2
-    }    
-}
-);
+    }
+});
 
 module.exports = model('products', productSchema);

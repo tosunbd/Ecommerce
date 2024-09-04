@@ -4,34 +4,39 @@ import api from "../../api/api";
 // Start of add_product
 export const add_product = createAsyncThunk(
     'product/add_product',
-    async (product , { rejectWithValue, fulfillWithValue }) => {
+    async (formData, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await api.post('/add_product', product, { withCredentials: true });
-            console.log(data);
+            const { data } = await api.post('/add_product', formData, {
+                withCredentials: true,  // optional, depending on whether you need credentials
+            });
             return fulfillWithValue(data);
         } catch (error) {
-            return rejectWithValue(error.response && error.response.data ? error.response.data : { errorMessage: "Unable to connect to server" });
+            return rejectWithValue(
+                error.response && error.response.data
+                ? error.response.data
+                : { errorMessage: 'Unable to connect to server' }
+            );
         }
     }
 );
 
 // End of add_product
 
-// start of get_product
-
+// Start of get_product
 export const get_product = createAsyncThunk(
     'product/get_product',
     async ({ itemsPerPage, currentPage, searchValue }, { rejectWithValue, fulfillWithValue }) => {
         try {
             const { data } = await api.get(`/product-get?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}&searchValue=${searchValue}`, { withCredentials: true });
-            // console.log(data);
             return fulfillWithValue(data);
         } catch (error) {
             return rejectWithValue(error.response && error.response.data ? error.response.data : { errorMessage: "Unable to connect to server" });
         }
     }
 );
+// End of get_product
 
+// Product Reducer Slice
 export const productReducers = createSlice({
     name: 'product',
     initialState: {
@@ -42,7 +47,7 @@ export const productReducers = createSlice({
         totalProduct: 0
     },
     reducers: {
-        messageClear: (state,_) => {
+        messageClear: (state, _) => {
             state.errorMessage = "";
             state.successMessage = "";
         }
@@ -54,7 +59,7 @@ export const productReducers = createSlice({
         })
         .addCase(add_product.rejected, (state, { payload }) => {
             state.loader = false;
-            state.errorMessage = payload.error;
+            state.errorMessage = payload.errorMessage || 'Something went wrong';
         })
         .addCase(add_product.fulfilled, (state, { payload }) => {
             state.loader = false;
@@ -64,8 +69,8 @@ export const productReducers = createSlice({
 
         .addCase(get_product.fulfilled, (state, { payload }) => {
             state.products = payload.products;
-            state.totalproduct = payload.totalproduct;
-        })
+            state.totalProduct = payload.totalProduct;
+        });
     }
 });
 
