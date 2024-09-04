@@ -85,8 +85,14 @@ const AddProduct = () => {
         setImageShow(filterImageUrl);
     };
 
-    const addProduct = (e) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const addProduct = async (e) => {
         e.preventDefault();
+        if (isSubmitting) return;
+    
+        setIsSubmitting(true);
+    
         const formData = new FormData();
         formData.append('name', state.name);
         formData.append('description', state.description);
@@ -96,13 +102,29 @@ const AddProduct = () => {
         formData.append('stock', state.stock);
         formData.append('category', state.category);
         formData.append('shopName', 'shadheen');
-        for (let i = 0; i < images.length; i++) { 
+    
+        // Log to check if images exist
+        // console.log('Images:', images);
+        for (let i = 0; i < images.length; i++) {
             formData.append('images', images[i]);
         }
-        dispatch({ type: 'add_product', payload: formData });
-        // dispatch(add_product(formData));
-        console.log([...formData]);
+    
+        console.log([...formData]); // Log the entire FormData object
+    
+        try {
+            await dispatch(add_product(formData)).unwrap();
+            console.log('Product added successfully');
+        } catch (error) {
+            console.error('Failed to add product:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
+    
+    
+
+    
+    // dispatch(add_product(formData)); // Check if dispatch is called
 
     useEffect(() => {
         setAllCategory(categories);

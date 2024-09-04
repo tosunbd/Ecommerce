@@ -11,6 +11,7 @@ module.exports = (req, res, next) => {
         const decodeToken = jwt.verify(token, process.env.SECRET);
         req.role = decodeToken.role;
         req.id = decodeToken.id;
+        console.log('Auth middleware triggered'); // Log middleware trigger
         next();
     }
     catch (error) {
