@@ -19,7 +19,7 @@ const productSchema = new Schema({
     },
     discount: {
         type: Number,
-        required: true
+        required: false
     },
     price: {
         type: Number,
@@ -27,7 +27,7 @@ const productSchema = new Schema({
     },
     brand: {
         type: String,
-        required: true
+        required: false
     },
     stock: {
         type: Number,

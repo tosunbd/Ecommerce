@@ -4,7 +4,6 @@ import api from "../../api/api";
 // Start of add_product
 export const add_product = createAsyncThunk(
     'product/add_product',
-<<<<<<< HEAD
     async (formData, { rejectWithValue, fulfillWithValue }) => {
         try {
             const { data } = await api.post('/add_product', formData, {
@@ -16,17 +15,7 @@ export const add_product = createAsyncThunk(
                 error.response && error.response.data
                 ? error.response.data
                 : { errorMessage: 'Unable to connect to server' }
-            );
-=======
-    async (product, { rejectWithValue, fulfillWithValue }) => {
-        try {
-            const { data } = await api.post('/add_product', product, { withCredentials: true });
-            console.log('API response:', data); // Log the API response here
-            return fulfillWithValue(data);
-        } catch (error) {
-            console.error('API error:', error); // Log API errors
-            return rejectWithValue(error.response && error.response.data ? error.response.data : { errorMessage: "Unable to connect to server" });
->>>>>>> 24c25351f992b6a58157e50b1f9888be3a1f3003
+            );    
         }
     }
 );

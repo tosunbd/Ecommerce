@@ -3,132 +3,134 @@ const formidable = require('formidable');
 const cloudinary = require('cloudinary').v2;
 const productModel = require('../../models/productModel');
 const fs = require('fs-extra');
+const path = require('path');
+
 
 class ProductControllers {
-    // Product Add
-    add_product = async (req, res) => {
-        console.log('Received request:', req); // Log the incoming request
-        const { id } = req;
-        const form = formidable({ multiples: true });
-    
-        form.parse(req, async (err, fields, files) => {
-            if (err) {
-                console.error('Form parse error:', err);
-                return responseReturn(res, 400, { error: 'Something went wrong while parsing the form.' });
-            }
-        
-            console.log('Fields received:', fields);
-            console.log('Files received:', files);
-        
-            let { name, category, description, stock, price, discount, shopName, brand } = fields;
-            let { images } = files;
-        
-            // Handle single or multiple image files
-            images = Array.isArray(images) ? images : [images];
-        
-            if (!images || images.length === 0) {
-                return responseReturn(res, 400, { error: 'No image provided' });
-            }
-        
-            try {
-                let allImageUrl = [];
-        
-                for (let i = 0; i < images.length; i++) {
-                    const result = await cloudinary.uploader.upload(images[i].filepath, { folder: 'products' });
-                    allImageUrl.push(result.url);
-                }
-        
-                const product = await productModel.create({
-                    sellerId: req.id,
-                    name,
-                    slug: name.split(' ').join('-'),
-                    description,
-                    discount,
-                    price,
-                    brand,
-                    stock,
-                    category,
-                    shopName,
-                    images: allImageUrl
-                });
 
-                return responseReturn(res, 201, { product, message: 'Product Added Successfully' });
-            } catch (uploadError) {
-                console.error('Image upload or save error:', uploadError);
-                return responseReturn(res, 500, { error: 'Failed to upload image or save product.' });
-            }
+  // Product Add
+  add_product = async (req, res) => 
+  { 
+    console.log('Received request:', req); // Log the incoming request
+
+    const uploadDir = path.join(__dirname, '..', '..', 'uploads');
+    await fs.ensureDir(uploadDir);
+
+    const form = formidable({ multiples: true, uploadDir: uploadDir, keepExtensions: true });
+
+    form.parse(req, async (err, fields, files) => {
+        if (err) {
+            console.error('Form parse error:', err);
+            return responseReturn(res, 400, { error: 'Something went wrong while parsing the form.' });
+        }
+    
+        // Log parsed fields and files for debugging
+        console.log('Fields:', fields);
+        console.log('Files:', files);
+    
+        let { name, category, description, stock, price, shopName, brand, discount } = fields;  // Add discount here
+        let { images } = files;
+    
+        if (!brand || !images) {
+            console.error('Missing required fields:', { name, category, description, stock, price, shopName, brand, discount, images });
+            return responseReturn(res, 400, { error: 'All fields including brand, discount, and images are required.' });
+        }
+
+        name = name.trim();
+        const slug = name.split(' ').join('-');
+
+        // Ensure images is an array
+        images = Array.isArray(images) ? images : [images];
+
+        cloudinary.config({
+            cloud_name: process.env.CLOUD_NAME,
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET,
+            secure: true
         });
 
-    };
-
-    // End of Product Add
-
-    // Product Get
-
-    get_product = async (req, res) => {
-        const { itemsPerPage, currentPage, searchValue } = req.query;
-
         try {
-          console.log('Uploading images...');
+            let allImageUrl = [];
 
-          // Handle multiple images
-          if (Array.isArray(images)) {
-            for (let image of images) {
-              const filePath = image.filepath || image.path;
-              console.log('Uploading image:', filePath);
-              const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
-              allImageUrl.push(result.url);
+            // Upload images to Cloudinary
+            for (let i = 0; i < images.length; i++) {
+                const filePath = images[i].filepath || images[i].path;
+                console.log('File being uploaded:', filePath);
+                const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
+                allImageUrl.push(result.url);
             }
-          } else {
-            // Handle single image
-            const filePath = images.filepath || images.path;
-            console.log('Uploading single image:', filePath);
-            const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
-            allImageUrl.push(result.url);
-          }
 
-          console.log('Uploaded image URLs:', allImageUrl);
+            // Create a new product document
+            // const product = new productModel({
+            //     sellerId: req.id,
+            //     name,
+            //     slug,
+            //     description,
+            //     discount,
+            //     price,
+            //     brand,
+            //     stock,
+            //     category,
+            //     shopName,
+            //     images: allImageUrl
+            // });
 
-          const product = new productModel({
-            sellerId: req.user._id, // Assuming the user is authenticated
-            name: name.trim(),
-            description: description.trim(),
-            discount: parseInt(discount),
-            price: parseInt(price),
-            brand: brand.trim(),
-            stock: parseInt(stock),
-            category: category.trim(),
-            shopName: shopName.trim(),
-            images: allImageUrl,
-          });
+            const product = new productModel({
+                sellerId: req.id,
+                name,
+                slug: name.split(' ').join('-'),
+                description,
+                discount: discount ? parseInt(discount, 10) : 0,  // Set default discount if not provided
+                price: parseInt(price, 10),
+                brand,
+                stock: parseInt(stock, 10),
+                category,
+                shopName,
+                images: allImageUrl
+            });            
 
-          await product.save();
-          console.log('Product saved successfully');
-          return res.status(201).json({ product, message: 'Product added successfully' });
+            await product.save();
 
+            return responseReturn(res, 201, { product, message: 'Product Added Successfully' });
         } catch (uploadError) {
-          console.error('Upload or save error:', uploadError);
-          return res.status(500).json({ error: 'Failed to upload image or save product.' });
+            console.error('Image upload or save error:', uploadError);
+            return responseReturn(res, 500, { error: 'Failed to upload images or save product.', details: uploadError.message });
         } finally {
-          // Clean up temp files
-          const filePaths = Array.isArray(images) ? images.map(img => img.filepath || img.path) : [images.filepath || images.path];
-          for (const filePath of filePaths) {
-            await fs.remove(filePath);
-          }
+            // Clean up uploaded temporary files
+            for (let i = 0; i < images.length; i++) {
+                const filePath = images[i].filepath || images[i].path;
+                await fs.remove(filePath);
+            }
         }
-      });
+    });
+};
+
+
+  // Product Get
+  get_product = async (req, res) => {
+    const { itemsPerPage, currentPage, searchValue } = req.query;
+
+    try {
+      console.log('Fetching products...');
+
+      const productQuery = {}; // Adjust query logic based on parameters
+
+      // Fetch products from the database with pagination
+      const products = await productModel.find(productQuery)
+        .skip((currentPage - 1) * itemsPerPage)
+        .limit(parseInt(itemsPerPage));
+
+      return res.status(200).json({ products, message: 'Products fetched successfully' });
     } catch (error) {
       console.error('Unexpected server error:', error);
       return res.status(500).json({ error: 'Unexpected server error occurred.' });
     }
   };
-
-  // Product Get
-  
+}
 
 const productControllers = new ProductControllers();
 
 module.exports = {
   add_product: productControllers.add_product,
-  get_product: productControllers.get_product
+  get_product: productControllers.get_product,
 };

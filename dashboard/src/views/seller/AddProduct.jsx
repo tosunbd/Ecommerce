@@ -6,7 +6,6 @@ import { get_category } from '../../store/Reducers/categoryReducers';
 import { add_product } from '../../store/Reducers/productReducers';
 
 const AddProduct = () => {
-
     const dispatch = useDispatch();
     const { categories } = useSelector((state) => state.category);
 
@@ -18,16 +17,30 @@ const AddProduct = () => {
         }));
     }, [dispatch]);
 
+    // const [state, setState] = useState({
+    //     name: '',
+    //     description: '',
+    //     discount: '',
+    //     price: '',
+    //     brand: '',
+    //     stock: '',
+    //     category: '',
+    //     shopName: 'shadheen'  // Setting default shopName
+    // });
+
     const [state, setState] = useState({
         name: '',
         description: '',
-        discount: '',
         price: '',
-        brand: '',
         stock: '',
+        shopName: 'shadheen',
         category: '',
-        shopName: 'shadheen'  // Setting default shopName
+        brand: '',  // Initialize brand in state
+        discount: 0,
+        images: []
     });
+    
+    
 
     const [cateShow, setCateShow] = useState(false);
     const [category, setCategory] = useState('');
@@ -85,21 +98,16 @@ const AddProduct = () => {
         setImageShow(filteredImageUrls);
     };
 
-<<<<<<< HEAD
     useEffect(() => {
         setState(prevState => ({
             ...prevState,
             shopName: 'shadheen'
         }));
     }, []);
-    
 
-    const add = (e) => {
-=======
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const addProduct = async (e) => {
->>>>>>> 24c25351f992b6a58157e50b1f9888be3a1f3003
         e.preventDefault();
         if (isSubmitting) return;
     
@@ -107,34 +115,22 @@ const AddProduct = () => {
     
         const formData = new FormData();
         formData.append('name', state.name);
-        formData.append('category', state.category);
-<<<<<<< HEAD
+        formData.append('category', category);  // Ensure category is correctly appended
         formData.append('description', state.description);
         formData.append('price', state.price);
         formData.append('stock', state.stock);
         formData.append('shopName', state.shopName);
-        
+        formData.append('brand', state.brand);
+        formData.append('discount', state.discount = state.discount ? parseInt(state.discount, 10) : 0)
+       
         // Append images
-        if (state.images.length > 0) {
-            for (let i = 0; i < state.images.length; i++) {
-                formData.append('images', state.images[i]);
+        if (images.length > 0) {
+            for (let i = 0; i < images.length; i++) {
+                formData.append('images', images[i]);
             }
         }
     
-        dispatch(add_product(formData));
-    };
-    
-    
-=======
-        formData.append('shopName', 'shadheen');
-    
-        // Log to check if images exist
-        // console.log('Images:', images);
-        for (let i = 0; i < images.length; i++) {
-            formData.append('images', images[i]);
-        }
-    
-        console.log([...formData]); // Log the entire FormData object
+        //console.log([...formData]); // Log the formData for debugging
     
         try {
             await dispatch(add_product(formData)).unwrap();
@@ -146,15 +142,11 @@ const AddProduct = () => {
         }
     };
     
-    
-
-    
-    // dispatch(add_product(formData)); // Check if dispatch is called
->>>>>>> 24c25351f992b6a58157e50b1f9888be3a1f3003
 
     useEffect(() => {
-        setAllCategory(categories); // Set the initial list of categories
+        setAllCategory(categories);
     }, [categories]);
+
 
     return (
         <div className="px-2 lg:px-7 pt-5">
@@ -183,13 +175,14 @@ const AddProduct = () => {
                                 <label className='text-left' htmlFor="brand">Brand Name</label>
                                 <input
                                     className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]'
-                                    onChange={inputHandle}
+                                    onChange={(e) => setState({ ...state, brand: e.target.value })}
                                     value={state.brand}
                                     type="text"
                                     name='brand'
                                     id='brand'
                                     placeholder='Brand Name'
                                 />
+
                             </div>
                         </div>
 
@@ -201,12 +194,11 @@ const AddProduct = () => {
                                     onClick={() => setCateShow(!cateShow)}
                                     className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf] border border-slate-700 rounded-md text-[#d0d2d6]'
                                     onChange={categorySearch}
-                                    value={category}  // Make sure this is correctly populated
+                                    value={category}  // Category is directly updated
                                     name='category'
                                     id='category'
                                     placeholder='--Select Category--'
                                 />
-
                                 <div className={`absolute top-[101%] bg-[#475569] w-full transition-all ${cateShow ? 'scale-100' : 'scale-0'}`}>
                                     <div className='w-full px-4 py-2'>
                                         <input
@@ -223,7 +215,7 @@ const AddProduct = () => {
                                                 key={i}
                                                 onClick={() => {
                                                     setCateShow(false);
-                                                    setCategory(c.name);  // This should set the category correctly
+                                                    setCategory(c.name);  // Ensure category is correctly set
                                                     setSearchValue('');
                                                     setAllCategory(categories);
                                                 }}
@@ -232,7 +224,7 @@ const AddProduct = () => {
                                         ))}
                                     </div>
                                 </div>
-                        </div>
+                            </div>
 
                             <div className='flex flex-col gap-1'>
                                 <label className='text-left' htmlFor="stock">Product Stock</label>
