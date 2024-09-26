@@ -17,17 +17,6 @@ const AddProduct = () => {
         }));
     }, [dispatch]);
 
-    // const [state, setState] = useState({
-    //     name: '',
-    //     description: '',
-    //     discount: '',
-    //     price: '',
-    //     brand: '',
-    //     stock: '',
-    //     category: '',
-    //     shopName: 'shadheen'  // Setting default shopName
-    // });
-
     const [state, setState] = useState({
         name: '',
         description: '',
@@ -39,8 +28,6 @@ const AddProduct = () => {
         discount: 0,
         images: []
     });
-    
-    
 
     const [cateShow, setCateShow] = useState(false);
     const [category, setCategory] = useState('');
@@ -129,8 +116,6 @@ const AddProduct = () => {
                 formData.append('images', images[i]);
             }
         }
-    
-        //console.log([...formData]); // Log the formData for debugging
     
         try {
             await dispatch(add_product(formData)).unwrap();
