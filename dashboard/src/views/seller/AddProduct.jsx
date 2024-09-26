@@ -2,12 +2,24 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoMdCloseCircle, IoMdImage } from 'react-icons/io';
 import { useDispatch, useSelector } from 'react-redux';
+import { PropagateLoader } from 'react-spinners';
+import { overrideStyle } from '../../utils/utils';
+import { toast } from 'react-hot-toast';
 import { get_category } from '../../store/Reducers/categoryReducers';
-import { add_product } from '../../store/Reducers/productReducers';
+import { add_product, messageClear } from '../../store/Reducers/productReducers';
 
 const AddProduct = () => {
     const dispatch = useDispatch();
-    const { categories } = useSelector((state) => state.category);
+    // const { categories } = useSelector((state) => state.category);
+    const { categories } = useSelector(state => state.category);
+    const { loader, errorMessage, successMessage } = useSelector(state => state.product);
+    const [cateShow, setCateShow] = useState(false);
+    const [category, setCategory] = useState('');
+    const [searchValue, setSearchValue] = useState('');
+    const [allCategory, setAllCategory] = useState([]);
+    const [images, setImages] = useState([]);
+    const [imageShow, setImageShow] = useState([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         dispatch(get_category({
@@ -29,10 +41,12 @@ const AddProduct = () => {
         images: []
     });
 
-    const [cateShow, setCateShow] = useState(false);
-    const [category, setCategory] = useState('');
-    const [searchValue, setSearchValue] = useState('');
-    const [allCategory, setAllCategory] = useState([]);
+    useEffect(() => {
+        setState(prevState => ({
+            ...prevState,
+            shopName: 'shadheen'
+        }));
+    }, []);
 
     const inputHandle = (e) => {
         setState({
@@ -51,10 +65,7 @@ const AddProduct = () => {
             setAllCategory(categories);
         }
     };
-
-    const [images, setImages] = useState([]);
-    const [imageShow, setImageShow] = useState([]);
-
+    
     const imageHandle = (e) => {
         const files = e.target.files;
         if (files.length > 0) {
@@ -84,15 +95,6 @@ const AddProduct = () => {
         setImages(filteredImages);
         setImageShow(filteredImageUrls);
     };
-
-    useEffect(() => {
-        setState(prevState => ({
-            ...prevState,
-            shopName: 'shadheen'
-        }));
-    }, []);
-
-    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const addProduct = async (e) => {
         e.preventDefault();
@@ -125,13 +127,37 @@ const AddProduct = () => {
         } finally {
             setIsSubmitting(false);
         }
-    };
-    
+    };    
 
+    useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage);
+            dispatch(messageClear());
+            setState({
+                name: '',
+                description: '',
+                price: '',
+                stock: '',
+                shopName: '',
+                category: '',
+                brand: '',  // Initialize brand in state
+                discount: 0,
+                images: []
+            });
+            setImageShow([]);
+            setImages([]);
+            setCategory([]);
+        }
+        if (errorMessage) {
+            toast.error(errorMessage);
+            dispatch(messageClear());            
+        }
+    }, [errorMessage, successMessage, dispatch]);
+    
     useEffect(() => {
         setAllCategory(categories);
     }, [categories]);
-
+    
 
     return (
         <div className="px-2 lg:px-7 pt-5">
@@ -304,12 +330,20 @@ const AddProduct = () => {
                         </div>
 
                         <div className=''>
-                            <button
+                            <button disabled={loader}
+                                className="bg-red-500 w-[400px] hover:shadow-red-500/40 
+                                hover:shadow-md text-white rounded-md px-7 py-2 my-2">
+                                {
+                                    loader ? <PropagateLoader color='#fff'
+                                    cssOverride={overrideStyle} /> : 'Add Product'
+                                }
+                            </button>
+                            {/* <button
                                 type="submit"
                                 className='bg-red-500 hover:shadow-green-500/50
                                 hover:shadow-lg text-white rounded-sm px-7 py-2'>
                                 Add Product
-                            </button>
+                            </button> */}
                         </div>
 
                     </form>
