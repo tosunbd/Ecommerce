@@ -15,25 +15,26 @@ export const add_product = createAsyncThunk(
                 error.response && error.response.data
                 ? error.response.data
                 : { errorMessage: 'Unable to connect to server' }
-            );    
+            );
         }
     }
 );
 // End of add_product
 
-// Start of get_product
-export const get_product = createAsyncThunk(
-    'product/get_product',
+// Start of get_products
+export const get_products = createAsyncThunk(
+    'product/get_products',
     async ({ itemsPerPage, currentPage, searchValue }, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await api.get(`/product-get?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}&searchValue=${searchValue}`, { withCredentials: true });
+            const { data } = await api.get(`/get_products?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}&searchValue=${searchValue}`, { withCredentials: true });
+            console.log(data);
             return fulfillWithValue(data);
         } catch (error) {
             return rejectWithValue(error.response && error.response.data ? error.response.data : { errorMessage: "Unable to connect to server" });
         }
     }
 );
-// End of get_product
+// End of get_products
 
 // Product Reducer Slice
 export const productReducers = createSlice({
@@ -66,7 +67,7 @@ export const productReducers = createSlice({
             state.products = [...state.products, payload.product];
         })
 
-        .addCase(get_product.fulfilled, (state, { payload }) => {
+        .addCase(get_products.fulfilled, (state, { payload }) => {
             state.products = payload.products;
             state.totalProduct = payload.totalProduct;
         });

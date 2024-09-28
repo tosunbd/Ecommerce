@@ -64,8 +64,8 @@ const Category = () => {
             });
             setImage('');
         }
-    }, [errorMessage, successMessage, dispatch]);   
-    
+    }, [errorMessage, successMessage, dispatch]);
+
 
     useEffect(() => {
         const obj = {
@@ -74,7 +74,7 @@ const Category = () => {
             searchValue
         };
         dispatch(get_category(obj));
-    }, [itemsPerPage, currentPage, searchValue, dispatch]);    
+    }, [itemsPerPage, currentPage, searchValue, dispatch]);
 
 
     return (
@@ -82,7 +82,7 @@ const Category = () => {
             <div className="flex lg:hidden justify-between items-center mb-5 p-4 bg-[#6a5fdf] rounded-md">
                 <h1 className="text-[#d0d2d6] font-samibold text-lg">Category</h1>
                 <button onClick={() => setShow(true)}
-                    className="bg-red-500 shadow-lg hover:shadow-red-500/40 py-2 px-4 
+                    className="bg-red-500 shadow-lg hover:shadow-red-500/40 py-2 px-4
                     cursor-pointer text-white rounded-sm text-sm">
                     Add
                 </button>
@@ -154,11 +154,11 @@ const Category = () => {
                                     <input value={state.name} onChange={(e) => setState({
                                         ...state,
                                         name: e.target.value
-                                    })} type="text" id="name" name="category_name" placeholder="Category Name" className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#ffffff] 
+                                    })} type="text" id="name" name="category_name" placeholder="Category Name" className="px-4 py-2 focus:border-indigo-500 outline-none bg-[#ffffff]
                                 border border-slate-700 rounded-md text-[#d0d2d6]" />
                                 </div>
                                 <div>
-                                    <label className="flex justify-center items-center 
+                                    <label className="flex justify-center items-center
                                     flex-col h-[238px] cursor-pointer border border-dashed hover:border-red-500 w-full border-[#d0d2d6]" htmlFor="image">
                                         {
                                             imageShow ? <img className="w-full h-full" src={imageShow} alt="Category Preview" />
