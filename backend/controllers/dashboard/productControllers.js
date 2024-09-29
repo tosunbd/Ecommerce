@@ -107,11 +107,11 @@ class ProductControllers {
 
 
   // Product Get
-  get_product = async (req, res) => {
+  get_products = async (req, res) => {
     const { itemsPerPage, currentPage, searchValue } = req.query;
 
     try {
-      console.log('Fetching products...');
+      // console.log('Fetching products...');
 
       const productQuery = {}; // Adjust query logic based on parameters
 
@@ -132,5 +132,5 @@ const productControllers = new ProductControllers();
 
 module.exports = {
   add_product: productControllers.add_product,
-  get_product: productControllers.get_product,
+  get_products: productControllers.get_products,
 };
