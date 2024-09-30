@@ -5,12 +5,10 @@ const productModel = require('../../models/productModel');
 const fs = require('fs-extra');
 const path = require('path');
 
-
 class ProductControllers {
 
   // Product Add
-  add_product = async (req, res) => 
-  { 
+  add_product = async (req, res) => { 
     console.log('Received request:', req); // Log the incoming request
 
     const uploadDir = path.join(__dirname, '..', '..', 'uploads');
@@ -61,20 +59,6 @@ class ProductControllers {
             }
 
             // Create a new product document
-            // const product = new productModel({
-            //     sellerId: req.id,
-            //     name,
-            //     slug,
-            //     description,
-            //     discount,
-            //     price,
-            //     brand,
-            //     stock,
-            //     category,
-            //     shopName,
-            //     images: allImageUrl
-            // });
-
             const product = new productModel({
                 sellerId: req.id,
                 name,
@@ -103,24 +87,41 @@ class ProductControllers {
             }
         }
     });
-};
-
+  };
 
   // Product Get
   get_products = async (req, res) => {
     const { itemsPerPage, currentPage, searchValue } = req.query;
+    const { id } = req;
 
-    try {
-      // console.log('Fetching products...');
+    const skipPage = (currentPage - 1) * itemsPerPage;
+    const limitPage = parseInt(itemsPerPage);
 
-      const productQuery = {}; // Adjust query logic based on parameters
+    try {     
+      if (searchValue) {
+        const products = await productModel.find({
+          $text: { $search: searchValue },
+          sellerId: id
+        })
+        .skip(skipPage)
+        .limit(limitPage)
+        .sort({ createdAt: -1 });
+        
+        const totalProduct = await productModel.find({
+          $text: { $search: searchValue },
+          sellerId: id
+        }).countDocuments();
 
-      // Fetch products from the database with pagination
-      const products = await productModel.find(productQuery)
-        .skip((currentPage - 1) * itemsPerPage)
-        .limit(parseInt(itemsPerPage));
-
-      return res.status(200).json({ products, message: 'Products fetched successfully' });
+        return res.status(200).json({ products, totalProduct });
+      } else {
+        const products = await productModel.find({ sellerId: id })
+          .skip(skipPage)
+          .limit(limitPage)
+          .sort({ createdAt: -1 });
+        
+        const totalProduct = await productModel.find({ sellerId: id }).countDocuments();
+        return res.status(200).json({ products, totalProduct });
+      }
     } catch (error) {
       console.error('Unexpected server error:', error);
       return res.status(500).json({ error: 'Unexpected server error occurred.' });
@@ -128,9 +129,10 @@ class ProductControllers {
   };
 }
 
+// Corrected the instantiation with the correct class name
 const productControllers = new ProductControllers();
-
+  
 module.exports = {
   add_product: productControllers.add_product,
-  get_products: productControllers.get_products,
+  get_products: productControllers.get_products
 };

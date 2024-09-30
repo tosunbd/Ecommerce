@@ -14,6 +14,7 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchValue, setSearchValue] = useState('');
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  
 
   useEffect(() => {
     if (successMessage) {
@@ -112,7 +113,9 @@ const Products = () => {
           </table>
         </div>
 
-        {totalProduct <= itemsPerPage && (
+        <h1>{totalProduct} products found</h1>
+
+        {totalProduct > itemsPerPage && (
           <div className="w-full flex justify-end mt-4">
             <Pagination
               pageNumber={currentPage}
@@ -123,6 +126,7 @@ const Products = () => {
             />
           </div>
         )}
+        
       </div>
     </div>
   );
