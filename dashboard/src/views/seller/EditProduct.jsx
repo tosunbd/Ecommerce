@@ -5,22 +5,19 @@ import { PropagateLoader } from 'react-spinners';
 import { overrideStyle } from '../../utils/utils';
 import { toast } from 'react-hot-toast';
 import { get_category } from '../../store/Reducers/categoryReducers';
-import { get_product } from '../../store/Reducers/productReducers';
-
-
+import { get_product, messageClear } from '../../store/Reducers/productReducers';
 
 const EditProduct = () => {
-
     const { productId } = useParams();
-    // console.log(productId);
-    const dispatch = useDispatch();    
+    const dispatch = useDispatch();
+    
     const { categories } = useSelector(state => state.category);
-    const { product } = useSelector(state => state.product);
+    const { loader, errorMessage, successMessage, product } = useSelector(state => state.product);
 
     const [cateShow, setCateShow] = useState(false);
     const [category, setCategory] = useState('');
     const [searchValue, setSearchValue] = useState('');
-    const [allCategory, setAllCategory] = useState(categories);
+    const [allCategory, setAllCategory] = useState(categories || []);
     const [images, setImages] = useState([]);
     const [imageShow, setImageShow] = useState([]);
 
@@ -35,7 +32,6 @@ const EditProduct = () => {
     useEffect(() => {
         dispatch(get_product(productId));
     }, [productId, dispatch]);
-      
 
     const [state, setState] = useState({
         name: '',
@@ -44,10 +40,8 @@ const EditProduct = () => {
         price: '',
         brand: '',
         stock: ''
-        // ,category: ''
-    ,});
+    });
 
-   
     const inputHandle = (e) => {
         setState({
             ...state,
@@ -65,53 +59,54 @@ const EditProduct = () => {
         } else {
             setAllCategory(categories);
         }
-    };    
-
-    // const imageHandle = (e) => {
-    //     const files = e.target.files;
-    //     if (files.length > 0)
-    //     {
-    //         setImages([...images, ...files]);
-    //         let imageURL = [];
-    //         for (let i = 0; i < files.length; i++) {
-    //             imageURL.push(URL.createObjectURL(files[i]));
-    //         }
-    //         setImageShow([...imageShow, ...imageURL]);
-    //     }
-    // };
+    };
 
     const changeImage = (img, files) => {
-        if (files.length > 0)
-        {
+        if (files.length > 0) {
             console.log(img);
             console.log(files[0]);
         }
     };
 
-    // const removeImage = (i) => {
-    //     const filterImage = images.filter((img, index) => index !== i);
-    //     const filterImageUrl = imageShow.filter((img, index) => index !== i);
-    //     setImages(filterImage);
-    //     setImageShow(filterImageUrl);
-    // };
+    useEffect(() => {
+        if (product) {
+            setState({
+                name: product.name || '',
+                description: product.description || '',
+                discount: product.discount || '',
+                price: product.price || '',
+                brand: product.brand || '',
+                stock: product.stock || ''
+            });
+            setCategory(product.category || '');
+            setImageShow(product.images || []);
+        }
+    }, [product]);
 
     useEffect(() => {
-        setState({
-            name: 'Mens TShirt',
-            description: 'Very Confortable Mens TShirt',
-            discount: 5,
-            price: 255,
-            brand: 'shadheen',
-            stock: 10
-            // ,category: 'TShirt'
-        });
-        setCategory('TShirt');
-        setImageShow([
-            'http://localhost:5173/images/admin.jpg',
-            'http://localhost:5173/images/seller.png',
-            'http://localhost:5173/images/demo.jpg'
-        ]);
-    },[])
+        if (successMessage) {
+            toast.success(successMessage);
+            dispatch(messageClear());
+            setState({
+                name: '',
+                description: '',
+                price: '',
+                stock: '',
+                shopName: '',
+                category: '',
+                brand: '',  // Initialize brand in state
+                discount: 0,
+                images: []
+            });
+            setImageShow([]);
+            setImages([]);
+            setCategory([]);
+        }
+        if (errorMessage) {
+            toast.error(errorMessage);
+            dispatch(messageClear());            
+        }
+    }, [errorMessage, successMessage, dispatch]);
 
     return (
         <div className="px-2 lg:px-7 pt-5">
@@ -164,7 +159,6 @@ const EditProduct = () => {
                                     id='category'
                                     placeholder='--Select Category--'
                                 />
-
                                 <div className={`absolute top-[101%] bg-[#475569] w-full transition-all ${cateShow ? 'scale-100' : 'scale-0'}`}>
                                     <div className='w-full px-4 py-2'>
                                         <input
@@ -178,21 +172,25 @@ const EditProduct = () => {
                                         />
                                     </div>
                                     <div className='flex flex-col justify-start items-start h-[200px] overflow-y-scroll mt-2 text-left'>
-                                        {allCategory.map((c, i) => (
-                                            <span
-                                                key={i}
-                                                onClick={() => {
-                                                    setCateShow(false);
-                                                    setCategory(c.name);
-                                                    setSearchValue('');
-                                                    setAllCategory(categories);
-                                                }}
-                                                className='cursor-pointer p-1 w-full hover:bg-indigo-500'
-                                            >{c.name}</span>
-                                        ))}
+                                        {allCategory && allCategory.length > 0 ? (
+                                            allCategory.map((c, i) => (
+                                                <span
+                                                    key={i}
+                                                    onClick={() => {
+                                                        setCateShow(false);
+                                                        setCategory(c.name);
+                                                        setSearchValue('');
+                                                        setAllCategory(categories);
+                                                    }}
+                                                    className='cursor-pointer p-1 w-full hover:bg-indigo-500'>
+                                                    {c.name}
+                                                </span>
+                                            ))
+                                        ) : (
+                                            <span>No Categories Found</span>
+                                        )}
                                     </div>
                                 </div>
-
                             </div>
                             <div className='flex flex-col gap-1'>
                                 <label className='text-left' htmlFor="stock">Product Stock</label>
@@ -254,25 +252,37 @@ const EditProduct = () => {
 
                         <div className="grid lg:grid-cols-4 grid-col-1 md:grid-cols-3 sm:grid-cols-2 sm:gap-4 md:gap-4 gap-3
                             w-full text-[#d0d2d6] mb-4">
-                            {
-                                imageShow.map((img, i) =>
-                                    <div className=''>
+                            {imageShow && imageShow.length > 0 ? (
+                                imageShow.map((img, i) => (
+                                    <div key={i}>
                                         <label htmlFor={i}>
                                             <img src={img} alt="" />
                                         </label>
-                                        <input onChange={(e) => changeImage(img, e.target.files) } type="file" id={i} className='hidden' />
+                                        <input onChange={(e) => changeImage(img, e.target.files)} type="file" id={i} className='hidden' />
                                     </div>
-                                )
-                            }
-
+                                ))
+                            ) : (
+                                <p>No Images Available</p>
+                            )}
                         </div>
 
                         <div className=''>
-                            <button
+                            {/* <button
                                 type="submit"
                                 className='bg-red-500 hover:shadow-green-500/50
                                 hover:shadow-lg text-white rounded-sm px-7 py-2'>
-                                Save Changes
+                                {
+                                    loader ? <PropagateLoader color='#fff'
+                                    cssOverride={overrideStyle} /> : 'Save Changes'
+                                }                                
+                            </button> */}
+                             <button disabled={loader}
+                                className='bg-red-500 hover:shadow-green-500/50
+                                hover:shadow-lg text-white rounded-sm px-7 py-2'>
+                                {
+                                    loader ? <PropagateLoader color='#fff'
+                                    cssOverride={overrideStyle} /> : 'Save Changes'
+                                }
                             </button>
                         </div>
 
