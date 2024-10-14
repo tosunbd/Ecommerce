@@ -27,7 +27,7 @@ export const get_products = createAsyncThunk(
     async ({ itemsPerPage, currentPage, searchValue }, { rejectWithValue, fulfillWithValue }) => {
         try {
             const { data } = await api.get(`/get_products?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}&searchValue=${searchValue}`, { withCredentials: true });
-            console.log(data);
+            // console.log(data);
             return fulfillWithValue(data);
         } catch (error) {
             return rejectWithValue(error.response && error.response.data ? error.response.data : { errorMessage: "Unable to connect to server" });
@@ -36,6 +36,27 @@ export const get_products = createAsyncThunk(
 );
 // End of get_products
 
+// Start of get_product
+export const get_product = createAsyncThunk(
+    'product/get_product',
+    async (productId, { rejectWithValue, fulfillWithValue }) => {
+      try {
+        const { data } = await api.get(`/get_product/${productId}`, { withCredentials: true }); // Make sure /api/ is included
+        // console.log("get_product = " + data);
+        console.log(data);
+        return fulfillWithValue(data);
+      } catch (error) {
+        return rejectWithValue(
+          error.response && error.response.data
+            ? error.response.data
+            : { errorMessage: "Unable to connect to server" }
+        );
+      }
+    }
+);
+ 
+// End of get_product
+
 // Product Reducer Slice
 export const productReducers = createSlice({
     name: 'product',
@@ -43,6 +64,7 @@ export const productReducers = createSlice({
         successMessage: '',
         errorMessage: '',
         loader: false,
+        product: '',
         products: [],
         totalProduct: 0
     },
@@ -66,7 +88,9 @@ export const productReducers = createSlice({
             state.successMessage = payload.message;
             state.products = [...state.products, payload.product];
         })
-
+        .addCase(get_product.fulfilled, (state, { payload }) => {
+            state.product = payload.product;            
+        })
         .addCase(get_products.fulfilled, (state, { payload }) => {
             state.products = payload.products;
             state.totalProduct = payload.totalProduct;

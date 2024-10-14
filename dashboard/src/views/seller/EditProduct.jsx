@@ -1,17 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { IoMdCloseCircle, IoMdImage } from 'react-icons/io';
-import Category from './../admin/Category';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
+import { PropagateLoader } from 'react-spinners';
+import { overrideStyle } from '../../utils/utils';
+import { toast } from 'react-hot-toast';
+import { get_category } from '../../store/Reducers/categoryReducers';
+import { get_product } from '../../store/Reducers/productReducers';
+
+
 
 const EditProduct = () => {
-    const categories = [
-        { id: 1, name: 'Sports' },
-        { id: 2, name: 'TShirt' },
-        { id: 3, name: 'Mobile' },
-        { id: 4, name: 'Computer' },
-        { id: 5, name: 'Watch' },
-        { id: 6, name: 'Pant' }
-    ];
+
+    const { productId } = useParams();
+    // console.log(productId);
+    const dispatch = useDispatch();    
+    const { categories } = useSelector(state => state.category);
+    const { product } = useSelector(state => state.product);
+
+    const [cateShow, setCateShow] = useState(false);
+    const [category, setCategory] = useState('');
+    const [searchValue, setSearchValue] = useState('');
+    const [allCategory, setAllCategory] = useState(categories);
+    const [images, setImages] = useState([]);
+    const [imageShow, setImageShow] = useState([]);
+
+    useEffect(() => {
+        dispatch(get_category({
+            itemsPerPage: '',
+            currentPage: '',
+            searchValue: ''
+        }));
+    }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(get_product(productId));
+    }, [productId, dispatch]);
+      
 
     const [state, setState] = useState({
         name: '',
@@ -23,10 +47,6 @@ const EditProduct = () => {
         // ,category: ''
     ,});
 
-    const [cateShow, setCateShow] = useState(false);
-    const [category, setCategory] = useState('');
-    const [searchValue, setSearchValue] = useState('');
-    const [allCategory, setAllCategory] = useState(categories);
    
     const inputHandle = (e) => {
         setState({
@@ -45,10 +65,7 @@ const EditProduct = () => {
         } else {
             setAllCategory(categories);
         }
-    };
-
-    const [images, setImages] = useState([]);
-    const [imageShow, setImageShow] = useState([]);
+    };    
 
     // const imageHandle = (e) => {
     //     const files = e.target.files;

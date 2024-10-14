@@ -9,7 +9,7 @@ class ProductControllers {
 
   // Product Add
   add_product = async (req, res) => { 
-    console.log('Received request:', req); // Log the incoming request
+    // console.log('Received request:', req); // Log the incoming request
 
     const uploadDir = path.join(__dirname, '..', '..', 'uploads');
     await fs.ensureDir(uploadDir);
@@ -18,19 +18,19 @@ class ProductControllers {
 
     form.parse(req, async (err, fields, files) => {
         if (err) {
-            console.error('Form parse error:', err);
+            // console.error('Form parse error:', err);
             return responseReturn(res, 400, { error: 'Something went wrong while parsing the form.' });
         }
     
         // Log parsed fields and files for debugging
-        console.log('Fields:', fields);
-        console.log('Files:', files);
+        // console.log('Fields:', fields);
+        // console.log('Files:', files);
     
         let { name, category, description, stock, price, shopName, brand, discount } = fields;  // Add discount here
         let { images } = files;
     
         if (!brand || !images) {
-            console.error('Missing required fields:', { name, category, description, stock, price, shopName, brand, discount, images });
+            // console.error('Missing required fields:', { name, category, description, stock, price, shopName, brand, discount, images });
             return responseReturn(res, 400, { error: 'All fields including brand, discount, and images are required.' });
         }
 
@@ -53,7 +53,7 @@ class ProductControllers {
             // Upload images to Cloudinary
             for (let i = 0; i < images.length; i++) {
                 const filePath = images[i].filepath || images[i].path;
-                console.log('File being uploaded:', filePath);
+                // console.log('File being uploaded:', filePath);
                 const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
                 allImageUrl.push(result.url);
             }
@@ -77,7 +77,7 @@ class ProductControllers {
 
             return responseReturn(res, 201, { product, message: 'Product Added Successfully' });
         } catch (uploadError) {
-            console.error('Image upload or save error:', uploadError);
+            // console.error('Image upload or save error:', uploadError);
             return responseReturn(res, 500, { error: 'Failed to upload images or save product.', details: uploadError.message });
         } finally {
             // Clean up uploaded temporary files
@@ -89,7 +89,7 @@ class ProductControllers {
     });
   };
 
-  // Product Get
+  // get products
   get_products = async (req, res) => {
     const { itemsPerPage, currentPage, searchValue } = req.query;
     const { id } = req;
@@ -111,28 +111,52 @@ class ProductControllers {
           $text: { $search: searchValue },
           sellerId: id
         }).countDocuments();
-
-        return res.status(200).json({ products, totalProduct });
+        // return res.status(200).json({ products, totalProduct });
+        responseReturn(res, 200,{ products, totalProduct });
       } else {
         const products = await productModel.find({ sellerId: id })
           .skip(skipPage)
           .limit(limitPage)
-          .sort({ createdAt: -1 });
-        
+          .sort({ createdAt: -1 });        
         const totalProduct = await productModel.find({ sellerId: id }).countDocuments();
-        return res.status(200).json({ products, totalProduct });
+        // return res.status(200).json({ products, totalProduct });
+        responseReturn(res, 200,{ products, totalProduct });
       }
     } catch (error) {
       console.error('Unexpected server error:', error);
-      return res.status(500).json({ error: 'Unexpected server error occurred.' });
+      // return res.status(500).json({ error: 'Unexpected server error occurred.' });
+      // responseReturn(res, 500,{ "error": "Unexpected server error occurred." });
     }
   };
+  //End of get products
+  
+  // get product
+  get_product = async (req, res) => {
+    const { productId } = req.params;
+    // console.log("Received Product ID:", productId);
+    try {    
+      const product = await productModel.findById(productId);
+      if (!product) {
+        return responseReturn(res, 404, { error: "Product not found" });
+      }
+      return responseReturn(res, 200, { product });
+    } catch (error) {
+      console.error('Unexpected server error:', error);
+      return responseReturn(res, 500, { error: 'Unexpected server error occurred.' });
+    }
+  };
+  //End of get product
+
 }
 
 // Corrected the instantiation with the correct class name
-const productControllers = new ProductControllers();
+// const productControllers = new ProductControllers();
   
-module.exports = {
-  add_product: productControllers.add_product,
-  get_products: productControllers.get_products
-};
+// module.exports = {
+//   add_product: productControllers.add_product,
+//   get_product: productControllers.get_product,
+//   get_products: productControllers.get_products
+// };
+
+const productControllers = new ProductControllers();
+module.exports = productControllers;
