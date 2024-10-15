@@ -5,7 +5,7 @@ import { PropagateLoader } from 'react-spinners';
 import { overrideStyle } from '../../utils/utils';
 import { toast } from 'react-hot-toast';
 import { get_category } from '../../store/Reducers/categoryReducers';
-import { get_product, messageClear } from '../../store/Reducers/productReducers';
+import { get_product, update_product, messageClear } from '../../store/Reducers/productReducers';
 
 const EditProduct = () => {
     const { productId } = useParams();
@@ -81,26 +81,28 @@ const EditProduct = () => {
             setCategory(product.category || '');
             setImageShow(product.images || []);
         }
-    }, [product]);
+    }, [product]);    
+
+    const updateProduct = (e) => {
+        e.preventDefault();
+        const obj = {
+            name: state.name,
+            description: state.description,
+            discount: state.discount,
+            price: state.price,
+            brand: state.brand,
+            stock: state.stock,
+            category,
+            productId
+        };
+        dispatch(update_product(obj));
+    };
+    
 
     useEffect(() => {
         if (successMessage) {
             toast.success(successMessage);
-            dispatch(messageClear());
-            setState({
-                name: '',
-                description: '',
-                price: '',
-                stock: '',
-                shopName: '',
-                category: '',
-                brand: '',  // Initialize brand in state
-                discount: 0,
-                images: []
-            });
-            setImageShow([]);
-            setImages([]);
-            setCategory([]);
+            dispatch(messageClear());            
         }
         if (errorMessage) {
             toast.error(errorMessage);
@@ -117,7 +119,7 @@ const EditProduct = () => {
                     hover:shadow-lg text-white rounded-sm px-7 py-2 my-2'>All Products</Link>
                 </div>
                 <div>
-                    <form action="">
+                    <form onSubmit={updateProduct}>
                         <div className='grid grid-cols-2 gap-4 mb-3 text-[#d0d2d6]'>
                             <div className='flex flex-col gap-1'>
                                 <label className='text-left' htmlFor="name">Product Name</label>

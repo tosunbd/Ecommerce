@@ -147,6 +147,42 @@ class ProductControllers {
   };
   //End of get product
 
+  // Start of update product  
+    
+  update_product = async (req, res) => {
+    try {
+      const { productId, name, description, discount, price, brand, stock, category } = req.body;
+
+      // Ensure required fields are provided
+      if (!productId) {
+        return responseReturn(res, 400, { error: "Product ID is required" });
+      }
+
+      if (!name || !description || !price || !stock || !category) {
+        return responseReturn(res, 400, { error: "Name, description, price, stock, and category are required" });
+      }
+
+      // Update the product
+      const updatedProduct = await productModel.findByIdAndUpdate(
+        productId,
+        { name, description, discount, price, brand, stock, category },
+        { new: true }
+      );
+
+      if (!updatedProduct) {
+        return responseReturn(res, 404, { error: "Product not found" });
+      }
+
+      return responseReturn(res, 200, { product: updatedProduct, message: "Product updated successfully" });
+    } catch (error) {
+      console.error('Unexpected server error:', error);
+      return responseReturn(res, 500, { error: 'Unexpected server error occurred.' });
+    }
+  };
+
+
+  //End of update product
+
 }
 
 // Corrected the instantiation with the correct class name

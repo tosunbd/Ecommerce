@@ -53,9 +53,28 @@ export const get_product = createAsyncThunk(
         );
       }
     }
-);
- 
+); 
 // End of get_product
+
+
+// Start of update_product
+export const update_product = createAsyncThunk(
+    'product/update_product',
+    async (product, { rejectWithValue, fulfillWithValue }) => {
+      try {
+        const { data } = await api.post(`/update_product`, product, { withCredentials: true });
+        return fulfillWithValue(data);
+      } catch (error) {
+        return rejectWithValue(
+          error.response && error.response.data
+            ? error.response.data
+            : { errorMessage: "Unable to connect to server" }
+        );
+      }
+    }
+);
+// End of update_product
+
 
 // Product Reducer Slice
 export const productReducers = createSlice({
@@ -85,8 +104,8 @@ export const productReducers = createSlice({
         })
         .addCase(add_product.fulfilled, (state, { payload }) => {
             state.loader = false;
-            state.successMessage = payload.message;
             state.products = [...state.products, payload.product];
+            state.successMessage = payload.message;            
         })
         .addCase(get_product.fulfilled, (state, { payload }) => {
             state.product = payload.product;            
@@ -94,6 +113,18 @@ export const productReducers = createSlice({
         .addCase(get_products.fulfilled, (state, { payload }) => {
             state.products = payload.products;
             state.totalProduct = payload.totalProduct;
+        })
+        .addCase(update_product.pending, (state) => {
+            state.loader = true;
+        })
+        .addCase(update_product.rejected, (state, { payload }) => {
+            state.loader = false;
+            state.errorMessage = payload.errorMessage || 'Something went wrong';
+        })
+        .addCase(update_product.fulfilled, (state, { payload }) => {
+            state.loader = false;            
+            state.product = payload.product;
+            state.successMessage = payload.message;
         });
     }
 });
