@@ -147,8 +147,7 @@ class ProductControllers {
   };
   //End of get product
 
-  // Start of update product  
-    
+  // Start of update product
   update_product = async (req, res) => {
     try {
       const { productId, name, description, discount, price, brand, stock, category } = req.body;
@@ -179,9 +178,65 @@ class ProductControllers {
       return responseReturn(res, 500, { error: 'Unexpected server error occurred.' });
     }
   };
-
-
   //End of update product
+
+
+  
+  // Start of product_image_update
+  product_image_update = async (req, res) => {
+
+      const uploadDir = path.join(__dirname, '..', '..', 'uploads');
+      await fs.ensureDir(uploadDir);
+
+      const form = formidable({ multiples: true, uploadDir: uploadDir, keepExtensions: true });
+
+      form.parse(req, async (err, fields, files) => {
+             
+        const { oldImage, productId } = fields;
+        let { newImage } = files;
+
+        if (err)
+        {
+          return responseReturn(res, 400, { error: 'Something went wrong while parsing the form.' });
+        }
+        else
+        {
+          try
+          {
+            cloudinary.config({
+              cloud_name: process.env.CLOUD_NAME,
+              api_key: process.env.API_KEY,
+              api_secret: process.env.API_SECRET,
+              secure: true
+            });
+
+            const filePath = oldImage.filepath || oldImage.path;
+            const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });            
+            if (result)
+            {
+              let { images } = await productModel.findById(productId);
+              const imageIndex = images.findIndex(img => img === (oldImage);
+              imges[imageIndex] = result.url;
+              return responseReturn(res, 200, { product: updatedProduct, message: "Product updated successfully" });
+            }
+            else
+            {
+              
+            }
+            
+          }
+          catch (error) {
+            console.error('Unexpected server error:', error);
+            return responseReturn(res, 500, { error: 'Unexpected server error occurred.' });
+          }
+        
+        } 
+
+  
+  };
+  //End of product_image_update
+
+
 
 }
 

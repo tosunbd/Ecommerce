@@ -5,7 +5,7 @@ import { PropagateLoader } from 'react-spinners';
 import { overrideStyle } from '../../utils/utils';
 import { toast } from 'react-hot-toast';
 import { get_category } from '../../store/Reducers/categoryReducers';
-import { get_product, update_product, messageClear } from '../../store/Reducers/productReducers';
+import { get_product, update_product, product_image_update, messageClear } from '../../store/Reducers/productReducers';
 
 const EditProduct = () => {
     const { productId } = useParams();
@@ -63,8 +63,11 @@ const EditProduct = () => {
 
     const changeImage = (img, files) => {
         if (files.length > 0) {
-            console.log(img);
-            console.log(files[0]);
+            dispatch(product_image_update({
+                oldImage: img,
+                newImage: files[0],
+                productId
+            }));
         }
     };
 
@@ -96,8 +99,7 @@ const EditProduct = () => {
             productId
         };
         dispatch(update_product(obj));
-    };
-    
+    };    
 
     useEffect(() => {
         if (successMessage) {
