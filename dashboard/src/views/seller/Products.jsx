@@ -98,10 +98,10 @@ const Products = () => {
                         <Link to={`/seller/dashboard/edit-product/${product._id}`} className="p-[6px] bg-yellow-500 rounded hover:shadow-lg hover:shadow-yellow-500/50">
                           <FaEdit />
                         </Link>
-                        <Link className="p-[6px] bg-green-500 rounded hover:shadow-lg hover:shadow-green-500/50" to={`/products/view/${product.id}`}>
+                        <Link className="p-[6px] bg-green-500 rounded hover:shadow-lg hover:shadow-green-500/50" to={`/products/view/${product._id}`}>
                           <FaEye />
                         </Link>
-                        <Link className="p-[6px] bg-red-500 hover:shadow-lg hover:shadow-red-500/50" to={`/products/delete/${product.id}`}>
+                        <Link className="p-[6px] bg-red-500 hover:shadow-lg hover:shadow-red-500/50" to={`/products/delete/${product._id}`}>
                           <FaTrash />
                         </Link>
                       </div>
