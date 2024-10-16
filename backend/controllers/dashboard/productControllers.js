@@ -194,9 +194,9 @@ product_image_update = async (req, res) => {
       const { oldImage, productId } = fields;
       let { newImage } = files;
 
-      console.log("Received Product ID:", productId);
-      console.log("Received Old Image:", oldImage);
-      console.log("Received New Image:", newImage);
+      // console.log("Received Product ID:", productId);
+      // console.log("Received Old Image:", oldImage);
+      // console.log("Received New Image:", newImage);
 
       if (err) {
         return responseReturn(res, 400, { error: 'Something went wrong while parsing the form.' });

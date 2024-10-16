@@ -1,14 +1,55 @@
 import { FaRegEdit } from "react-icons/fa";
 import { FaImages } from "react-icons/fa6";
 import { FadeLoader } from "react-spinners";
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { PropagateLoader } from 'react-spinners';
+import { overrideStyle } from '../../utils/utils';
+import { toast } from 'react-hot-toast';
+import { profile_image_upload, messageClear } from '../../store/Reducers/authReducers';
 
 const Profile = () => {
 
-    const image = true;
-    const loader = true;
+    const dispatch = useDispatch();
+    const { userInfo, loader, errorMessage, successMessage } = useSelector(state => state.auth);
     const status = 'active';
-    const userInfo = true;
 
+    const add_profile_image = (e) => {
+        const file = e.target.files[0];
+        if(file.length > 0){            
+            const formData = new FormData();
+            formData.append('image', file);
+            dispatch(profile_image_upload(formData));
+        }
+    }
+
+    // const add_profile_image = (e) => {        
+    //     const files = e.target.files;
+    //     // console.log(userInfo._id);
+    //     if (files.length > 0) {
+    //         const oldImage = ""; 
+    //         dispatch(profile_image_upload({
+    //             oldImage,  // This will be empty for the first upload
+    //             newImage: files[0],
+    //             userId: userInfo._id  // Ensure userInfo._id is defined
+    //         }));
+    //     }
+    // };
+    
+    
+    useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage);
+            dispatch(messageClear());            
+        }
+        if (errorMessage) {
+            toast.error(errorMessage);
+            dispatch(messageClear());            
+        }
+    }, [errorMessage, successMessage, dispatch]);
+    
+    
+    
     return (
         <div className='px-2 lg:px-7 py-5'>
             <div className='w-full flex flex-wrap'>
@@ -16,10 +57,10 @@ const Profile = () => {
                     <div className="w-full p-4 bg-[#6a5fdf] rounded-md text-[#d0d2d6]">
                         <div className="flex justify-center items-center py-3">
                             {
-                                image ? <label className="h-[150px] w-[200px] relative p-3 cursor-pointer overflow-hidden" htmlFor="img">
-                                    <img src="http://localhost:5173/images/demo.jpg" alt="" />
+                                userInfo?.image ? <label className="h-[150px] w-[200px] relative p-3 cursor-pointer overflow-hidden" htmlFor="img">
+                                    <img src={userInfo?.image} alt="" />
                                     {
-                                        !loader && <div className="bg-slate-600 absolute left-0 top-0 w-full h-full
+                                        loader && <div className="bg-slate-600 absolute left-0 top-0 w-full h-full
                                         opacity-70 flex justify-center items-center z-20">
                                             <span>
                                                 <FadeLoader />
@@ -43,7 +84,7 @@ const Profile = () => {
                                     }
                                 </label>
                             }
-                            <input type="file" className="hidden" id="img" />
+                            <input onChange={add_profile_image} type="file" className="hidden" id="img" />
                         </div>
 
                         <div className="px-0 md:px-5 py-2">
@@ -55,26 +96,26 @@ const Profile = () => {
                                 </span>
                                 <div className="flex gap-2">
                                     <span>Name:</span>
-                                    <span>Taufiqul Islam</span>
+                                    <span>{ userInfo?.name }</span>
                                 </div>
                                 <div className="flex gap-2">
                                     <span>Email:</span>
-                                    <span>tosunbd@gmail.com</span>
+                                    <span>{ userInfo?.email }</span>
                                 </div>
                                 <div className="flex gap-2">
                                     <span>Role:</span>
-                                    <span>Seller</span>
+                                    <span>{ userInfo?.role }</span>
                                 </div>
                                 <div className="flex gap-2">
                                     <span>Status:</span>
-                                    <span>Active</span>
+                                    <span>{ userInfo?.status }</span>
                                 </div>
                                 <div className="flex gap-2">
                                     <span>Payment Acount:</span>
                                     {
                                         status === 'active' ?
-                                            <span className="bg-green-500 text-white text-xs 
-                                            cursor-pointer font-normal ml-2 px-2 py-0.5 rounded">Pending</span>
+                                            <span className="bg-red-500 text-white text-xs 
+                                            cursor-pointer font-normal ml-2 px-2 py-0.5 rounded">{ userInfo?.payment }</span>
                                             : <span className="bg-blue-500 text-white text-xs 
                                             cursor-pointer font-normal ml-2 px-2 py-0.5 rounded">Click Active</span>
                                     }
@@ -84,7 +125,7 @@ const Profile = () => {
 
                         <div className="px-0 md:px-5 py-2">
                             {
-                                !userInfo ? <form>
+                                !userInfo?.shopInfo ? <form>
                                     <div className='flex flex-col gap-1 mb-2'>
                                         <label className='text-left' htmlFor="shop">Shop Name</label>
                                         <input

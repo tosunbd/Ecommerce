@@ -61,11 +61,8 @@ const EditProduct = () => {
         }
     };
 
-    const changeImage = (img, files) => {
-        console.log('Image being changed:', img);
-        console.log('Files:', files);
-        if (files.length > 0) {
-            // console.log('Dispatching image update...');
+    const changeImage = (img, files) => {        
+        if (files.length > 0) {            
             dispatch(product_image_update({
                 oldImage: img,
                 newImage: files[0],

@@ -4,6 +4,11 @@ const sellerCustomerModel = require('../models/chat/sellerCustomerModel');
 const { responseReturn } = require('../utilities/response');
 const bcrypt = require('bcrypt');
 const { createToken } = require('../utilities/tokenCreate');
+const formidable = require('formidable');
+const cloudinary = require('cloudinary').v2;
+const fs = require('fs-extra');
+const path = require('path');
+
 
 class authControllers {
     // Admin Login
@@ -147,8 +152,107 @@ class authControllers {
             responseReturn(res, 500, { error: "Internal Server Error" });
         }
     }
-
     // End of Get User
+
+    
+    // Start of profile_image_upload
+    // profile_image_upload = async (req, res) => {
+    //     try {
+    //         console.log('Request received for profile_image_upload');
+            
+    //         const uploadDir = path.join(__dirname, '..', '..', 'uploads');
+    //         await fs.ensureDir(uploadDir);
+    //         console.log('Upload directory ensured:', uploadDir);
+
+    //         const form = formidable({ multiples: true, uploadDir: uploadDir, keepExtensions: true });
+
+    //         form.parse(req, async (err, fields, files) => {
+    //             if (err) {
+    //                 console.error("Formidable parsing error:", err);
+    //                 return res.status(400).json({ error: 'Form parsing error' });
+    //             }
+            
+    //             console.log("Parsed fields:", fields);  // Should log userId and oldImage
+    //             console.log("Parsed files:", files);    // Should log newImage with correct details
+            
+    //             const { oldImage, userId } = fields;
+    //             const { newImage } = files;
+            
+    //             if (!newImage) {
+    //                 console.error("No new image file provided");
+    //                 return res.status(400).json({ error: 'No image provided' });
+    //             }
+            
+    //             // Proceed with the rest of your logic...
+    //         });
+            
+    //     } catch (error) {
+    //         console.error('Server error during profile_image_upload:', error);
+    //         return responseReturn(res, 500, { error: 'Server error while uploading profile image.' });
+    //     }
+    // };
+
+    profile_image_upload = async (req, res) => {
+        const { id } = req;
+    
+        try {
+            // Ensure upload directory exists
+            const uploadDir = path.join(__dirname, '..', '..', 'uploads');
+            await fs.ensureDir(uploadDir);
+    
+            const form = formidable({ multiples: false, uploadDir: uploadDir, keepExtensions: true });
+    
+            form.parse(req, async (err, _, files) => {
+                // Check for errors in form parsing
+                if (err) {
+                    console.error("Form parsing error:", err);
+                    return responseReturn(res, 400, { error: 'Form parsing error.' });
+                }
+    
+                let { image } = files;
+    
+                // Check if an image file is uploaded
+                if (!image) {
+                    return responseReturn(res, 400, { error: 'No image file uploaded.' });
+                }
+    
+                try {
+                    // Configure Cloudinary
+                    cloudinary.config({
+                        cloud_name: process.env.CLOUD_NAME,
+                        api_key: process.env.API_KEY,
+                        api_secret: process.env.API_SECRET,
+                        secure: true
+                    });
+    
+                    // Upload image to Cloudinary
+                    const filePath = image.filepath || image.path;
+                    const result = await cloudinary.uploader.upload(filePath, { folder: 'profile' });
+    
+                    if (result) {
+                        // Update the seller's profile image
+                        await sellerModel.findByIdAndUpdate(id, { image: result.secure_url });
+    
+                        // Fetch updated user info
+                        const userInfo = await sellerModel.findById(id);
+    
+                        return responseReturn(res, 201, { message: "Profile image uploaded successfully", userInfo });
+                    } else {
+                        return responseReturn(res, 500, { error: 'Image upload to Cloudinary failed.' });
+                    }
+                } catch (error) {
+                    console.error("Cloudinary upload error:", error);
+                    return responseReturn(res, 500, { error: error.message });
+                }
+            });
+        } catch (error) {
+            console.error("Server error:", error);
+            return responseReturn(res, 500, { error: 'Server error while uploading profile image.' });
+        }
+    };
+    // End of profile_image_upload
+
+
 }
 
 module.exports = new authControllers();

@@ -74,6 +74,66 @@ export const get_user_info = createAsyncThunk(
     }
 );
 
+
+// Start of profile_image_upload
+
+// export const profile_image_upload = createAsyncThunk(
+//     'product/profile_image_upload',
+//     async ({ oldImage, newImage, userId }, { rejectWithValue, fulfillWithValue }) => {
+//         try {
+//             const formData = new FormData();
+//             if (oldImage) formData.append('oldImage', oldImage);  // Append oldImage if exists
+//             formData.append('newImage', newImage);  // Append new image file
+//             formData.append('userId', userId);  // Append user ID
+
+//             // Log FormData content to ensure it's correctly populated
+//             for (const pair of formData.entries()) {
+//                 console.log(pair[0]+ ', ' + pair[1]);
+//             }
+
+//             const { data } = await api.post(`/profile_image_upload`, formData, {
+//                 headers: {
+//                     'Content-Type': 'multipart/form-data',  // Make sure the content type is set correctly
+//                 },
+//                 withCredentials: true
+//             });
+//             return fulfillWithValue(data);
+//         } catch (error) {
+//             console.error("Error during profile image upload:", error);
+//             return rejectWithValue(
+//                 error.response && error.response.data
+//                     ? error.response.data
+//                     : { errorMessage: 'Unable to connect to server' }
+//             );
+//         }
+//     }
+// );
+
+
+
+export const profile_image_upload = createAsyncThunk(
+    'product/profile_image_upload',
+    async ({ image }, { rejectWithValue, fulfillWithValue }) => {
+        try {
+            const { data } = await api.post(`/profile_image_upload`, image, { withCredentials: true })
+            return fulfillWithValue(data);
+        } catch (error) {
+            console.error("Error during profile image upload:", error);
+            return rejectWithValue(
+                error.response && error.response.data
+                    ? error.response.data
+                    : { errorMessage: 'Unable to connect to server' }
+            );
+        }
+    }
+);
+
+
+
+
+// End of profile_image_upload
+
+
 const returnRole = (token) => {
     if (token)
     {
@@ -155,14 +215,20 @@ export const authReducer = createSlice({
             state.role = returnRole(payload.token);
         })
         .addCase(seller_register.rejected, (state, { payload }) => {
-            state.loader = false;
-            // Ensure there is a payload and it contains an errorMessage, otherwise set a default message
+            state.loader = false;            
             state.errorMessage = payload && payload.errorMessage ? payload.errorMessage : "Please Enter a Valid Email and Password";
         })
-
         .addCase(get_user_info.fulfilled, (state, { payload }) => {
             state.loader = false;
             state.userInfo = payload.userInfo;
+        })
+        .addCase(profile_image_upload.pending, (state, { payload }) => {
+            state.loader = false;
+        })
+        .addCase(profile_image_upload.fulfilled, (state, { payload }) => {
+            state.loader = false;
+            state.userInfo = payload.userInfo;
+            state.successMessage = payload.message;
         })
     }
 });
