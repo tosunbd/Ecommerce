@@ -18,7 +18,7 @@ const EditProduct = () => {
     const [category, setCategory] = useState('');
     const [searchValue, setSearchValue] = useState('');
     const [allCategory, setAllCategory] = useState(categories || []);
-    const [images, setImages] = useState([]);
+    // const [images, setImages] = useState([]);
     const [imageShow, setImageShow] = useState([]);
 
     useEffect(() => {
@@ -62,7 +62,10 @@ const EditProduct = () => {
     };
 
     const changeImage = (img, files) => {
+        console.log('Image being changed:', img);
+        console.log('Files:', files);
         if (files.length > 0) {
+            // console.log('Dispatching image update...');
             dispatch(product_image_update({
                 oldImage: img,
                 newImage: files[0],
@@ -70,6 +73,7 @@ const EditProduct = () => {
             }));
         }
     };
+    
 
     useEffect(() => {
         if (product) {
@@ -84,7 +88,11 @@ const EditProduct = () => {
             setCategory(product.category || '');
             setImageShow(product.images || []);
         }
-    }, [product]);    
+    }, [product]); 
+    
+    useEffect(() => {
+        setAllCategory(categories);
+    }, [categories]);
 
     const updateProduct = (e) => {
         e.preventDefault();
@@ -111,6 +119,7 @@ const EditProduct = () => {
             dispatch(messageClear());            
         }
     }, [errorMessage, successMessage, dispatch]);
+   
 
     return (
         <div className="px-2 lg:px-7 pt-5">

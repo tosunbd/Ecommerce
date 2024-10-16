@@ -4,6 +4,7 @@ const cloudinary = require('cloudinary').v2;
 const productModel = require('../../models/productModel');
 const fs = require('fs-extra');
 const path = require('path');
+const { error } = require('console');
 
 class ProductControllers {
 
@@ -180,61 +181,72 @@ class ProductControllers {
   };
   //End of update product
 
-
   
-  // Start of product_image_update
-  product_image_update = async (req, res) => {
+// Start of product_image_update
+product_image_update = async (req, res) => {
+  try {
+    const uploadDir = path.join(__dirname, '..', '..', 'uploads');
+    await fs.ensureDir(uploadDir);
 
-      const uploadDir = path.join(__dirname, '..', '..', 'uploads');
-      await fs.ensureDir(uploadDir);
+    const form = formidable({ multiples: true, uploadDir: uploadDir, keepExtensions: true });
 
-      const form = formidable({ multiples: true, uploadDir: uploadDir, keepExtensions: true });
+    form.parse(req, async (err, fields, files) => {
+      const { oldImage, productId } = fields;
+      let { newImage } = files;
 
-      form.parse(req, async (err, fields, files) => {
-             
-        const { oldImage, productId } = fields;
-        let { newImage } = files;
+      console.log("Received Product ID:", productId);
+      console.log("Received Old Image:", oldImage);
+      console.log("Received New Image:", newImage);
 
-        if (err)
-        {
-          return responseReturn(res, 400, { error: 'Something went wrong while parsing the form.' });
+      if (err) {
+        return responseReturn(res, 400, { error: 'Something went wrong while parsing the form.' });
+      } else {
+        try {
+          cloudinary.config({
+            cloud_name: process.env.CLOUD_NAME,
+            api_key: process.env.API_KEY,
+            api_secret: process.env.API_SECRET,
+            secure: true
+          });
+
+          // Check if oldImage exists and use the correct path for Cloudinary upload
+          const filePath = newImage.filepath || newImage.path;
+
+          const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });
+
+          if (result) {
+            let { images } = await productModel.findById(productId);
+
+            // Find the index of the old image and update it with the new image URL
+            const imageIndex = images.findIndex(img => img === oldImage);
+
+            if (imageIndex !== -1) {
+              images[imageIndex] = result.secure_url; // Use `secure_url` for HTTPS
+
+              // Update the product with the new image URL
+              await productModel.findByIdAndUpdate(productId, { images });
+
+              const updatedProduct = await productModel.findById(productId);
+              return responseReturn(res, 200, {
+                product: updatedProduct,
+                message: 'Image uploaded successfully'
+              });
+            } else {
+              return responseReturn(res, 404, { error: 'Old image not found in product images.' });
+            }
+          } else {
+            return responseReturn(res, 404, { error: 'Image upload failed' });
+          }
+        } catch (error) {
+          return responseReturn(res, 500, { error: error.message });
         }
-        else
-        {
-          try
-          {
-            cloudinary.config({
-              cloud_name: process.env.CLOUD_NAME,
-              api_key: process.env.API_KEY,
-              api_secret: process.env.API_SECRET,
-              secure: true
-            });
-
-            const filePath = oldImage.filepath || oldImage.path;
-            const result = await cloudinary.uploader.upload(filePath, { folder: 'products' });            
-            if (result)
-            {
-              let { images } = await productModel.findById(productId);
-              const imageIndex = images.findIndex(img => img === (oldImage);
-              imges[imageIndex] = result.url;
-              return responseReturn(res, 200, { product: updatedProduct, message: "Product updated successfully" });
-            }
-            else
-            {
-              
-            }
-            
-          }
-          catch (error) {
-            console.error('Unexpected server error:', error);
-            return responseReturn(res, 500, { error: 'Unexpected server error occurred.' });
-          }
-        
-        } 
-
-  
-  };
-  //End of product_image_update
+      }
+    });
+  } catch (error) {
+    return responseReturn(res, 500, { error: 'Server error while updating product image.' });
+  }
+};
+// End of product_image_update
 
 
 
