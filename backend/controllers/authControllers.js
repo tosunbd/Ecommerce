@@ -156,44 +156,8 @@ class authControllers {
 
     
     // Start of profile_image_upload
-    // profile_image_upload = async (req, res) => {
-    //     try {
-    //         console.log('Request received for profile_image_upload');
-            
-    //         const uploadDir = path.join(__dirname, '..', '..', 'uploads');
-    //         await fs.ensureDir(uploadDir);
-    //         console.log('Upload directory ensured:', uploadDir);
-
-    //         const form = formidable({ multiples: true, uploadDir: uploadDir, keepExtensions: true });
-
-    //         form.parse(req, async (err, fields, files) => {
-    //             if (err) {
-    //                 console.error("Formidable parsing error:", err);
-    //                 return res.status(400).json({ error: 'Form parsing error' });
-    //             }
-            
-    //             console.log("Parsed fields:", fields);  // Should log userId and oldImage
-    //             console.log("Parsed files:", files);    // Should log newImage with correct details
-            
-    //             const { oldImage, userId } = fields;
-    //             const { newImage } = files;
-            
-    //             if (!newImage) {
-    //                 console.error("No new image file provided");
-    //                 return res.status(400).json({ error: 'No image provided' });
-    //             }
-            
-    //             // Proceed with the rest of your logic...
-    //         });
-            
-    //     } catch (error) {
-    //         console.error('Server error during profile_image_upload:', error);
-    //         return responseReturn(res, 500, { error: 'Server error while uploading profile image.' });
-    //     }
-    // };
-
     profile_image_upload = async (req, res) => {
-        const { id } = req;
+        const { id } = req; // Assuming `id` is passed from `authMiddleware`
     
         try {
             // Ensure upload directory exists
@@ -209,7 +173,7 @@ class authControllers {
                     return responseReturn(res, 400, { error: 'Form parsing error.' });
                 }
     
-                let { image } = files;
+                let { image } = files;  // Extract the image file from the parsed files
     
                 // Check if an image file is uploaded
                 if (!image) {
@@ -230,7 +194,7 @@ class authControllers {
                     const result = await cloudinary.uploader.upload(filePath, { folder: 'profile' });
     
                     if (result) {
-                        // Update the seller's profile image
+                        // Update the seller's profile image in the database
                         await sellerModel.findByIdAndUpdate(id, { image: result.secure_url });
     
                         // Fetch updated user info
@@ -249,7 +213,7 @@ class authControllers {
             console.error("Server error:", error);
             return responseReturn(res, 500, { error: 'Server error while uploading profile image.' });
         }
-    };
+    };    
     // End of profile_image_upload
 
 

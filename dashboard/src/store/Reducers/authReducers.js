@@ -115,7 +115,13 @@ export const profile_image_upload = createAsyncThunk(
     'product/profile_image_upload',
     async ({ image }, { rejectWithValue, fulfillWithValue }) => {
         try {
-            const { data } = await api.post(`/profile_image_upload`, image, { withCredentials: true })
+            // Ensure the image is being sent with the correct headers
+            const { data } = await api.post(`/profile_image_upload`, image, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                withCredentials: true,
+            });
             return fulfillWithValue(data);
         } catch (error) {
             console.error("Error during profile image upload:", error);
@@ -127,7 +133,6 @@ export const profile_image_upload = createAsyncThunk(
         }
     }
 );
-
 
 
 

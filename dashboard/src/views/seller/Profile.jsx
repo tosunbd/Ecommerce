@@ -16,13 +16,15 @@ const Profile = () => {
 
     const add_profile_image = (e) => {
         const file = e.target.files[0];
-        if(file.length > 0){            
+        if (file) { // Ensure the file exists
             const formData = new FormData();
-            formData.append('image', file);
-            dispatch(profile_image_upload(formData));
+            formData.append('image', file);  // Append the image file to FormData
+    
+            // Dispatch the FormData directly
+            dispatch(profile_image_upload({ image: formData }));
         }
-    }
-
+    };
+    
     // const add_profile_image = (e) => {        
     //     const files = e.target.files;
     //     // console.log(userInfo._id);
@@ -35,6 +37,7 @@ const Profile = () => {
     //         }));
     //     }
     // };
+    
     
     
     useEffect(() => {
