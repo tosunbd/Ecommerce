@@ -9,6 +9,7 @@ router.post('/seller-login', authControllers.seller_login);
 router.post('/seller-register', authControllers.seller_register);
 // router.post('/category-add', categoryControllers.add_category);
 router.post('/profile_image_upload', authMiddleware, authControllers.profile_image_upload);
+router.post('/add_user_info', authMiddleware, authControllers.add_user_info);
 
 module.exports = router;
 

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PropagateLoader } from 'react-spinners';
 import { overrideStyle } from '../../utils/utils';
 import { toast } from 'react-hot-toast';
-import { profile_image_upload, messageClear } from '../../store/Reducers/authReducers';
+import { profile_image_upload, add_user_info, messageClear } from '../../store/Reducers/authReducers';
 
 const Profile = () => {
 
@@ -14,42 +14,48 @@ const Profile = () => {
     const { userInfo, loader, errorMessage, successMessage } = useSelector(state => state.auth);
     const status = 'active';
 
+    const [state, setState] = useState({
+        shopName: '',
+        division: '',
+        district: '',        
+        sub_district: ''
+    });
+
     const add_profile_image = (e) => {
         const file = e.target.files[0];
-        if (file) { // Ensure the file exists
+        if (file)
+        {
             const formData = new FormData();
-            formData.append('image', file);  // Append the image file to FormData
-    
-            // Dispatch the FormData directly
+            formData.append('image', file);
             dispatch(profile_image_upload({ image: formData }));
         }
     };
+
+    const addUserInfo = (e) => {
+        e.preventDefault();
+        dispatch(add_user_info(state)); // state should contain shopName, division, district, sub_district
+    };
     
-    // const add_profile_image = (e) => {        
-    //     const files = e.target.files;
-    //     // console.log(userInfo._id);
-    //     if (files.length > 0) {
-    //         const oldImage = ""; 
-    //         dispatch(profile_image_upload({
-    //             oldImage,  // This will be empty for the first upload
-    //             newImage: files[0],
-    //             userId: userInfo._id  // Ensure userInfo._id is defined
-    //         }));
-    //     }
-    // };
-    
-    
+   
+
+    const inputHandle = (e) => {
+        setState({
+            ...state,
+            [e.target.name]: e.target.value
+        })
+    }
     
     useEffect(() => {
         if (successMessage) {
-            toast.success(successMessage);
-            dispatch(messageClear());            
+            toast.success(successMessage);  // Display success message as toast
+            dispatch(messageClear());  // Clear the message after displaying it
         }
         if (errorMessage) {
-            toast.error(errorMessage);
-            dispatch(messageClear());            
+            toast.error(errorMessage);  // Display error message if any
+            dispatch(messageClear());  // Clear the error message
         }
     }, [errorMessage, successMessage, dispatch]);
+    
     
     
     
@@ -128,21 +134,24 @@ const Profile = () => {
 
                         <div className="px-0 md:px-5 py-2">
                             {
-                                !userInfo?.shopInfo ? <form>
+                                !userInfo?.shopInfo ? <form onSubmit={addUserInfo}>
                                     <div className='flex flex-col gap-1 mb-2'>
                                         <label className='text-left' htmlFor="shop">Shop Name</label>
-                                        <input
+                                        <input value={state.shopName} onChange={inputHandle}
                                             className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf]
                                             border border-slate-700 rounded-md text-[#d0d2d6]'
                                             type="text"
-                                            name='shop'
-                                            id='shop'
+                                            name='shopName'
+                                            id='shopName'
                                             placeholder='Shop Name'
                                         />
                                     </div>
+                                    
                                     <div className='flex flex-col gap-1 mb-2'>
                                         <label className='text-left' htmlFor="division">Division Name</label>
                                         <input
+                                            value={state.division}
+                                            onChange={inputHandle}
                                             className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf]
                                             border border-slate-700 rounded-md text-[#d0d2d6]'
                                             type="text"
@@ -151,9 +160,12 @@ const Profile = () => {
                                             placeholder='Division Name'
                                         />
                                     </div>
+
                                     <div className='flex flex-col gap-1 mb-2'>
                                         <label className='text-left' htmlFor="district">District Name</label>
                                         <input
+                                            value={state.district}
+                                            onChange={inputHandle}
                                             className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf]
                                             border border-slate-700 rounded-md text-[#d0d2d6]'
                                             type="text"
@@ -162,24 +174,31 @@ const Profile = () => {
                                             placeholder='District Name'
                                         />
                                     </div>
+
                                     <div className='flex flex-col gap-1 mb-2'>
                                         <label className='text-left' htmlFor="subDistrict">Sub District Name</label>
                                         <input
+                                            value={state.sub_district}
+                                            onChange={inputHandle}
                                             className='px-4 py-2 focus:border-indigo-500 outline-none bg-[#6a5fdf]
                                             border border-slate-700 rounded-md text-[#d0d2d6]'
                                             type="text"
-                                            name='subDistrict'
+                                            name='sub_district'  // Updated name attribute
                                             id='subDistrict'
                                             placeholder='Sub District Name'
                                         />
                                     </div>
+
                                     <div>
-                                        <button
+                                        <button disabled={loader ? true : false}
                                             type="submit"
                                             className='bg-red-500 hover:shadow-red-500/40 mt-2
                                             hover:shadow-md text-white rounded-md px-7 py-2 my-2'>
-                                            Save Changes
-                                        </button>
+                                            {
+                                                loader ? <PropagateLoader color='#fff'
+                                                cssOverride={overrideStyle} /> : 'Save Changes'
+                                            } 
+                                        </button>                                        
                                     </div>
                                 </form>
 
@@ -193,19 +212,19 @@ const Profile = () => {
                                     </span>
                                     <div className="flex gap-2">
                                         <span>Shop Name:</span>
-                                        <span>shadheen</span>
+                                        <span>{ userInfo?.shopInfo?.shopName }</span>
                                     </div>
                                     <div className="flex gap-2">
                                         <span>Division:</span>
-                                        <span>Dhaka</span>
+                                        <span>{ userInfo?.shopInfo?.division }</span>
                                     </div>
                                     <div className="flex gap-2">
                                         <span>District:</span>
-                                        <span>Dhaka</span>
+                                        <span>{ userInfo?.shopInfo?.district }</span>
                                     </div>
                                     <div className="flex gap-2">
                                         <span>Sub District:</span>
-                                        <span>Rampura</span>
+                                        <span>{ userInfo?.shopInfo?.sub_district }</span>
                                     </div>
                                 </div>
                             }

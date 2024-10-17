@@ -181,26 +181,45 @@ class authControllers {
                 }
     
                 try {
+                    // Get the user's existing profile
+                    const user = await sellerModel.findById(id);
+    
+                    if (!user) {
+                        return responseReturn(res, 404, { error: 'User not found.' });
+                    }
+    
+                    // Check if the user has an existing profile image
+                    if (user.image) {
+                        // Extract public_id from the existing image URL
+                        const publicId = user.image.split('/').pop().split('.')[0];
+                        console.log(`Deleting old image with public_id: ${publicId}`);
+    
+                        // Delete the old image from Cloudinary
+                        await cloudinary.uploader.destroy(`profile/${publicId}`, function (result) {
+                            console.log("Old image deleted from Cloudinary:", result);
+                        });
+                    }
+    
                     // Configure Cloudinary
                     cloudinary.config({
                         cloud_name: process.env.CLOUD_NAME,
                         api_key: process.env.API_KEY,
                         api_secret: process.env.API_SECRET,
-                        secure: true
+                        secure: true,
                     });
     
-                    // Upload image to Cloudinary
+                    // Upload the new image to Cloudinary
                     const filePath = image.filepath || image.path;
                     const result = await cloudinary.uploader.upload(filePath, { folder: 'profile' });
     
                     if (result) {
-                        // Update the seller's profile image in the database
+                        // Update the user's profile with the new image URL
                         await sellerModel.findByIdAndUpdate(id, { image: result.secure_url });
     
                         // Fetch updated user info
-                        const userInfo = await sellerModel.findById(id);
+                        const updatedUserInfo = await sellerModel.findById(id);
     
-                        return responseReturn(res, 201, { message: "Profile image uploaded successfully", userInfo });
+                        return responseReturn(res, 201, { message: "Profile image uploaded successfully", userInfo: updatedUserInfo });
                     } else {
                         return responseReturn(res, 500, { error: 'Image upload to Cloudinary failed.' });
                     }
@@ -213,9 +232,42 @@ class authControllers {
             console.error("Server error:", error);
             return responseReturn(res, 500, { error: 'Server error while uploading profile image.' });
         }
-    };    
+    };
     // End of profile_image_upload
-
+    
+    
+    // Start of add_user_info
+    
+    add_user_info = async (req, res) => {
+        const { id } = req;  // This should contain the id set by the middleware
+    
+        // Debugging - log the id and request body
+        console.log('User ID from middleware:', id);
+        const { shopName, division, district, sub_district } = req.body;
+    
+        console.log('Received data:', { shopName, division, district, sub_district });
+        
+        if (!id) {
+            return res.status(400).json({ error: 'User ID is missing' });
+        }
+    
+        try {
+            // Update the user's shop info
+            await sellerModel.findByIdAndUpdate(id, {
+                shopInfo: { shopName, division, district, sub_district }
+            });
+    
+            // Fetch updated user info
+            const updatedUserInfo = await sellerModel.findById(id);
+    
+            return responseReturn(res, 201, { message: "Shop information updated successfully", userInfo: updatedUserInfo });
+        } catch (error) {
+            console.error("Error during updating user info:", error);
+            return responseReturn(res, 500, { error: 'Server error while updating shop information.' });
+        }
+    };
+       
+    // End of add_user_info 
 
 }
 

@@ -76,43 +76,8 @@ export const get_user_info = createAsyncThunk(
 
 
 // Start of profile_image_upload
-
-// export const profile_image_upload = createAsyncThunk(
-//     'product/profile_image_upload',
-//     async ({ oldImage, newImage, userId }, { rejectWithValue, fulfillWithValue }) => {
-//         try {
-//             const formData = new FormData();
-//             if (oldImage) formData.append('oldImage', oldImage);  // Append oldImage if exists
-//             formData.append('newImage', newImage);  // Append new image file
-//             formData.append('userId', userId);  // Append user ID
-
-//             // Log FormData content to ensure it's correctly populated
-//             for (const pair of formData.entries()) {
-//                 console.log(pair[0]+ ', ' + pair[1]);
-//             }
-
-//             const { data } = await api.post(`/profile_image_upload`, formData, {
-//                 headers: {
-//                     'Content-Type': 'multipart/form-data',  // Make sure the content type is set correctly
-//                 },
-//                 withCredentials: true
-//             });
-//             return fulfillWithValue(data);
-//         } catch (error) {
-//             console.error("Error during profile image upload:", error);
-//             return rejectWithValue(
-//                 error.response && error.response.data
-//                     ? error.response.data
-//                     : { errorMessage: 'Unable to connect to server' }
-//             );
-//         }
-//     }
-// );
-
-
-
 export const profile_image_upload = createAsyncThunk(
-    'product/profile_image_upload',
+    'auth/profile_image_upload',
     async ({ image }, { rejectWithValue, fulfillWithValue }) => {
         try {
             // Ensure the image is being sent with the correct headers
@@ -133,10 +98,30 @@ export const profile_image_upload = createAsyncThunk(
         }
     }
 );
-
-
-
 // End of profile_image_upload
+
+// Start of add_user_info
+export const add_user_info = createAsyncThunk(
+    'auth/add_user_info',
+    async (info, { rejectWithValue, fulfillWithValue }) => { // remove destructuring
+        console.log(info); // This should log the info (shop details) passed from React
+        try
+        {   
+            const { data } = await api.post(`/add_user_info`, info, { withCredentials: true });
+            return fulfillWithValue(data);
+        }
+        catch (error)
+        {
+            console.error("Error during profile info update", error);
+            return rejectWithValue(
+                error.response && error.response.data
+                    ? error.response.data
+                    : { errorMessage: 'Unable to connect to server' }
+            );
+        }
+    }
+);
+// End of add_user_info
 
 
 const returnRole = (token) => {
@@ -227,14 +212,31 @@ export const authReducer = createSlice({
             state.loader = false;
             state.userInfo = payload.userInfo;
         })
-        .addCase(profile_image_upload.pending, (state, { payload }) => {
-            state.loader = false;
+        .addCase(profile_image_upload.pending, (state) => {
+            state.loader = true;
         })
         .addCase(profile_image_upload.fulfilled, (state, { payload }) => {
             state.loader = false;
             state.userInfo = payload.userInfo;
             state.successMessage = payload.message;
         })
+        .addCase(profile_image_upload.rejected, (state, { payload }) => {
+            state.loader = false;
+            state.errorMessage = payload?.errorMessage || 'Image upload failed';
+        })
+        .addCase(add_user_info.pending, (state) => {
+            state.loader = true;
+        })
+        .addCase(add_user_info.fulfilled, (state, { payload }) => {
+            state.loader = false;
+            state.userInfo = payload.userInfo;
+            state.successMessage = payload.message;
+        })
+        .addCase(add_user_info.rejected, (state, { payload }) => {
+            state.loader = false;
+            state.errorMessage = payload?.errorMessage || 'User info update failed';
+        });;
+
     }
 });
 
