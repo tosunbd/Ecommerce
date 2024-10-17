@@ -6,3 +6,5 @@ router.get('/get_seller_request', authMiddleware, sellerControllers.get_seller_r
 
 
 module.exports = router;
+
+

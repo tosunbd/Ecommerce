@@ -4,25 +4,36 @@ const cloudinary = require('cloudinary').v2;
 const fs = require('fs-extra');
 const path = require('path');
 const { error } = require('console');
-const sellerModel = require('../../models/sellerModel'); // Make sure this exists
+const sellerModel = require('../../models/sellerModel'); // Import the seller model
 
 class sellerControllers {
 
   // get_seller_request handler
   get_seller_request = async (req, res) => {
     try {
-      const { itemsPerPage, currentPage, searchValue } = req.query;
+      const { itemsPerPage = 5, currentPage = 1, searchValue = '' } = req.query;
 
+      // Create the query object to search for sellers by name or email
       const query = searchValue
-        ? { name: new RegExp(searchValue, 'i') }
+        ? {
+            $or: [
+              { name: { $regex: searchValue, $options: 'i' } }, // Case-insensitive search
+              { email: { $regex: searchValue, $options: 'i' } }
+            ]
+          }
         : {};
 
-      // Pagination logic
+      // Calculate skip value for pagination
+      const skip = (currentPage - 1) * parseInt(itemsPerPage);
+
+      // Fetch sellers based on the query, pagination, and limit
       const sellers = await sellerModel
         .find(query)
-        .skip((currentPage - 1) * itemsPerPage)
-        .limit(parseInt(itemsPerPage));
+        .skip(skip)
+        .limit(parseInt(itemsPerPage))
+        .sort({ createdAt: -1 }); // Sort by creation date
 
+      // Get total number of sellers matching the query
       const totalSeller = await sellerModel.countDocuments(query);
 
       // Return the response
