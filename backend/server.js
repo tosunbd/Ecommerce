@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/dashboard/categoryRoutes');
 const productRoutes = require('./routes/dashboard/productRoutes');
+const sellerRoutes = require('./routes/dashboard/sellerRoutes');
 const { dbConnect } = require('./utilities/db');
 
 // Load environment variables
@@ -30,6 +31,7 @@ app.use(cookieParser());
 app.use('/api', authRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', productRoutes);
+app.use('/api', sellerRoutes);
 app.get('/', (req, res) => {
     res.send('Backend Server is running.');
 });

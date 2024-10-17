@@ -12,7 +12,7 @@ import { toast } from 'react-hot-toast';
 
 const Category = () => {
     const dispatch = useDispatch();
-    const { loader, errorMessage, successMessage, categories } = useSelector(state => state.category);
+    const { loader, errorMessage, successMessage, categories, totalCategory } = useSelector(state => state.category);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [searchValue, setSearchValue] = useState('');
@@ -127,15 +127,20 @@ const Category = () => {
                             </table>
                         </div>
 
-                        <div className="w-full flex justify-end mt-4 bottom-4 right-4">
+                        <h1>{totalCategory} products found</h1>
+
+                        {totalCategory > itemsPerPage && (
+                        <div className="w-full flex justify-end mt-4">
                             <Pagination
-                                pageNumber={currentPage}
-                                setPageNumber={setCurrentPage}
-                                totalItem={50}
-                                perPage={itemsPerPage}
-                                showItems={3}
+                            pageNumber={currentPage}
+                            setPageNumber={setCurrentPage}
+                            totalItem={totalCategory}
+                            perPage={itemsPerPage}
+                            showItems={3}
                             />
                         </div>
+                        )}
+
                     </div>
                 </div>
 

@@ -1,39 +1,26 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "../../api/api";
 
-// Start of get_sellers
-export const get_sellers = createAsyncThunk(
-    'seller/get_sellers',
+// Start of get_seller_request
+export const get_seller_request = createAsyncThunk(
+    'seller/get_seller_request',
     async ({ itemsPerPage, currentPage, searchValue }, { rejectWithValue, fulfillWithValue }) => {
-        try {
-            const { data } = await api.get(`/get_sellers?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}&searchValue=${searchValue}`, { withCredentials: true });
-            // console.log(data);
+        try
+        {   
+            const { data } = await api.get(`/get_seller_request?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}&searchValue=${searchValue}`, { withCredentials: true });            
             return fulfillWithValue(data);
-        } catch (error) {
-            return rejectWithValue(error.response && error.response.data ? error.response.data : { errorMessage: "Unable to connect to server" });
+        }
+        catch (error)
+        {
+            return rejectWithValue(
+            error.response && error.response.data
+                ? error.response.data
+                : { errorMessage: "Unable to connect to server" }
+            );
         }
     }
-);
-// End of get_sellers
-
-// Start of get_seller
-export const get_seller = createAsyncThunk(
-    'seller/get_seller',
-    async (productId, { rejectWithValue, fulfillWithValue }) => {
-      try {
-        const { data } = await api.get(`/get_seller/${productId}`, { withCredentials: true });
-        // console.log(data);
-        return fulfillWithValue(data);
-      } catch (error) {
-        return rejectWithValue(
-          error.response && error.response.data
-            ? error.response.data
-            : { errorMessage: "Unable to connect to server" }
-        );
-      }
-    }
 ); 
-// End of get_seller
+// End of get_seller_request
 
 // Seller Reducer Slice
 export const sellerReducers = createSlice({
