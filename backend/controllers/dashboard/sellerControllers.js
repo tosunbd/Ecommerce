@@ -1,31 +1,39 @@
 const { responseReturn } = require('../../utilities/response');
 const formidable = require('formidable');
 const cloudinary = require('cloudinary').v2;
-const productModel = require('../../models/productModel');
 const fs = require('fs-extra');
 const path = require('path');
 const { error } = require('console');
+const sellerModel = require('../../models/sellerModel'); // Make sure this exists
 
 class sellerControllers {
-  
-  // start of get_seller_request
+
+  // get_seller_request handler
   get_seller_request = async (req, res) => {
-    console.log(req.query);
-    // const { id } = req;    
-    // try {    
-    //   const seller = await sellerModel.findById(id);
-    //   if (!seller) {
-    //     return responseReturn(res, 404, { error: "Seller Request not found" });
-    //   }
-    //   return responseReturn(res, 200, { seller });
-    // } catch (error) {
-    //   console.error('Unexpected server error:', error);
-    //   return responseReturn(res, 500, { error: 'Unexpected server error occurred.' });
-    // }
+    try {
+      const { itemsPerPage, currentPage, searchValue } = req.query;
+
+      const query = searchValue
+        ? { name: new RegExp(searchValue, 'i') }
+        : {};
+
+      // Pagination logic
+      const sellers = await sellerModel
+        .find(query)
+        .skip((currentPage - 1) * itemsPerPage)
+        .limit(parseInt(itemsPerPage));
+
+      const totalSeller = await sellerModel.countDocuments(query);
+
+      // Return the response
+      return res.status(200).json({ sellers, totalSeller });
+    } catch (error) {
+      console.error('Unexpected server error:', error);
+      return res.status(500).json({ error: 'Unexpected server error occurred.' });
+    }
   };
-  //End of get_seller_request
 
 }
 
-const sellerControllers = new sellerControllers();
-module.exports = sellerControllers;
+const sellerControllersInstance = new sellerControllers();
+module.exports = sellerControllersInstance;

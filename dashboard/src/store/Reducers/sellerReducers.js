@@ -5,17 +5,17 @@ import api from "../../api/api";
 export const get_seller_request = createAsyncThunk(
     'seller/get_seller_request',
     async ({ itemsPerPage, currentPage, searchValue }, { rejectWithValue, fulfillWithValue }) => {
-        try
-        {   
-            const { data } = await api.get(`/get_seller_request?itemsPerPage=${itemsPerPage}&currentPage=${currentPage}&searchValue=${searchValue}`, { withCredentials: true });            
+        try {   
+            const { data } = await api.get(`/get_seller_request`, {
+                params: { itemsPerPage, currentPage, searchValue },
+                withCredentials: true
+            });
             return fulfillWithValue(data);
-        }
-        catch (error)
-        {
+        } catch (error) {
             return rejectWithValue(
-            error.response && error.response.data
-                ? error.response.data
-                : { errorMessage: "Unable to connect to server" }
+                error.response && error.response.data
+                    ? error.response.data
+                    : { errorMessage: "Unable to connect to server" }
             );
         }
     }
@@ -34,19 +34,24 @@ export const sellerReducers = createSlice({
         totalSeller: 0
     },
     reducers: {
-        messageClear: (state, _) => {
+        messageClear: (state) => {
             state.errorMessage = "";
             state.successMessage = "";
         }
     },
     extraReducers: (builder) => {
-        builder        
-        .addCase(get_seller.fulfilled, (state, { payload }) => {
-            state.seller = payload.seller;            
+        builder
+        .addCase(get_seller_request.pending, (state) => {
+            state.loader = true;
         })
-        .addCase(get_sellers.fulfilled, (state, { payload }) => {
+        .addCase(get_seller_request.fulfilled, (state, { payload }) => {
+            state.loader = false;
             state.sellers = payload.sellers;
             state.totalSeller = payload.totalSeller;
+        })
+        .addCase(get_seller_request.rejected, (state, { payload }) => {
+            state.loader = false;
+            state.errorMessage = payload.errorMessage || 'Something went wrong';
         });
     }
 });
