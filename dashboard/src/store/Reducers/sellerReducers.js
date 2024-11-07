@@ -46,7 +46,7 @@ export const sellerReducers = createSlice({
         })
         .addCase(get_seller_request.fulfilled, (state, { payload }) => {
             state.loader = false;
-            state.sellers = payload.sellers;
+            state.sellers = payload.sellers;            
             state.totalSeller = payload.totalSeller;
         })
         .addCase(get_seller_request.rejected, (state, { payload }) => {

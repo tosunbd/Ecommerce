@@ -11,8 +11,8 @@ import { get_seller_request, messageClear } from '../../store/Reducers/sellerRed
 
 const SellerRequest = () => {
     const dispatch = useDispatch();
-    const { sellers, totalSeller } = useSelector(state => state.seller || { sellers: [], totalSeller: 0 }); // Guarding against undefined
-
+    const { loader, sellers, totalSeller } = useSelector(state => state.seller);
+    
     const [currentPage, setCurrentPage] = useState(1);
     const [searchValue, setSearchValue] = useState('');
     const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -30,7 +30,7 @@ const SellerRequest = () => {
 
     return (
         <div className='px-2 lg:px-7 pt-5'>
-            <h1 className='text-[25px] font-bold mb-3 text-left'>Deactivate Sellers</h1>
+            <h1 className='text-[25px] font-bold mb-3 text-left'>Seller Request</h1>
 
             <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
                 <Search setItemsPerPage={setItemsPerPage} setSearchValue={setSearchValue} searchValue={searchValue} />
@@ -48,12 +48,12 @@ const SellerRequest = () => {
                             </tr>
                         </thead>
                         <tbody className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
-                            {[1, 2, 3, 4, 5].map((d, i) => (
+                            {sellers.map((d, i) => (
                                 <tr className="border-b border-slate-700" key={i}>
-                                    <td scope="row" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{d}</td>
-                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">Taufiqul Islam</td>
-                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">tosunbd@gmail.com</td>
-                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">Active</td>
+                                    <td scope="row" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{d+1}</td>
+                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{ d.name }</td>
+                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{ d.email }</td>
+                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{ d.payment }</td>
                                     <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">Deactive</td>
                                     <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">
                                         <div className="flex justify-start items-center gap-4">

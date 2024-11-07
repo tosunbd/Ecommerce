@@ -10,37 +10,39 @@ class sellerControllers {
 
   // get_seller_request handler
   get_seller_request = async (req, res) => {
-    try {
-      const { itemsPerPage = 5, currentPage = 1, searchValue = '' } = req.query;
+    const { itemsPerPage, currentPage, searchValue } = req.query;
+    const { id } = req;
 
-      // Create the query object to search for sellers by name or email
-      const query = searchValue
-        ? {
-            $or: [
-              { name: { $regex: searchValue, $options: 'i' } }, // Case-insensitive search
-              { email: { $regex: searchValue, $options: 'i' } }
-            ]
-          }
-        : {};
+    const skipPage = (currentPage - 1) * itemsPerPage;
+    const limitPage = parseInt(itemsPerPage);
 
-      // Calculate skip value for pagination
-      const skip = (currentPage - 1) * parseInt(itemsPerPage);
-
-      // Fetch sellers based on the query, pagination, and limit
-      const sellers = await sellerModel
-        .find(query)
-        .skip(skip)
-        .limit(parseInt(itemsPerPage))
-        .sort({ createdAt: -1 }); // Sort by creation date
-
-      // Get total number of sellers matching the query
-      const totalSeller = await sellerModel.countDocuments(query);
-
-      // Return the response
-      return res.status(200).json({ sellers, totalSeller });
+    try {     
+      if (searchValue) {
+        const sellers = await sellerModel.find({
+          $text: { $search: searchValue },
+          sellerId: id
+        })
+        .skip(skipPage)
+        .limit(limitPage)
+        .sort({ createdAt: -1 });
+        
+        const totalSeller = await sellerModel.find({
+          $text: { $search: searchValue },
+          sellerId: id
+        }).countDocuments();        
+        responseReturn(res, 200,{ sellers, totalSeller });
+      } else {
+        const sellers = await sellerModel.find({ sellerId: id })
+          .skip(skipPage)
+          .limit(limitPage)
+          .sort({ createdAt: -1 });        
+        const totalSeller = await sellerModel.find({ sellerId: id }).countDocuments();        
+        responseReturn(res, 200,{ sellers, totalSeller });
+      }
+      console.log(sellers);
+      console.log(totalSeller);
     } catch (error) {
-      console.error('Unexpected server error:', error);
-      return res.status(500).json({ error: 'Unexpected server error occurred.' });
+      console.error('Unexpected server error:', error);      
     }
   };
 
