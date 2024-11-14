@@ -1,6 +1,52 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { PropagateLoader } from 'react-spinners';
+import { overrideStyle } from '../../utils/utils';
+import { toast } from 'react-hot-toast';
+import { get_seller, seller_status_update, messageClear } from '../../store/Reducers/sellerReducers';
+import { useParams } from 'react-router-dom';
 
 const SellerDetails = () => {
+
+    const dispatch = useDispatch();
+    const { loader, successMessage, errorMessage, seller } = useSelector(state => state.seller);
+    const { sellerId } = useParams();
+
+    const [status, setStatus] = useState(false);
+
+    const sellerStatusSubmit = () => {
+        e.preventDefault();
+        dispatch(seller_status_update({
+            sellerId,
+            status
+        }));
+    }
+
+    useEffect(() => {
+        if (sellerId) {
+            dispatch(get_seller({ sellerId })); // Dispatch with valid sellerId
+        }
+    }, [sellerId, dispatch]);
+
+
+    useEffect(() => {
+        if (successMessage) {
+            toast.success(successMessage);
+            dispatch(messageClear());           
+        }
+        if (errorMessage) {
+            toast.error(errorMessage);
+            dispatch(messageClear());           
+        }
+    }, [errorMessage, successMessage, dispatch]);
+
+    useEffect(() => {
+        if (seller) {
+            setStatus(seller.status);     
+        }       
+    }, [successMessage, seller, dispatch]);
+    
+
     return (
         <div className='px-2 lg:px-7 pt-5'>
             <h1 className='text-[25px] font-bold mb-3 text-left'>Seller Details</h1>
@@ -8,7 +54,12 @@ const SellerDetails = () => {
                 <div className='w-full flex flex-wrap text-[#d0d2d6]'>
                     <div className='w-3/12 flex justify-center items-center py-3'>
                         <div>
-                            <img className='w-full h-[230px]' src="http://localhost:5173/images/demo.jpg" alt="" />
+                            { 
+                               seller?.image ? <img className='w-full h-[230px]' src="http://localhost:5173/
+                               images/demo.jpg" alt="" />
+                                :
+                                <span>No Image Found</span>
+                            }                            
                         </div>
 
                     </div>
@@ -21,27 +72,23 @@ const SellerDetails = () => {
                                 flex-col gap-1 p-4 bg-[#9e97e9] rounded-md'>
                                 <div className='flex gap-2 font-bold text-[#000000]'>
                                     <span>Name : </span>
-                                    <span>Taufiqul Islam</span>
+                                    <span>{ seller?.name }</span>
                                 </div>
                                 <div className='flex gap-2 font-bold text-[#000000]'>
                                     <span>Email : </span>
-                                    <span>tosunbd@gmail.com</span>
+                                    <span>{ seller?.email }</span>
                                 </div>
                                 <div className='flex gap-2 font-bold text-[#000000]'>
                                     <span>Role : </span>
-                                    <span>Seller</span>
-                                </div>
-                                <div className='flex gap-2 font-bold text-[#000000]'>
-                                    <span>Name : </span>
-                                    <span>Raju Khan</span>
-                                </div>
+                                    <span>{ seller?.role }</span>
+                                </div>                               
                                 <div className='flex gap-2 font-bold text-[#000000]'>
                                     <span>Status : </span>
-                                    <span>Active</span>
+                                    <span>{ seller?.status }</span>
                                 </div>
                                 <div className='flex gap-2 font-bold text-[#000000]'>
                                     <span>Payment Status : </span>
-                                    <span>Active</span>
+                                    <span>{ seller?.payment }</span>
                                 </div>
                             </div>
                         </div>
@@ -56,19 +103,19 @@ const SellerDetails = () => {
                                 flex-col gap-1 p-4 bg-[#9e97e9] rounded-md'>
                                 <div className='flex gap-2 font-bold text-[#000000]'>
                                     <span>Shop Name : </span>
-                                    <span>Shadheen</span>
+                                    <span>{ seller?.shopInfo.shopName }</span>
                                 </div>
                                 <div className='flex gap-2 font-bold text-[#000000]'>
                                     <span>Division : </span>
-                                    <span>Dhaka</span>
+                                    <span>{ seller?.shopInfo.division }</span>
                                 </div>                              
                                 <div className='flex gap-2 font-bold text-[#000000]'>
                                     <span>District : </span>
-                                    <span>Dhaka</span>
+                                    <span>{ seller?.shopInfo.district }</span>
                                 </div>
                                 <div className='flex gap-2 font-bold text-[#000000]'>
                                     <span>State : </span>
-                                    <span>Dhaka</span>
+                                    <span>{ seller?.shopInfo.sub_district }</span>
                                 </div>                               
                             </div>
                         </div>
@@ -77,9 +124,9 @@ const SellerDetails = () => {
                 </div>
 
                 <div>
-                    <form action="">
+                    <form onSubmit={sellerStatusSubmit}>
                         <div className='flex gap-4 py-3'>
-                            <select name="" id="" className="px-4 py-2 focus:border-indigo-500 
+                            <select value={status} onChange={(e) => setStatus(e.target.value)} className="px-4 py-2 focus:border-indigo-500 
                                 outline-none bg-[#6a5fdf] border border-slate-700
                                 rounded-md text-[#d0d2d6]">
                                 <option value="">--Select Status--</option>

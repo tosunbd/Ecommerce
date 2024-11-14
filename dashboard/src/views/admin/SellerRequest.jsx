@@ -50,18 +50,22 @@ const SellerRequest = () => {
                         <tbody className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
                             {sellers.map((d, i) => (
                                 <tr className="border-b border-slate-700" key={i}>
-                                    <td scope="row" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{d+1}</td>
+                                    <td scope="row" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{i+1}</td>
                                     <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{ d.name }</td>
                                     <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{ d.email }</td>
-                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{ d.payment }</td>
-                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">Deactive</td>
                                     <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">
-                                        <div className="flex justify-start items-center gap-4">
-                                            <Link to='/admin/dashboard/seller/details/2'
-                                                className="p-[6px] bg-green-500 rounded hover:bg-green-500/50">
-                                                <FaEye />
-                                            </Link>
-                                        </div>
+                                        <span> {d.payment} </span>
+                                    </td>
+                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">
+                                        <span> {d.status} </span>
+                                    </td>
+                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">
+                                    <div className="flex justify-start items-center gap-4">
+                                        <Link to={`/admin/dashboard/seller/details/${d._id}`}  // Use backticks here for string interpolation
+                                            className="p-[6px] bg-green-500 rounded hover:bg-green-500/50">
+                                            <FaEye />
+                                        </Link>
+                                    </div>
                                     </td>
                                 </tr>
                             ))}
