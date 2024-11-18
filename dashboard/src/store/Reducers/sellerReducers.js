@@ -44,7 +44,7 @@ export const get_seller = createAsyncThunk(
 export const seller_status_update = createAsyncThunk(
     'seller/seller_status_update',
     async (info, { rejectWithValue }) => {
-        console.log("Info being sent:", info); // Log info for debugging
+        // console.log("Info being sent:", info); // Log info for debugging
         try {
             const { data } = await api.post(`/update_seller_status`, info, {
                 withCredentials: true

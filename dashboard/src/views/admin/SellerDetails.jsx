@@ -17,7 +17,7 @@ const SellerDetails = () => {
     const sellerStatusSubmit = (e) => {
         e.preventDefault();
         if (!sellerId || !status) {
-            console.error("Missing sellerId or status:", { sellerId, status });
+            // console.error("Missing sellerId or status:", { sellerId, status });
             return;
         }
         dispatch(seller_status_update({
@@ -47,7 +47,7 @@ const SellerDetails = () => {
 
     useEffect(() => {
         if (seller) {
-            console.log("Seller status:", seller.status);
+            // console.log("Seller status:", seller.status);
             setStatus(seller.status);     
         }
     }, [seller]);    
