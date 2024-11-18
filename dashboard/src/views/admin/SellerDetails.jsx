@@ -14,17 +14,22 @@ const SellerDetails = () => {
 
     const [status, setStatus] = useState(false);
 
-    const sellerStatusSubmit = () => {
+    const sellerStatusSubmit = (e) => {
         e.preventDefault();
+        if (!sellerId || !status) {
+            console.error("Missing sellerId or status:", { sellerId, status });
+            return;
+        }
         dispatch(seller_status_update({
             sellerId,
             status
         }));
-    }
+    };
+      
 
     useEffect(() => {
         if (sellerId) {
-            dispatch(get_seller({ sellerId })); // Dispatch with valid sellerId
+            dispatch(get_seller({ sellerId }));
         }
     }, [sellerId, dispatch]);
 
@@ -42,9 +47,10 @@ const SellerDetails = () => {
 
     useEffect(() => {
         if (seller) {
+            console.log("Seller status:", seller.status);
             setStatus(seller.status);     
-        }       
-    }, [successMessage, seller, dispatch]);
+        }
+    }, [seller]);    
     
 
     return (
@@ -128,10 +134,10 @@ const SellerDetails = () => {
                         <div className='flex gap-4 py-3'>
                             <select value={status} onChange={(e) => setStatus(e.target.value)} className="px-4 py-2 focus:border-indigo-500 
                                 outline-none bg-[#6a5fdf] border border-slate-700
-                                rounded-md text-[#d0d2d6]">
+                                rounded-md text-[#d0d2d6]" name='' id='' required>
                                 <option value="">--Select Status--</option>
-                                <option value="Active">Active</option>
-                                <option value="Deactive">Deactive</option>
+                                <option value="active">Active</option>
+                                <option value="deactive">Deactive</option>
                             </select>
                             <div>
                                 <button className="bg-red-500 w-[170px] hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2">Submit

@@ -60,27 +60,32 @@ get_seller = async (req, res) => {
   
 
 // seller_status_update
-seller_status_update = async (req, res) => {    
-  const { sellerId, status } = req.body;  
+seller_status_update = async (req, res) => {
+  console.log("Received payload:", req.body); // Log the incoming payload
+  const { sellerId, status } = req.body;
+
+  if (!sellerId || !status) {
+      return res.status(400).json({ message: "Seller ID and status are required" });
+  }
+
   try {
-      // Update the seller status by ID
-      const updatedSeller = await sellerModel.findByIdAndUpdate(
-          sellerId, 
+      const seller = await sellerModel.findByIdAndUpdate(
+          sellerId,
           { status },
-          { new: true } // This option returns the updated document
+          { new: true }
       );
 
-      if (!updatedSeller) {
-          return responseReturn(res, 404, { message: "Seller not found" });
+      if (!seller) {
+          return res.status(404).json({ message: "Seller not found" });
       }
 
-      return responseReturn(res, 200, { seller: updatedSeller, message: "Seller status updated successfully" });      
-      
+      return res.status(200).json({ seller, message: "Seller status updated successfully" });
   } catch (error) {
-      console.error('Unexpected server error:', error);
-      responseReturn(res, 500, { message: 'Unexpected server error occurred.' });
+      console.error("Error during seller status update:", error.message);
+      return res.status(500).json({ message: "Unexpected server error occurred." });
   }
 };
+
 // End of seller_status_update
 
   
