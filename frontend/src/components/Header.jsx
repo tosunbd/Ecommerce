@@ -12,7 +12,7 @@ const Header = () => {
 
   return (
     <div className="w-full bg-[#caddff]">
-      <div className="container mx-auto flex justify-between items-center h-[50px] px-4 md:px-6">
+      <div className="container header-top mx-auto flex justify-between items-center h-[50px] px-4 md:px-6">
         {/* Left Section */}
         <div className="flex items-center space-x-4">
           {/* Email */}
