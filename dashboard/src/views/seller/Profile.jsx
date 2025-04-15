@@ -8,7 +8,7 @@ import { overrideStyle } from '../../utils/utils';
 import { toast } from 'react-hot-toast';
 import { profile_image_upload, add_user_info, messageClear } from '../../store/Reducers/authReducers';
 
-const Profile = () => {
+const Profile = () => { 
 
     const dispatch = useDispatch();
     const { userInfo, loader, errorMessage, successMessage } = useSelector(state => state.auth);
@@ -35,8 +35,6 @@ const Profile = () => {
         e.preventDefault();
         dispatch(add_user_info(state)); // state should contain shopName, division, district, sub_district
     };
-    
-   
 
     const inputHandle = (e) => {
         setState({
@@ -60,17 +58,16 @@ const Profile = () => {
     
     
     return (
-        <div className='px-2 lg:px-7 py-5'>
-            <div className='w-full flex flex-wrap'>
+        <div className='px-2 py-5 lg:px-7'>
+            <div className='flex flex-wrap w-full'>
                 <div className="w-full md:w-6/12">
                     <div className="w-full p-4 bg-[#6a5fdf] rounded-md text-[#d0d2d6]">
-                        <div className="flex justify-center items-center py-3">
+                        <div className="flex items-center justify-center py-3">
                             {
                                 userInfo?.image ? <label className="h-[150px] w-[200px] relative p-3 cursor-pointer overflow-hidden" htmlFor="img">
                                     <img src={userInfo?.image} alt="" />
                                     {
-                                        loader && <div className="bg-slate-600 absolute left-0 top-0 w-full h-full
-                                        opacity-70 flex justify-center items-center z-20">
+                                        loader && <div className="absolute top-0 left-0 z-20 flex items-center justify-center w-full h-full bg-slate-600 opacity-70">
                                             <span>
                                                 <FadeLoader />
                                             </span>
@@ -84,8 +81,7 @@ const Profile = () => {
                                     <span><FaImages /></span>
                                     <span>Select Image</span>
                                     {
-                                        loader && <div className="bg-slate-600 absolute left-0 top-0 w-full h-full
-                                        opacity-70 flex justify-center items-center z-20">
+                                        loader && <div className="absolute top-0 left-0 z-20 flex items-center justify-center w-full h-full bg-slate-600 opacity-70">
                                             <span>
                                                 <FadeLoader />
                                             </span>
@@ -96,9 +92,8 @@ const Profile = () => {
                             <input onChange={add_profile_image} type="file" className="hidden" id="img" />
                         </div>
 
-                        <div className="px-0 md:px-5 py-2">
-                            <div className="flex justify-between text-sm flex-col 
-                            gap-2 p-4 bg-slate-800 rounded-md relative">
+                        <div className="px-0 py-2 md:px-5">
+                            <div className="relative flex flex-col justify-between gap-2 p-4 text-sm rounded-md bg-slate-800">
                                 <span className="p-[6px] bg-yellow-500 rounded hover:shadow-lg
                                     hover:shadow-yellow-500/50 absolute right-2 top-2 cursor-pointer">
                                     <FaRegEdit />
@@ -132,7 +127,7 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        <div className="px-0 md:px-5 py-2">
+                        <div className="px-0 py-2 md:px-5">
                             {
                                 !userInfo?.shopInfo ? <form onSubmit={addUserInfo}>
                                     <div className='flex flex-col gap-1 mb-2'>
@@ -192,8 +187,7 @@ const Profile = () => {
                                     <div>
                                         <button disabled={loader ? true : false}
                                             type="submit"
-                                            className='bg-red-500 hover:shadow-red-500/40 mt-2
-                                            hover:shadow-md text-white rounded-md px-7 py-2 my-2'>
+                                            className='py-2 my-2 mt-2 text-white bg-red-500 rounded-md hover:shadow-red-500/40 hover:shadow-md px-7'>
                                             {
                                                 loader ? <PropagateLoader color='#fff'
                                                 cssOverride={overrideStyle} /> : 'Save Changes'
@@ -204,8 +198,7 @@ const Profile = () => {
 
                                     :
 
-                                <div className="flex justify-between text-sm flex-col 
-                                    gap-2 p-4 bg-slate-800 rounded-md relative">
+                                <div className="relative flex flex-col justify-between gap-2 p-4 text-sm rounded-md bg-slate-800">
                                     <span className="p-[6px] bg-yellow-500 rounded hover:shadow-lg
                                         hover:shadow-yellow-500/50 absolute right-2 top-2 cursor-pointer">
                                         <FaRegEdit />
@@ -233,7 +226,7 @@ const Profile = () => {
                     </div>
                 </div>
                 <div className="w-full md:w-6/12">
-                    <div className="w-full pl-0 md:pl-7 mt-6 md:mt-0" >
+                    <div className="w-full pl-0 mt-6 md:pl-7 md:mt-0" >
                         <div className="bg-[#6a5fdf] rounded-md text-[#d0d2d6] p-4">
                             <h1 className="text-[#d0d2d6] text-lg mb-3 font-semibold">Change Password</h1>
                             <form>
@@ -273,8 +266,7 @@ const Profile = () => {
                                 <div>
                                     <button
                                         type="submit"
-                                        className='bg-red-500 hover:shadow-red-500/40 mt-2
-                                        hover:shadow-md text-white rounded-md px-7 py-2 my-2'>
+                                        className='py-2 my-2 mt-2 text-white bg-red-500 rounded-md hover:shadow-red-500/40 hover:shadow-md px-7'>
                                         Save Changes
                                     </button>
                                 </div>

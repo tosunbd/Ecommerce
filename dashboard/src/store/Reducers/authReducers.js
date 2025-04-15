@@ -200,7 +200,7 @@ export const authReducer = createSlice({
         })
         .addCase(seller_register.fulfilled, (state, { payload }) => {
             state.loader = false;
-            state.successMessage = payload && payload.successMessage ? payload.successMessage : "Successfuly Register";
+            state.successMessage = payload && payload.successMessage ? payload.successMessage : "Successfully Register";
             state.token = payload.token;
             state.role = returnRole(payload.token);
         })
@@ -235,8 +235,7 @@ export const authReducer = createSlice({
         .addCase(add_user_info.rejected, (state, { payload }) => {
             state.loader = false;
             state.errorMessage = payload?.errorMessage || 'User info update failed';
-        });;
-
+        });
     }
 });
 
