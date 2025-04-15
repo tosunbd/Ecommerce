@@ -235,8 +235,7 @@ export const authReducer = createSlice({
         .addCase(add_user_info.rejected, (state, { payload }) => {
             state.loader = false;
             state.errorMessage = payload?.errorMessage || 'User info update failed';
-        });;
-
+        });
     }
 });
 
