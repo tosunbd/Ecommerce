@@ -8,7 +8,7 @@ import { overrideStyle } from '../../utils/utils';
 import { toast } from 'react-hot-toast';
 import { profile_image_upload, add_user_info, messageClear } from '../../store/Reducers/authReducers';
 
-const Profile = () => {
+const Profile = () => { 
 
     const dispatch = useDispatch();
     const { userInfo, loader, errorMessage, successMessage } = useSelector(state => state.auth);
