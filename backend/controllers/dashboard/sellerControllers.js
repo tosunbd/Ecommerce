@@ -18,6 +18,13 @@ class sellerControllers {
 
     try {
 
+      // const sellers = await sellerModel.find({
+      //     status: 'pending' 
+      // })
+      // .skip(skipPage)
+      // .limit(limitPage)
+      // .sort({ createdAt: -1 });
+
       const query = {
         status: 'pending',
           ...(searchValue && {
