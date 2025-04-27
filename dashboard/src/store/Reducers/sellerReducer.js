@@ -10,7 +10,7 @@ export const get_seller_request = createAsyncThunk(
                 params: { itemsPerPage, currentPage, searchValue },
                 withCredentials: true
             });
-            // console.log(data);
+            console.log(data);
             return data; // Return data directly, no need for fulfillWithValue
         } catch (error) {
             return rejectWithValue(

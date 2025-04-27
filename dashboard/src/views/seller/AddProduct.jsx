@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PropagateLoader } from 'react-spinners';
 import { overrideStyle } from '../../utils/utils';
 import { toast } from 'react-hot-toast';
-import { get_category } from '../../store/Reducers/categoryReducers';
-import { add_product, messageClear } from '../../store/Reducers/productReducers';
+import { get_category } from '../../store/Reducers/categoryReducer';
+import { add_product, messageClear } from '../../store/Reducers/productReducer';
 
 const AddProduct = () => {
     const dispatch = useDispatch();
@@ -160,12 +160,11 @@ const AddProduct = () => {
     
 
     return (
-        <div className="px-2 lg:px-7 pt-5">
+        <div className="px-2 pt-5 lg:px-7">
             <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
-                <div className='flex justify-between items-center pb-4'>
+                <div className='flex items-center justify-between pb-4'>
                     <h1 className='text-[#d0d2d6] text-xl font-semibold'>Add Product</h1>
-                    <Link to="/seller/dashboard/products" className='bg-blue-500 hover:shadow-blue-500/50 
-                    hover:shadow-lg text-white rounded-sm px-7 py-2 my-2'>All Products</Link>
+                    <Link to="/seller/dashboard/products" className='py-2 my-2 text-white bg-blue-500 rounded-sm hover:shadow-blue-500/50 hover:shadow-lg px-7'>All Products</Link>
                 </div>
                 <div>
                     <form onSubmit={addProduct}>
@@ -198,7 +197,7 @@ const AddProduct = () => {
                         </div>
 
                         <div className='grid grid-cols-2 gap-4 mb-3 text-[#d0d2d6]'>
-                            <div className='flex flex-col gap-1 relative'>
+                            <div className='relative flex flex-col gap-1'>
                                 <label className='text-left' htmlFor="category">Category</label>
                                 <input
                                     type="text"
@@ -230,7 +229,7 @@ const AddProduct = () => {
                                                     setSearchValue('');
                                                     setAllCategory(categories);
                                                 }}
-                                                className='cursor-pointer p-1 w-full hover:bg-indigo-500'
+                                                className='w-full p-1 cursor-pointer hover:bg-indigo-500'
                                             >{c.name}</span>
                                         ))}
                                     </div>
@@ -307,7 +306,7 @@ const AddProduct = () => {
                                         id={`image-${i}`}
                                         className='hidden'
                                     />
-                                    <span onClick={() => removeImage(i)} className='p-2 z-10 cursor-pointer bg-slate-700 hover:shadow-lg hover:shadow-slate-400/50 text-white absolute top-1 right-1 rounded-full'>
+                                    <span onClick={() => removeImage(i)} className='absolute z-10 p-2 text-white rounded-full cursor-pointer bg-slate-700 hover:shadow-lg hover:shadow-slate-400/50 top-1 right-1'>
                                         <IoMdCloseCircle />
                                     </span>
                                 </div>
@@ -340,8 +339,7 @@ const AddProduct = () => {
                             </button>
                             {/* <button
                                 type="submit"
-                                className='bg-red-500 hover:shadow-green-500/50
-                                hover:shadow-lg text-white rounded-sm px-7 py-2'>
+                                className='py-2 text-white bg-red-500 rounded-sm hover:shadow-green-500/50 hover:shadow-lg px-7'>
                                 Add Product
                             </button> */}
                         </div>

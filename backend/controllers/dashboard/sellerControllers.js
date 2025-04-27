@@ -17,17 +17,28 @@ class sellerControllers {
     const limitPage = parseInt(itemsPerPage);
 
     try {
-      const sellers = await sellerModel.find({
-        status: 'pending' 
-      })
-      .skip(skipPage)
-      .limit(limitPage)
-      .sort({ createdAt: -1 });
+
+      const query = {
+        status: 'pending',
+          ...(searchValue && {
+              $or: [
+                  { name: { $regex: searchValue, $options: 'i' } },
+                  { email: { $regex: searchValue, $options: 'i' } }
+              ]
+          })
+      };
+    
+      const sellers = await sellerModel.find(query)
+          .skip(skipPage)
+          .limit(limitPage)
+          .sort({ createdAt: -1 });
       
-      const totalSeller = await sellerModel.find({
-        status: 'pending'
-      }).countDocuments();        
-      responseReturn(res, 200, { sellers, totalSeller });      
+      const totalSeller = await sellerModel.countDocuments(query);
+      
+      console.log(sellers);
+      console.log(totalSeller);
+
+      responseReturn(res, 200, { sellers, totalSeller });   
       
     } catch (error) {
       responseReturn(res, 500, { message: error.message });      

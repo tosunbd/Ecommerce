@@ -5,7 +5,7 @@ import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 import Search from "../components/Search";
 import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { get_products, messageClear } from '../../store/Reducers/productReducers';
+import { get_products, messageClear } from '../../store/Reducers/productReducer';
 
 const Products = () => {
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ const Products = () => {
   }, [itemsPerPage, currentPage, searchValue, dispatch]);
 
   return (
-    <div className='px-2 lg:px-7 pt-5'>
+    <div className='px-2 pt-5 lg:px-7'>
       <h1 className='text-[25px] font-bold mb-3 text-left'>All Products</h1>
 
       <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
@@ -46,54 +46,54 @@ const Products = () => {
           <table className='w-full text-sm text-[#d0d2d6]'>
             <thead className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
               <tr>
-                <th scope='col' className='px-4 py-3 align-middle text-left'>No</th>
-                <th scope='col' className='px-4 py-3 align-middle text-left'>Image</th>
-                <th scope='col' className='px-4 py-3 align-middle text-left'>Name</th>
-                <th scope='col' className='px-4 py-3 align-middle text-left'>Category</th>
-                <th scope='col' className='px-4 py-3 align-middle text-left'>Brand</th>
-                <th scope='col' className='px-4 py-3 align-middle text-left'>Price</th>
-                <th scope='col' className='px-4 py-3 align-middle text-left'>Discount</th>
-                <th scope='col' className='px-4 py-3 align-middle text-left'>Stock</th>
-                <th scope='col' className='px-4 py-3 align-middle text-left'>Action</th>
+                <th scope='col' className='px-4 py-3 text-left align-middle'>No</th>
+                <th scope='col' className='px-4 py-3 text-left align-middle'>Image</th>
+                <th scope='col' className='px-4 py-3 text-left align-middle'>Name</th>
+                <th scope='col' className='px-4 py-3 text-left align-middle'>Category</th>
+                <th scope='col' className='px-4 py-3 text-left align-middle'>Brand</th>
+                <th scope='col' className='px-4 py-3 text-left align-middle'>Price</th>
+                <th scope='col' className='px-4 py-3 text-left align-middle'>Discount</th>
+                <th scope='col' className='px-4 py-3 text-left align-middle'>Stock</th>
+                <th scope='col' className='px-4 py-3 text-left align-middle'>Action</th>
               </tr>
             </thead>
 
             <tbody className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
               {products.length === 0 ? (
                 <tr>
-                  <td colSpan="9" className="text-center py-5">
+                  <td colSpan="9" className="py-5 text-center">
                     No products found
                   </td>
                 </tr>
               ) : (
                 products.map((product, index) => (
                   <tr key={index}>
-                    <td className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
+                    <td className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">
                       {index + 1}
                     </td>
-                    <td className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
+                    <td className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">
                       <img className="w-[45px] h-[45px]" src={product?.images?.[0]} alt={product.name} />
                     </td>
-                    <td className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
+                    <td className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">
                       {product?.name?.slice(0, 15)}...
                     </td>
-                    <td className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
+                    <td className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">
                       {product.category}
                     </td>
-                    <td className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
+                    <td className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">
                       {product.brand}
                     </td>
-                    <td className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
+                    <td className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">
                       {product.price}
                     </td>
-                    <td className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
+                    <td className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">
                       {product.discount === 0 ? <span>No Discount</span> : <span>{product.discount}%</span>}
                     </td>
-                    <td className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
+                    <td className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">
                       {product.stock}
                     </td>
-                    <td className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
-                      <div className="flex justify-start items-center gap-4">
+                    <td className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">
+                      <div className="flex items-center justify-start gap-4">
                         <Link to={`/seller/dashboard/edit-product/${product._id}`} className="p-[6px] bg-yellow-500 rounded hover:shadow-lg hover:shadow-yellow-500/50">
                           <FaEdit />
                         </Link>
@@ -115,7 +115,7 @@ const Products = () => {
         <h1>{totalProduct} products found</h1>
 
         {totalProduct > itemsPerPage && (
-          <div className="w-full flex justify-end mt-4">
+          <div className="flex justify-end w-full mt-4">
             <Pagination
               pageNumber={currentPage}
               setPageNumber={setCurrentPage}

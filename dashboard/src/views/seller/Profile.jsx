@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PropagateLoader } from 'react-spinners';
 import { overrideStyle } from '../../utils/utils';
 import { toast } from 'react-hot-toast';
-import { profile_image_upload, add_user_info, messageClear } from '../../store/Reducers/authReducers';
+import { profile_image_upload, add_user_info, messageClear } from '../../store/Reducers/authReducer';
 
 const Profile = () => { 
 

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PropagateLoader } from 'react-spinners';
 import { overrideStyle } from '../../utils/utils';
 import { toast } from 'react-hot-toast';
-import { get_seller_request, messageClear } from '../../store/Reducers/sellerReducers';
+import { get_seller_request, messageClear } from '../../store/Reducers/sellerReducer';
 
 const SellerRequest = () => {
     const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const SellerRequest = () => {
 
 
     return (
-        <div className='px-2 lg:px-7 pt-5'>
+        <div className='px-2 pt-5 lg:px-7'>
             <h1 className='text-[25px] font-bold mb-3 text-left'>Seller Request</h1>
 
             <div className="w-full p-4 bg-[#6a5fdf] rounded-md">
@@ -39,28 +39,28 @@ const SellerRequest = () => {
                     <table className='w-full text-sm text-[#d0d2d6]'>
                         <thead className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
                             <tr>
-                                <th scope='col' className='px-4 py-3 align-middle text-left'> No </th>
-                                <th scope='col' className='px-4 py-3 align-middle text-left'> Name </th>
-                                <th scope='col' className='px-4 py-3 align-middle text-left'> Email </th>
-                                <th scope='col' className='px-4 py-3 align-middle text-left'> Payment Status </th>
-                                <th scope='col' className='px-4 py-3 align-middle text-left'> Status </th>
-                                <th scope='col' className='px-4 py-3 align-middle text-left'> Action </th>
+                                <th scope='col' className='px-4 py-3 text-left align-middle'> No </th>
+                                <th scope='col' className='px-4 py-3 text-left align-middle'> Name </th>
+                                <th scope='col' className='px-4 py-3 text-left align-middle'> Email </th>
+                                <th scope='col' className='px-4 py-3 text-left align-middle'> Payment Status </th>
+                                <th scope='col' className='px-4 py-3 text-left align-middle'> Status </th>
+                                <th scope='col' className='px-4 py-3 text-left align-middle'> Action </th>
                             </tr>
                         </thead>
                         <tbody className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
                             {sellers.map((d, i) => (
                                 <tr className="border-b border-slate-700" key={i}>
-                                    <td scope="row" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{i+1}</td>
-                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{ d.name }</td>
-                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">{ d.email }</td>
-                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">
+                                    <td scope="row" className="px-6 py-2 font-medium text-left align-middle whitespace-nowrap">{i+1}</td>
+                                    <td scope="col" className="px-6 py-2 font-medium text-left align-middle whitespace-nowrap">{ d.name }</td>
+                                    <td scope="col" className="px-6 py-2 font-medium text-left align-middle whitespace-nowrap">{ d.email }</td>
+                                    <td scope="col" className="px-6 py-2 font-medium text-left align-middle whitespace-nowrap">
                                         <span> {d.payment} </span>
                                     </td>
-                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">
+                                    <td scope="col" className="px-6 py-2 font-medium text-left align-middle whitespace-nowrap">
                                         <span> {d.status} </span>
                                     </td>
-                                    <td scope="col" className="px-6 py-2 align-middle text-left font-medium whitespace-nowrap">
-                                    <div className="flex justify-start items-center gap-4">
+                                    <td scope="col" className="px-6 py-2 font-medium text-left align-middle whitespace-nowrap">
+                                    <div className="flex items-center justify-start gap-4">
                                         <Link to={`/admin/dashboard/seller/details/${d._id}`}  // Use backticks here for string interpolation
                                             className="p-[6px] bg-green-500 rounded hover:bg-green-500/50">
                                             <FaEye />
@@ -76,7 +76,7 @@ const SellerRequest = () => {
                 <h1>{totalSeller} sellers found</h1>
 
                 {totalSeller > itemsPerPage && (
-                    <div className="w-full flex justify-end mt-4">
+                    <div className="flex justify-end w-full mt-4">
                         <Pagination
                             pageNumber={currentPage}
                             setPageNumber={setCurrentPage}

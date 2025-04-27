@@ -6,7 +6,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import Search from "../components/Search";
 import { PropagateLoader } from 'react-spinners';
 import { overrideStyle } from '../../utils/utils';
-import { add_category, messageClear, get_category } from './../../store/Reducers/categoryReducers';
+import { add_category, messageClear, get_category } from './../../store/Reducers/categoryReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-hot-toast';
 
@@ -78,12 +78,11 @@ const Category = () => {
 
 
     return (
-        <div className='px-2 lg:px-7 pt-5'>
+        <div className='px-2 pt-5 lg:px-7'>
             <div className="flex lg:hidden justify-between items-center mb-5 p-4 bg-[#6a5fdf] rounded-md">
                 <h1 className="text-[#d0d2d6] font-samibold text-lg">Category</h1>
                 <button onClick={() => setShow(true)}
-                    className="bg-red-500 shadow-lg hover:shadow-red-500/40 py-2 px-4
-                    cursor-pointer text-white rounded-sm text-sm">
+                    className="px-4 py-2 text-sm text-white bg-red-500 rounded-sm shadow-lg cursor-pointer hover:shadow-red-500/40">
                     Add
                 </button>
             </div>
@@ -97,22 +96,22 @@ const Category = () => {
                             <table className='w-full text-sm text-[#d0d2d6]'>
                                 <thead className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
                                     <tr>
-                                        <th scope='col' className='px-6 py-3 align-middle text-left'> No </th>
-                                        <th scope='col' className='px-6 py-3 align-middle text-left'> Image </th>
-                                        <th scope='col' className='px-6 py-3 align-middle text-left'> Name </th>
-                                        <th scope='col' className='px-6 py-3 align-middle text-left'> Action </th>
+                                        <th scope='col' className='px-6 py-3 text-left align-middle'> No </th>
+                                        <th scope='col' className='px-6 py-3 text-left align-middle'> Image </th>
+                                        <th scope='col' className='px-6 py-3 text-left align-middle'> Name </th>
+                                        <th scope='col' className='px-6 py-3 text-left align-middle'> Action </th>
                                     </tr>
                                 </thead>
                                 <tbody className='text-sm text-[#d0d2d6] uppercase border-b border-slate-700'>
                                     {categories.map((d, i) => (
                                         <tr key={i}>
-                                            <td scope="row" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">{i + 1}</td>
-                                            <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
+                                            <td scope="row" className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">{i + 1}</td>
+                                            <td scope="col" className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">
                                                 <img className="w-[45px] h-[45px]" src={d.image} alt="" />
                                             </td>
-                                            <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">{d.name}</td>
-                                            <td scope="col" className="px-6 py-1 align-middle text-left font-medium whitespace-nowrap">
-                                                <div className="flex justify-start items-center gap-4">
+                                            <td scope="col" className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">{d.name}</td>
+                                            <td scope="col" className="px-6 py-1 font-medium text-left align-middle whitespace-nowrap">
+                                                <div className="flex items-center justify-start gap-4">
                                                     <Link className="p-[6px] bg-yellow-500 rounded hover:bg-yellow-500/50" to="/">
                                                         <FaEdit />
                                                     </Link>
@@ -130,7 +129,7 @@ const Category = () => {
                         <h1>{totalCategory} products found</h1>
 
                         {totalCategory > itemsPerPage && (
-                        <div className="w-full flex justify-end mt-4">
+                        <div className="flex justify-end w-full mt-4">
                             <Pagination
                             pageNumber={currentPage}
                             setPageNumber={setCurrentPage}
@@ -147,7 +146,7 @@ const Category = () => {
                 <div className={`w-[320px] lg:w-5/12 translate-x-100 lg:relative lg:right-0 fixed ${show ? 'right-0' : '-right-[340px]'} z-[9999] top-0 transition-all duration-500`}>
                     <div className="w-full pl-5">
                         <div className='bg-[#6a5fdf] h-screen lg:h-auto px-3 py-2 lg:rounded-md text-[#d0d2d6]'>
-                            <div className="flex justify-between items-center mb-4">
+                            <div className="flex items-center justify-between mb-4">
                                 <h1 className="text-[#d0d2d6] font-semibold text-xl mb-4 w-full text-center">Add Category</h1>
                                 <div className="block lg:hidden">
                                     <IoMdCloseCircle onClick={() => setShow(false)} />
@@ -177,7 +176,7 @@ const Category = () => {
                                     <input onChange={imageHandle} className="hidden" type="file" id="image" />
 
                                     <div className="mt-3">
-                                        <button disabled={loader} className="bg-red-500 w-full hover:shadow-red-500/40 hover:shadow-md text-white rounded-md px-7 py-2 my-2">
+                                        <button disabled={loader} className="w-full py-2 my-2 text-white bg-red-500 rounded-md hover:shadow-red-500/40 hover:shadow-md px-7">
                                             {
                                                 loader ? <PropagateLoader color='#fff' cssOverride={overrideStyle} /> : 'Add Category'
                                             }

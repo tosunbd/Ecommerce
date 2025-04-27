@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { admin_login, messageClear } from '../../store/Reducers/authReducers';
+import { admin_login, messageClear } from '../../store/Reducers/authReducer';
 import { PropagateLoader } from 'react-spinners';
 import { toast } from 'react-hot-toast';
 import { overrideStyle } from '../../utils/utils';
@@ -61,17 +61,16 @@ const AdminLogin = () => {
 
                         <div className='flex flex-col w-full gap-1 mb-3'>
                             <label htmlFor="email">Email</label>
-                            <input onChange={inputHandle} value={state.email} className=' px-3 py-2 outline-none border border-slate-400 bg-transparent rounded-md' type="email" name='email' id='email' placeholder='Email' required />
+                            <input onChange={inputHandle} value={state.email} className='px-3 py-2 bg-transparent border rounded-md outline-none  border-slate-400' type="email" name='email' id='email' placeholder='Email' required />
                         </div>
 
                         <div className='flex flex-col w-full gap-1 mb-3'>
                             <label htmlFor="name">Password</label>
-                            <input onChange={inputHandle} value={state.password} className=' px-3 py-2 outline-none border border-slate-400 bg-transparent rounded-md' type="password" name='password' id='password' placeholder='Password' required />
+                            <input onChange={inputHandle} value={state.password} className='px-3 py-2 bg-transparent border rounded-md outline-none  border-slate-400' type="password" name='password' id='password' placeholder='Password' required />
                         </div>
 
 
-                        <button disabled={loader ? true : false} className='bg-slate-800 w-full
-                            hover:shadow-blue-300/hover:shadow-lg text-white rounded-md px-7 py-2 mb-3'>
+                        <button disabled={loader ? true : false} className='w-full py-2 mb-3 text-white rounded-md bg-slate-800 hover:shadow-blue-300/hover:shadow-lg px-7'>
                             {
                                 loader ? <PropagateLoader color='#fff' cssOverride={overrideStyle} /> : 'Login'
                             }

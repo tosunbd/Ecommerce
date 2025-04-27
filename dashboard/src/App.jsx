@@ -4,7 +4,7 @@ import Router from './router/Router';
 import publicRoutes from './router/routes/publicRoutes';
 import { getRoutes } from './router/routes';
 import { useDispatch, useSelector } from 'react-redux';
-import { get_user_info } from './store/Reducers/authReducers';
+import { get_user_info } from './store/Reducers/authReducer';
 
 function App() {
 
