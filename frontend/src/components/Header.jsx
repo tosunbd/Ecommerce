@@ -1,88 +1,88 @@
 import { MdEmail } from "react-icons/md";
 import { IoPhonePortrait } from "react-icons/io5";
-import { FaUser, FaLock, FaFacebook, FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaUser, FaList, FaLock, FaFacebook, FaTwitter, FaLinkedin, FaGithub } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 
-
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const Header = () => {
-
+  const [showSidebar, setShowSidebar] = useState(true);  
   const user = true;
 
   return (
-    <div className="w-full bg-[#caddff]">
-      <div className="container header-top mx-auto flex justify-between items-center h-[50px] px-4 md:px-6">
-        {/* Left Section */}
-        <div className="flex items-center space-x-4">
-          {/* Email */}
-          <div className="flex items-center gap-2 text-sm text-black">
-            <MdEmail />
-            <span>support@gmail.com</span>
-          </div>
-          {/* Separator */}
-          <span className="text-gray-500">|</span>
-          {/* Phone */}
-          <div className="flex items-center gap-2 text-sm text-black">
-            <IoPhonePortrait />
-            <span>+(123) 4567 890</span>
-          </div>
-        </div>
+    <div className="w-full">
 
-        {/* Right Section */}
-        <div className="flex items-center space-x-6">
-          {/* Social Media */}
-          <div className="flex items-center space-x-2">
-            <FaFacebook className="hover:text-blue-600 cursor-pointer" />
-            <FaTwitter className="hover:text-blue-400 cursor-pointer" />
-            <FaLinkedin className="hover:text-blue-700 cursor-pointer" />
-            <FaGithub className="hover:text-gray-800 cursor-pointer" />
+      {/* Top Contact and Social Header (visible on larger screens) */}
+      <div className="bg-[#caddff]">
+        <div className="container mx-auto flex justify-between items-center h-[50px] px-4 md:px-6 md-lg:hidden">
+          {/* Left Section */}
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-2 text-sm text-black">
+              <MdEmail />
+              <span>support@gmail.com</span>
+            </div>
+            <span className="text-gray-500">|</span>
+            <div className="flex items-center gap-2 text-sm text-black">
+              <IoPhonePortrait />
+              <span>+(123) 4567 890</span>
+            </div>
           </div>
 
-          {/* Separator */}
-          <span className="text-gray-500">|</span>
-
-          {/* Language */}
-          <div className="relative group flex items-center space-x-2">
-            <img
-              src="http://localhost:5173/images/language.png"
-              alt="Language"
-              className="h-4 w-6"
-            />
-            <span className="text-sm text-black">US</span>
-            <IoMdArrowDropdown />
-            <ul
-              className="absolute left-0 top-8 bg-black text-white p-2 w-[100px] flex flex-col gap-2 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-hover:top-10 transition-all duration-200 z-10"
-            >
-              <li className="hover:text-blue-500 cursor-pointer">English</li>
-              <li className="hover:text-blue-500 cursor-pointer">Bangla</li>
-            </ul>
-          </div>
-
-          {/* Separator */}
-          <span className="text-gray-500">|</span>
-
-          {/* User */}
-          <div className="flex items-center space-x-2">
-            {
-              user ?  
-                <Link className="flex cursor-pointer justify-center items-center gap-2
-                text-sm text-black" to={"/dashboard"}>
-                  <span><FaUser /></span>                  
+          {/* Right Section */}
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-2">
+              <FaFacebook className="cursor-pointer hover:text-blue-600" />
+              <FaTwitter className="cursor-pointer hover:text-blue-400" />
+              <FaLinkedin className="cursor-pointer hover:text-blue-700" />
+              <FaGithub className="cursor-pointer hover:text-gray-800" />
+            </div>
+            <span className="text-gray-500">|</span>
+            <div className="relative flex items-center space-x-2 group">
+              <img className="w-6 h-4" src="http://localhost:5174/images/language.png" alt="Language"/>
+              <span className="text-sm text-black">US</span>
+              <IoMdArrowDropdown />
+              <ul className="absolute left-0 top-8 bg-black text-white p-2 w-[100px] flex flex-col gap-2 rounded-md opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto group-hover:top-10 transition-all duration-200 z-10">
+                <li className="cursor-pointer hover:text-blue-500">English</li>
+                <li className="cursor-pointer hover:text-blue-500">Bangla</li>
+              </ul>
+            </div>
+            <span className="text-gray-500">|</span>
+            <div className="flex items-center space-x-2">
+              {user ?  
+                <Link className="flex items-center gap-2 text-sm text-black cursor-pointer" to={"/dashboard"}>
+                  <FaUser />
                   <span>Taufiqul Islam</span>                
                 </Link>
                 :
-                <Link className="flex cursor-pointer justify-center items-center gap-2
-                text-sm text-black" to={"/login"}>
-                  <span><FaLock /></span>                  
+                <Link className="flex items-center gap-2 text-sm text-black cursor-pointer" to={"/login"}>
+                  <FaLock />
                   <span>Login</span>                
                 </Link>
-            }
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Logo and Menu (Always visible) */}
+      <div className="bg-white shadow-sm">
+        <div className="container mx-auto flex justify-between items-center h-[80px] px-4 md:px-6">
+          <div class='md-lg:w-full w-3/12 md-lg:pt-4'>
+                                                                                                              
+
+          </div>
+          <Link to='/'>
+            <img src="http://localhost:5174/images/logo.png" alt="Logo" />
+          </Link>
+          {/* FaList Icon - visible on small screens only */}
+          <div className="hidden md-lg:flex items-center justify-center w-[30px] h-[30px] bg-white text-slate-600 border border-slate-600 rounded-sm cursor-pointer" onClick={() => setShowSidebar(!showSidebar)}>
+            <span><FaList /></span>
+          </div>
             
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
